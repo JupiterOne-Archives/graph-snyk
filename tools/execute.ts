@@ -3,7 +3,8 @@ import { executeIntegrationLocal } from "@jupiterone/jupiter-managed-integration
 import invocationConfig from "../src/index";
 
 const integrationConfig = {
-  // providerApiToken: process.env.PROVIDER_LOCAL_EXECUTION_API_TOKEN
+  SnykApiKey: process.env.SNYK_API_KEY,
+  SnykOrgId: process.env.SNYK_ORG_ID,
 };
 
 const invocationArgs = {

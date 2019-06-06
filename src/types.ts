@@ -1,40 +1,53 @@
 import {
   EntityFromIntegration,
-  GraphClient,
-  IntegrationExecutionContext,
-  PersisterClient,
+  RelationshipFromIntegration,
+  // GraphClient,
+  // IntegrationExecutionContext,
+  // PersisterClient,
 } from "@jupiterone/jupiter-managed-integration-sdk";
-import ProviderClient from "./ProviderClient";
 
-export const ACCOUNT_ENTITY_TYPE = "provider_account";
-export const ACCOUNT_ENTITY_CLASS = "Account";
-
-export const USER_ENTITY_TYPE = "provider_user";
-export const USER_ENTITY_CLASS = "User";
-export const ACCOUNT_USER_RELATIONSHIP_TYPE = "provider_account_user";
-
-export const DEVICE_ENTITY_TYPE = "provider_device";
-export const DEVICE_ENTITY_CLASS = "Device";
-export const ACCOUNT_DEVICE_RELATIONSHIP_TYPE = "provider_account_device";
-
-export const USER_DEVICE_RELATIONSHIP_TYPE = "provider_user_device";
-export const USER_DEVICE_RELATIONSHIP_CLASS = "HAS";
-
-export interface AccountEntity extends EntityFromIntegration {
-  accountId: string;
+export interface ServiceEntity extends EntityFromIntegration {
+  category: string;
+  handle: string;
 }
 
-export interface UserEntity extends EntityFromIntegration {
-  userId: string;
+export interface CodeRepoEntity extends EntityFromIntegration {
+  name: string;
+  id: string;
+  created?: number; // string,
+  totalDependencies: number;
+  low_vulnerabilities: number;
+  medium_vulnerabilities: number;
+  high_vulnerabilities: number;
 }
 
-export interface DeviceEntity extends EntityFromIntegration {
-  deviceId: string;
-  ownerId: string;
+export interface VulnerabilityEntity extends EntityFromIntegration {
+  // patches: Patch[], upgradePath: string[]??
+  category: string;
+  cvss: number;
+  cwe: string[];
+  cve: string[];
+  description: string;
+  displayName: string;
+  webLink: string;
+  id: string;
+  severity: string;
+  from: string[];
+  package: string;
+  version: string;
+  language: string;
+  packageManager: string;
+  isUpgradable: string;
+  isPatchable: string;
+  publicationTime?: number; // string,
+  disclosureTime?: number; // string
 }
 
-export interface ExampleExecutionContext extends IntegrationExecutionContext {
-  graph: GraphClient;
-  persister: PersisterClient;
-  provider: ProviderClient;
+export type ServiceCodeRepoRelationship = RelationshipFromIntegration;
+
+export type CodeRepoVulnerabilityRelationship = RelationshipFromIntegration;
+
+export interface SnykIntegrationInstanceConfig {
+  SnykApiKey: string;
+  SnykOrgId: string;
 }

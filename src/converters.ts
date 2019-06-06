@@ -1,7 +1,159 @@
+/*
 import {
   EntityFromIntegration,
   RelationshipFromIntegration,
 } from "@jupiterone/jupiter-managed-integration-sdk";
+*/
+
+import {
+  // SNYK_SERVICE_ENTITY_TYPE,
+  SNYK_CODEREPO_ENTITY_TYPE,
+  SNYK_CODEREPO_VULNERABILITY_RELATIONSHIP_TYPE,
+  SNYK_SERVICE_CODEREPO_RELATIONSHIP_TYPE,
+  SNYK_VULNERABILITY_ENTITY_TYPE,
+} from "./constants";
+
+import {
+  CodeRepoEntity,
+  CodeRepoVulnerabilityRelationship,
+  ServiceCodeRepoRelationship,
+  ServiceEntity,
+  VulnerabilityEntity,
+} from "./types";
+
+export interface Vulnerability {
+  id: string;
+  url: string;
+  title: string;
+  type: string;
+  description: string;
+  from: string[];
+  package: string;
+  version: string;
+  severity: string;
+  language: string;
+  packageManager: string;
+  // semver: thing,
+  publicationTime: Date; // string,
+  disclosureTime: Date; // string,
+  isUpgradable: string;
+  isPatchable: string;
+  identifiers: Identifier;
+  // credit: string[],
+  // CVSSv3: string,
+  cvssScore: number;
+  patches: Patch[];
+  upgradePath: string[];
+}
+
+export interface Identifier {
+  CVE: string[];
+  CWE: string[];
+}
+
+export interface Patch {
+  id: string;
+  urls: string[];
+  version: string;
+  comments: string[];
+  modificationTime: Date; // string
+}
+
+export interface Project {
+  name: string;
+  id: string;
+  created: Date; // string,
+  origin: string;
+  // type: string,
+  // readOnly: string,
+  // testFrequency: string,
+  totalDependencies: number;
+  issueCountsBySeverity: IssueCount;
+}
+
+export interface IssueCount {
+  low: number;
+  medium: number;
+  high: number;
+}
+
+export function toCodeRepoEntity(project: Project): CodeRepoEntity {
+  return {
+    _class: "CodeRepo",
+    _key: `snyk-project-${project.name}`,
+    _type: SNYK_CODEREPO_ENTITY_TYPE,
+    name: project.name,
+    id: project.id,
+    created: getTime(project.created),
+    totalDependencies: project.totalDependencies,
+    low_vulnerabilities: project.issueCountsBySeverity.low,
+    medium_vulnerabilities: project.issueCountsBySeverity.medium,
+    high_vulnerabilities: project.issueCountsBySeverity.high,
+  };
+}
+
+export function toVulnerabilityEntity(
+  vuln: Vulnerability,
+): VulnerabilityEntity {
+  return {
+    _class: "Vulnerability",
+    _key: `snyk-project-vulnerability-${vuln.id}`,
+    _type: SNYK_VULNERABILITY_ENTITY_TYPE,
+    category: "third-party dependency vulnerability",
+    cvss: vuln.cvssScore,
+    cwe: vuln.identifiers.CWE,
+    cve: vuln.identifiers.CVE,
+    description: vuln.description,
+    displayName: vuln.title,
+    webLink: vuln.url,
+    id: vuln.id,
+    severity: vuln.severity,
+    from: vuln.from,
+    package: vuln.package,
+    version: vuln.version,
+    language: vuln.language,
+    packageManager: vuln.packageManager,
+    isUpgradable: vuln.isUpgradable,
+    isPatchable: vuln.isPatchable,
+    publicationTime: getTime(vuln.publicationTime),
+    disclosureTime: getTime(vuln.disclosureTime),
+  };
+}
+
+export function toServiceCodeRepoRelationship(
+  service: ServiceEntity,
+  project: CodeRepoEntity,
+): ServiceCodeRepoRelationship {
+  return {
+    _class: "EVALUATES",
+    _key: `${service._key}|evaluates|${project._key}`,
+    _type: SNYK_SERVICE_CODEREPO_RELATIONSHIP_TYPE,
+    _fromEntityKey: service._key,
+    _toEntityKey: project._key,
+    displayName: "EVALUATES",
+  };
+}
+
+export function toCodeRepoVulnerabilityRelationship(
+  project: CodeRepoEntity,
+  vuln: VulnerabilityEntity,
+): CodeRepoVulnerabilityRelationship {
+  return {
+    _class: "HAS",
+    _key: `${project._key}|has|${vuln._key}`,
+    _type: SNYK_CODEREPO_VULNERABILITY_RELATIONSHIP_TYPE,
+    _fromEntityKey: project._key,
+    _toEntityKey: vuln._key,
+    displayName: "HAS",
+  };
+}
+
+function getTime(time: Date | string | undefined | null): number | undefined {
+  return time ? new Date(time).getTime() : undefined;
+}
+
+// ---------------------------------------------------------------------------------------------
+/*
 import { Account, Device, User } from "./ProviderClient";
 import {
   ACCOUNT_ENTITY_CLASS,
@@ -105,3 +257,4 @@ function createUserDeviceRelationship(
     _type: USER_DEVICE_RELATIONSHIP_TYPE,
   };
 }
+*/
