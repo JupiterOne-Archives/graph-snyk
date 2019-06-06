@@ -1,3 +1,4 @@
+/*
 import {
   createAccountEntity,
   createAccountRelationships,
@@ -96,3 +97,4 @@ test("createUserDeviceRelationships", () => {
     },
   ]);
 });
+*/
