@@ -1,4 +1,4 @@
-import SnykClient from "./snyk-client";
+import SnykClient from "snyk-client";
 
 import {
   IntegrationInstanceAuthenticationError,
@@ -21,9 +21,9 @@ export default async function invocationValidator(
     throw new IntegrationInstanceConfigError("snykOrgId is required");
   }
 
-  const provider = new SnykClient(config.SnykApiKey, config.SnykOrgId);
+  const provider = new SnykClient(config.SnykApiKey);
   try {
-    await provider.verifyAccess();
+    await provider.verifyAccess(config.SnykOrgId);
   } catch (err) {
     throw new IntegrationInstanceAuthenticationError(err);
   }

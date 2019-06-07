@@ -38,6 +38,13 @@ class SnykClient {
     return response;
   }
 
+  async verifyAccess(orgId) {
+    return this.snykRequest({
+      method: "GET",
+      uri: `org/${orgId}/members`,
+    });
+  }
+
   /**
    * "Imports projects into an integration"
    * @param {string} orgId - Organization ID

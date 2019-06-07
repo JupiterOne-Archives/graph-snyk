@@ -1,5 +1,4 @@
-import SnykClient from "./snyk-client";
-
+import SnykClient from "snyk-client";
 import {
   IntegrationExecutionContext,
   PersisterOperationsResult,
@@ -53,13 +52,16 @@ export default async function synchronize(
     project => project.origin === "bitbucket-cloud",
   ); // only use projects imported through bitbucket cloud
 
+  allProjects = allProjects.slice(10, 20); // shorten for testing purposes
+
   for (const project of allProjects) {
     const proj: CodeRepoEntity = toCodeRepoEntity(project);
     codeRepoEntities.push(proj);
     serviceCodeRepoRelationships.push(
       toServiceCodeRepoRelationship(service, proj),
     );
-    vulnerabilities = (await Snyk.listIssues(process.env.ORGID, project.id, {}))
+
+    vulnerabilities = (await Snyk.listIssues(config.SnykOrgId, project.id, {}))
       .issues.vulnerabilities;
     vulnerabilities.forEach((vulnerability: Vulnerability) => {
       const vuln: VulnerabilityEntity = toVulnerabilityEntity(vulnerability);
