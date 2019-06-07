@@ -1,6 +1,7 @@
 import {
   EntityFromIntegration,
   RelationshipFromIntegration,
+  MappedRelationshipFromIntegration
   // GraphClient,
   // IntegrationExecutionContext,
   // PersisterClient,
@@ -19,6 +20,7 @@ export interface CodeRepoEntity extends EntityFromIntegration {
   low_vulnerabilities: number;
   medium_vulnerabilities: number;
   high_vulnerabilities: number;
+  origin: string
 }
 
 export interface FindingEntity extends EntityFromIntegration {
@@ -51,3 +53,11 @@ export interface SnykIntegrationInstanceConfig {
   SnykApiKey: string;
   SnykOrgId: string;
 }
+
+
+export interface VulnerabilityEntity extends EntityFromIntegration {
+  name?: string;
+  description?: string;
+}
+
+export type FindingVulnerabilityRelationship = MappedRelationshipFromIntegration;

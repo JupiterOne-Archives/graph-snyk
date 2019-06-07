@@ -1,25 +1,29 @@
-/*
+
 import {
-  EntityFromIntegration,
-  RelationshipFromIntegration,
+  //EntityFromIntegration,
+  RelationshipDirection,
 } from "@jupiterone/jupiter-managed-integration-sdk";
-*/
 
 import {
   // SNYK_SERVICE_ENTITY_TYPE,
   SNYK_CODEREPO_ENTITY_TYPE,
   SNYK_CODEREPO_FINDING_RELATIONSHIP_TYPE,
   SNYK_SERVICE_CODEREPO_RELATIONSHIP_TYPE,
-  SNYK_FINDING_ENTITY_TYPE,
+  SNYK_FINDING_VULNERABILITY_RELATIONSHIP_TYPE,
+  SNYK_FINDING_ENTITY_TYPE
 } from "./constants";
 
 import {
   CodeRepoEntity,
   CodeRepoFindingRelationship,
   ServiceCodeRepoRelationship,
+  FindingVulnerabilityRelationship,
   ServiceEntity,
-  FindingEntity,
+  FindingEntity
+  //VulnerabilityEntity
 } from "./types";
+
+import { CVE } from "./util/getCVE";
 
 export interface Vulnerability {
   id: string;
@@ -89,6 +93,7 @@ export function toCodeRepoEntity(project: Project): CodeRepoEntity {
     low_vulnerabilities: project.issueCountsBySeverity.low,
     medium_vulnerabilities: project.issueCountsBySeverity.medium,
     high_vulnerabilities: project.issueCountsBySeverity.high,
+    origin: project.origin
   };
 }
 
@@ -151,6 +156,50 @@ export function toCodeRepoFindingRelationship(
 function getTime(time: Date | string | undefined | null): number | undefined {
   return time ? new Date(time).getTime() : undefined;
 }
+
+
+
+/*
+export function toVulnerabilityEntity(
+  cveId: string,
+): VulnerabilityEntity {
+  return {
+    _key: cveId.toLowerCase(),
+    _type: "cve",
+    _class: "Vulnerability",
+    displayName: cveId.toUpperCase(),
+    webLink: `https://nvd.nist.gov/vuln/detail/${cveId}`,
+  };
+}
+*/
+
+
+export function toVulnerabilityRelationship(
+  finding: FindingEntity,
+  cve: CVE
+): FindingVulnerabilityRelationship {
+  return {
+    _key: `${finding._key}|is|${cve._key}`,
+    _class: "IS",
+    _type: SNYK_FINDING_VULNERABILITY_RELATIONSHIP_TYPE,
+    _mapping: {
+      sourceEntityKey: finding._key,
+      relationshipDirection: RelationshipDirection.FORWARD,
+      targetFilterKeys: [["_type", "_key"]],
+      targetEntity: {
+        ...cve,
+      }
+    },
+    displayName: "IS",
+  };
+}
+
+
+
+
+
+
+
 
 // ---------------------------------------------------------------------------------------------
 /*

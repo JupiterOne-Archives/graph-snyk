@@ -10,8 +10,10 @@ import {
   toCodeRepoEntity,
   toCodeRepoFindingRelationship,
   toServiceCodeRepoRelationship,
+  toVulnerabilityRelationship,
   toFindingEntity,
   Vulnerability,
+  //toVulnerabilityEntity,
 } from "./converters";
 import { createOperationsFromFindings } from "./createOperations";
 import {
@@ -20,8 +22,14 @@ import {
   ServiceCodeRepoRelationship,
   ServiceEntity,
   SnykIntegrationInstanceConfig,
+  FindingVulnerabilityRelationship,
   FindingEntity,
 } from "./types";
+
+import { 
+  getCVE, 
+  CVE 
+} from "./util/getCVE";
 
 export default async function synchronize(
   context: IntegrationExecutionContext,
@@ -41,9 +49,11 @@ export default async function synchronize(
   };
   const serviceCodeRepoRelationships: ServiceCodeRepoRelationship[] = [];
   const codeRepoFindingRelationships: CodeRepoFindingRelationship[] = [];
+  const findingVulnerabilityRelationships: FindingVulnerabilityRelationship[] = [];
   const serviceEntities: ServiceEntity[] = [service];
   const codeRepoEntities: CodeRepoEntity[] = [];
   const findingEntities: FindingEntity[] = [];
+  const cveEntities: CVE[] = [];
 
   let vulnerabilities: Vulnerability[];
   let allProjects: Project[] = (await Snyk.listAllProjects(config.SnykOrgId))
@@ -52,7 +62,7 @@ export default async function synchronize(
     project => project.origin === "bitbucket-cloud",
   ); // only use projects imported through bitbucket cloud
 
-  allProjects = allProjects.slice(10, 20); // shorten for testing purposes
+  allProjects = allProjects.slice(10, 15); // shorten for testing purposes
 
   for (const project of allProjects) {
     const proj: CodeRepoEntity = toCodeRepoEntity(project);
@@ -61,17 +71,28 @@ export default async function synchronize(
       toServiceCodeRepoRelationship(service, proj),
     );
 
-    vulnerabilities = (await Snyk.listIssues(config.SnykOrgId, project.id, {}))
-      .issues.vulnerabilities;
+    vulnerabilities = (await Snyk.listIssues(config.SnykOrgId, project.id, {})).issues.vulnerabilities;
+    vulnerabilities = vulnerabilities.filter(  // FOR TESTING
+      vuln => vuln.identifiers.CVE.length >= 1, // FOR TESTING
+    ); // FOR TESTING
+  
+
     vulnerabilities.forEach((vulnerability: Vulnerability) => {
+      console.log(vulnerability.identifiers.CVE);
       const finding: FindingEntity = toFindingEntity(vulnerability);
       findingEntities.push(finding);
       codeRepoFindingRelationships.push(
         toCodeRepoFindingRelationship(proj, finding),
       );
+
+      for (const cve of vulnerability.identifiers.CVE) {
+        const snykCVE: CVE = getCVE(cve);
+        cveEntities.push(snykCVE);
+        findingVulnerabilityRelationships.push(toVulnerabilityRelationship(finding, snykCVE));
+      }
     });
   }
-  console.log(codeRepoEntities.length);
+  //console.log(codeRepoEntities.length);
 
   return persister.publishPersisterOperations(
     await createOperationsFromFindings(
@@ -79,8 +100,10 @@ export default async function synchronize(
       serviceEntities,
       codeRepoEntities,
       findingEntities,
+      cveEntities,
       serviceCodeRepoRelationships,
       codeRepoFindingRelationships,
+      findingVulnerabilityRelationships
     ),
   );
 }
