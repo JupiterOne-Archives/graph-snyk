@@ -21,7 +21,7 @@ export interface CodeRepoEntity extends EntityFromIntegration {
   high_vulnerabilities: number;
 }
 
-export interface VulnerabilityEntity extends EntityFromIntegration {
+export interface FindingEntity extends EntityFromIntegration {
   // patches: Patch[], upgradePath: string[]??
   category: string;
   cvss: number;
@@ -45,7 +45,7 @@ export interface VulnerabilityEntity extends EntityFromIntegration {
 
 export type ServiceCodeRepoRelationship = RelationshipFromIntegration;
 
-export type CodeRepoVulnerabilityRelationship = RelationshipFromIntegration;
+export type CodeRepoFindingRelationship = RelationshipFromIntegration;
 
 export interface SnykIntegrationInstanceConfig {
   SnykApiKey: string;

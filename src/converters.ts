@@ -8,17 +8,17 @@ import {
 import {
   // SNYK_SERVICE_ENTITY_TYPE,
   SNYK_CODEREPO_ENTITY_TYPE,
-  SNYK_CODEREPO_VULNERABILITY_RELATIONSHIP_TYPE,
+  SNYK_CODEREPO_FINDING_RELATIONSHIP_TYPE,
   SNYK_SERVICE_CODEREPO_RELATIONSHIP_TYPE,
-  SNYK_VULNERABILITY_ENTITY_TYPE,
+  SNYK_FINDING_ENTITY_TYPE,
 } from "./constants";
 
 import {
   CodeRepoEntity,
-  CodeRepoVulnerabilityRelationship,
+  CodeRepoFindingRelationship,
   ServiceCodeRepoRelationship,
   ServiceEntity,
-  VulnerabilityEntity,
+  FindingEntity,
 } from "./types";
 
 export interface Vulnerability {
@@ -92,14 +92,14 @@ export function toCodeRepoEntity(project: Project): CodeRepoEntity {
   };
 }
 
-export function toVulnerabilityEntity(
+export function toFindingEntity(
   vuln: Vulnerability,
-): VulnerabilityEntity {
+): FindingEntity {
   return {
-    _class: "Vulnerability",
-    _key: `snyk-project-vulnerability-${vuln.id}`,
-    _type: SNYK_VULNERABILITY_ENTITY_TYPE,
-    category: "third-party dependency vulnerability",
+    _class: "Finding",
+    _key: `snyk-project-finding-${vuln.id}`,
+    _type: SNYK_FINDING_ENTITY_TYPE,
+    category: "snyk scan finding",
     cvss: vuln.cvssScore,
     cwe: vuln.identifiers.CWE,
     cve: vuln.identifiers.CVE,
@@ -134,16 +134,16 @@ export function toServiceCodeRepoRelationship(
   };
 }
 
-export function toCodeRepoVulnerabilityRelationship(
+export function toCodeRepoFindingRelationship(
   project: CodeRepoEntity,
-  vuln: VulnerabilityEntity,
-): CodeRepoVulnerabilityRelationship {
+  find: FindingEntity,
+): CodeRepoFindingRelationship {
   return {
     _class: "HAS",
-    _key: `${project._key}|has|${vuln._key}`,
-    _type: SNYK_CODEREPO_VULNERABILITY_RELATIONSHIP_TYPE,
+    _key: `${project._key}|has|${find._key}`,
+    _type: SNYK_CODEREPO_FINDING_RELATIONSHIP_TYPE,
     _fromEntityKey: project._key,
-    _toEntityKey: vuln._key,
+    _toEntityKey: find._key,
     displayName: "HAS",
   };
 }

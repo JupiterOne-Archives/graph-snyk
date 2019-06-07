@@ -19,15 +19,18 @@ Snyk account.
 
 The following entity resources are ingested when the integration runs:
 
-| Entity Resource | \_type : \_class of the Entity | | Scanner | `snyk_service`
-: `Service` | | Project | `snyk_project` : `CodeRepo` | | Third-Party
+| Entity Resource | \_type : \_class of the Entity | | Scanner | `snyk_service`:
+`Service` | | Project | `snyk_project` : `CodeRepo` | | Third-Party
 Vulnerability | `dependency_vulnerability` : `Vulnerability` |
 
 ## Relationships
 
 The following relationships are created/mapped:
 
-| From | Type | To | | `snyk_service` | **EVALUATES** | `snyk_project` | |
-`snyk_project` | **HAS** | `dependency_vulnerability` |
+| From | Type | To | | `snyk_service` | **EVALUATES** | `snyk_project` |
+|`snyk_project` | **HAS** | `dependency_vulnerability` |
 
 [1]: https://jupiterone.io/
+
+coderepo has finding finding is vulnerability(CVE) finding exploits
+weakness(CWE)

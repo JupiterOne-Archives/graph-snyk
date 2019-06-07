@@ -10,26 +10,26 @@ import {
 
 import {
   SNYK_CODEREPO_ENTITY_TYPE,
-  SNYK_CODEREPO_VULNERABILITY_RELATIONSHIP_TYPE,
+  SNYK_CODEREPO_FINDING_RELATIONSHIP_TYPE,
   SNYK_SERVICE_CODEREPO_RELATIONSHIP_TYPE,
   SNYK_SERVICE_ENTITY_TYPE,
-  SNYK_VULNERABILITY_ENTITY_TYPE,
+  SNYK_FINDING_ENTITY_TYPE,
 } from "./constants";
 import {
   CodeRepoEntity,
-  CodeRepoVulnerabilityRelationship,
+  CodeRepoFindingRelationship,
   ServiceCodeRepoRelationship,
   ServiceEntity,
-  VulnerabilityEntity,
+  FindingEntity,
 } from "./types";
 
 export async function createOperationsFromFindings(
   context: IntegrationExecutionContext,
   serviceEntities: ServiceEntity[],
   codeRepoEntities: CodeRepoEntity[],
-  vulnerabilityEntities: VulnerabilityEntity[],
+  findingEntities: FindingEntity[],
   serviceCodeRepoRelationships: ServiceCodeRepoRelationship[],
-  codeRepoVulnerabilityRelationships: CodeRepoVulnerabilityRelationship[],
+  codeRepoFindingRelationships: CodeRepoFindingRelationship[],
 ): Promise<PersisterOperations> {
   const entityOperations = [
     ...(await toEntityOperations(
@@ -44,8 +44,8 @@ export async function createOperationsFromFindings(
     )),
     ...(await toEntityOperations(
       context,
-      vulnerabilityEntities,
-      SNYK_VULNERABILITY_ENTITY_TYPE,
+      findingEntities,
+      SNYK_FINDING_ENTITY_TYPE,
     )),
   ];
 
@@ -57,8 +57,8 @@ export async function createOperationsFromFindings(
     )),
     ...(await toRelationshipOperations(
       context,
-      codeRepoVulnerabilityRelationships,
-      SNYK_CODEREPO_VULNERABILITY_RELATIONSHIP_TYPE,
+      codeRepoFindingRelationships,
+      SNYK_CODEREPO_FINDING_RELATIONSHIP_TYPE,
     )),
   ];
 

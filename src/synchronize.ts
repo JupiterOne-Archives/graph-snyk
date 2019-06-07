@@ -8,19 +8,19 @@ import { SNYK_SERVICE_ENTITY_TYPE } from "./constants";
 import {
   Project,
   toCodeRepoEntity,
-  toCodeRepoVulnerabilityRelationship,
+  toCodeRepoFindingRelationship,
   toServiceCodeRepoRelationship,
-  toVulnerabilityEntity,
+  toFindingEntity,
   Vulnerability,
 } from "./converters";
 import { createOperationsFromFindings } from "./createOperations";
 import {
   CodeRepoEntity,
-  CodeRepoVulnerabilityRelationship,
+  CodeRepoFindingRelationship,
   ServiceCodeRepoRelationship,
   ServiceEntity,
   SnykIntegrationInstanceConfig,
-  VulnerabilityEntity,
+  FindingEntity,
 } from "./types";
 
 export default async function synchronize(
@@ -40,10 +40,10 @@ export default async function synchronize(
     handle: config.SnykApiKey, // ?
   };
   const serviceCodeRepoRelationships: ServiceCodeRepoRelationship[] = [];
-  const codeRepoVulnerabilityRelationships: CodeRepoVulnerabilityRelationship[] = [];
+  const codeRepoFindingRelationships: CodeRepoFindingRelationship[] = [];
   const serviceEntities: ServiceEntity[] = [service];
   const codeRepoEntities: CodeRepoEntity[] = [];
-  const vulnerabilityEntities: VulnerabilityEntity[] = [];
+  const findingEntities: FindingEntity[] = [];
 
   let vulnerabilities: Vulnerability[];
   let allProjects: Project[] = (await Snyk.listAllProjects(config.SnykOrgId))
@@ -64,22 +64,23 @@ export default async function synchronize(
     vulnerabilities = (await Snyk.listIssues(config.SnykOrgId, project.id, {}))
       .issues.vulnerabilities;
     vulnerabilities.forEach((vulnerability: Vulnerability) => {
-      const vuln: VulnerabilityEntity = toVulnerabilityEntity(vulnerability);
-      vulnerabilityEntities.push(vuln);
-      codeRepoVulnerabilityRelationships.push(
-        toCodeRepoVulnerabilityRelationship(proj, vuln),
+      const finding: FindingEntity = toFindingEntity(vulnerability);
+      findingEntities.push(finding);
+      codeRepoFindingRelationships.push(
+        toCodeRepoFindingRelationship(proj, finding),
       );
     });
   }
+  console.log(codeRepoEntities.length);
 
   return persister.publishPersisterOperations(
     await createOperationsFromFindings(
       context,
       serviceEntities,
       codeRepoEntities,
-      vulnerabilityEntities,
+      findingEntities,
       serviceCodeRepoRelationships,
-      codeRepoVulnerabilityRelationships,
+      codeRepoFindingRelationships,
     ),
   );
 }
