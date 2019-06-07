@@ -78,12 +78,9 @@ export default async function synchronize(
   
 
     vulnerabilities.forEach((vulnerability: Vulnerability) => {
-      console.log(vulnerability.identifiers.CVE);
       const finding: FindingEntity = toFindingEntity(vulnerability);
       findingEntities.push(finding);
-      codeRepoFindingRelationships.push(
-        toCodeRepoFindingRelationship(proj, finding),
-      );
+      codeRepoFindingRelationships.push(toCodeRepoFindingRelationship(proj, finding));
 
       for (const cve of vulnerability.identifiers.CVE) {
         const snykCVE: CVE = getCVE(cve);

@@ -1,7 +1,7 @@
 import {
   EntityFromIntegration,
   RelationshipFromIntegration,
-  MappedRelationshipFromIntegration
+  //MappedRelationshipFromIntegration
   // GraphClient,
   // IntegrationExecutionContext,
   // PersisterClient,
@@ -54,10 +54,11 @@ export interface SnykIntegrationInstanceConfig {
   SnykOrgId: string;
 }
 
-
+/*
 export interface VulnerabilityEntity extends EntityFromIntegration {
   name?: string;
   description?: string;
 }
+*/
 
-export type FindingVulnerabilityRelationship = MappedRelationshipFromIntegration;
+export type FindingVulnerabilityRelationship = RelationshipFromIntegration; //MappedRelationshipFromIntegration;

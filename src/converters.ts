@@ -1,8 +1,10 @@
 
+/*
 import {
   //EntityFromIntegration,
   RelationshipDirection,
 } from "@jupiterone/jupiter-managed-integration-sdk";
+*/
 
 import {
   // SNYK_SERVICE_ENTITY_TYPE,
@@ -159,21 +161,24 @@ function getTime(time: Date | string | undefined | null): number | undefined {
 
 
 
-/*
-export function toVulnerabilityEntity(
-  cveId: string,
-): VulnerabilityEntity {
+export function toVulnerabilityRelationship(
+  finding: FindingEntity,
+  cve: CVE
+): FindingVulnerabilityRelationship {
   return {
-    _key: cveId.toLowerCase(),
-    _type: "cve",
-    _class: "Vulnerability",
-    displayName: cveId.toUpperCase(),
-    webLink: `https://nvd.nist.gov/vuln/detail/${cveId}`,
+    _class: "HAS",
+    _key: `${finding._key}|is|${cve._key}`,
+    _type: SNYK_FINDING_VULNERABILITY_RELATIONSHIP_TYPE,
+    _fromEntityKey: finding._key,
+    _toEntityKey: cve._key,
+    displayName: "IS",
   };
 }
-*/
 
 
+
+
+/*
 export function toVulnerabilityRelationship(
   finding: FindingEntity,
   cve: CVE
@@ -193,6 +198,7 @@ export function toVulnerabilityRelationship(
     displayName: "IS",
   };
 }
+*/
 
 
 

@@ -2,7 +2,7 @@ import {
   EntityFromIntegration,
   EntityOperation,
   IntegrationExecutionContext,
-  MappedRelationshipFromIntegration,
+  //MappedRelationshipFromIntegration,
   PersisterOperations,
   RelationshipFromIntegration,
   RelationshipOperation,
@@ -75,11 +75,18 @@ export async function createOperationsFromFindings(
       codeRepoFindingRelationships,
       SNYK_CODEREPO_FINDING_RELATIONSHIP_TYPE,
     )),
+    ...(await toRelationshipOperations(
+      context,
+      findingVulnerabilityRelationships,
+      SNYK_FINDING_VULNERABILITY_RELATIONSHIP_TYPE,
+    ))
+    /*
     ...(await toMappedRelationshipOperations(
       context,
       findingVulnerabilityRelationships,
       SNYK_FINDING_VULNERABILITY_RELATIONSHIP_TYPE,
     ))
+    */
   ];
 
   return [entityOperations, relationshipOperations];
@@ -105,7 +112,7 @@ async function toRelationshipOperations<T extends RelationshipFromIntegration>(
   return persister.processRelationships(oldRelationships, relationships);
 }
 
-
+/*
   async function toMappedRelationshipOperations<
     T extends MappedRelationshipFromIntegration
   >(
@@ -117,4 +124,4 @@ async function toRelationshipOperations<T extends RelationshipFromIntegration>(
     const oldRelationships = await graph.findRelationshipsByType(type);
     return persister.processRelationships(oldRelationships, relationships);
   }
-  
+  */
