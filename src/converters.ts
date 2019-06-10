@@ -1,35 +1,29 @@
-
-
-import {
-  RelationshipDirection,
-} from "@jupiterone/jupiter-managed-integration-sdk";
-
+import { RelationshipDirection } from "@jupiterone/jupiter-managed-integration-sdk";
 
 import {
   SNYK_CODEREPO_ENTITY_TYPE,
   SNYK_CODEREPO_FINDING_RELATIONSHIP_TYPE,
-  SNYK_SERVICE_CODEREPO_RELATIONSHIP_TYPE,
+  SNYK_CVE_ENTITY_TYPE,
+  SNYK_CWE_ENTITY_TYPE,
   SNYK_FINDING_CVE_RELATIONSHIP_TYPE,
   SNYK_FINDING_CWE_RELATIONSHIP_TYPE,
-  SNYK_CVE_ENTITY_TYPE,
   SNYK_FINDING_ENTITY_TYPE,
-  SNYK_CWE_ENTITY_TYPE
+  SNYK_SERVICE_CODEREPO_RELATIONSHIP_TYPE,
 } from "./constants";
 
 import {
   CodeRepoEntity,
   CodeRepoFindingRelationship,
-  ServiceCodeRepoRelationship,
-  FindingVulnerabilityRelationship,
-  FindingCWERelationship,
-  ServiceEntity,
-  FindingEntity,
   CVEEntity,
-  CWEEntity
+  CWEEntity,
+  FindingCWERelationship,
+  FindingEntity,
+  FindingVulnerabilityRelationship,
+  ServiceCodeRepoRelationship,
+  ServiceEntity,
 } from "./types";
 
 const cveLink = "https://nvd.nist.gov/vuln/detail/";
-
 
 export interface Vulnerability {
   id: string;
@@ -64,7 +58,7 @@ export interface Patch {
   urls: string[];
   version: string;
   comments: string[];
-  modificationTime: Date; // string
+  modificationTime: Date;
 }
 
 export interface Project {
@@ -97,13 +91,11 @@ export function toCodeRepoEntity(project: Project): CodeRepoEntity {
     low_vulnerabilities: project.issueCountsBySeverity.low,
     medium_vulnerabilities: project.issueCountsBySeverity.medium,
     high_vulnerabilities: project.issueCountsBySeverity.high,
-    origin: project.origin
+    origin: project.origin,
   };
 }
 
-export function toFindingEntity(
-  vuln: Vulnerability,
-): FindingEntity {
+export function toFindingEntity(vuln: Vulnerability): FindingEntity {
   return {
     _class: "Finding",
     _key: `snyk-project-finding-${vuln.id}`,
@@ -161,8 +153,6 @@ function getTime(time: Date | string | undefined | null): number | undefined {
   return time ? new Date(time).getTime() : undefined;
 }
 
-
-
 export function toCVEEntities(vuln: Vulnerability): CVEEntity[] {
   const cveEntities: CVEEntity[] = [];
 
@@ -184,14 +174,15 @@ export function toCVEEntities(vuln: Vulnerability): CVEEntity[] {
   return cveEntities;
 }
 
-
 export function toCWEEntities(vuln: Vulnerability): CWEEntity[] {
   const cweEntities: CWEEntity[] = [];
 
   for (const cwe of vuln.identifiers.CWE) {
     const cweLowerCase = cwe.toLowerCase();
     const cweUpperCase = cwe.toUpperCase();
-    const link = `https://capec.mitre.org/data/definitions/${cwe.split("-")[1]}.html`;
+    const link = `https://capec.mitre.org/data/definitions/${
+      cwe.split("-")[1]
+    }.html`;
     cweEntities.push({
       _class: "Weakness",
       _key: cweLowerCase,
@@ -206,15 +197,9 @@ export function toCWEEntities(vuln: Vulnerability): CWEEntity[] {
   return cweEntities;
 }
 
-
-
-
-
-
-
 export function toFindingVulnerabilityRelationship(
   finding: FindingEntity,
-  cve: CVEEntity
+  cve: CVEEntity,
 ): FindingVulnerabilityRelationship {
   return {
     _key: `${finding._key}|is|${cve._key}`,
@@ -224,16 +209,15 @@ export function toFindingVulnerabilityRelationship(
       sourceEntityKey: finding._key,
       relationshipDirection: RelationshipDirection.FORWARD,
       targetFilterKeys: [["_type", "_key"]],
-      targetEntity: { ...cve }
+      targetEntity: { ...cve },
     },
     displayName: "IS",
   };
 }
 
-
 export function toFindingWeaknessRelationship(
   finding: FindingEntity,
-  cwe: CWEEntity
+  cwe: CWEEntity,
 ): FindingCWERelationship {
   return {
     _key: `${finding._key}|is|${cwe._key}`,
@@ -243,9 +227,8 @@ export function toFindingWeaknessRelationship(
       sourceEntityKey: finding._key,
       relationshipDirection: RelationshipDirection.FORWARD,
       targetFilterKeys: [["_type", "_key"]],
-      targetEntity: { ...cwe }
+      targetEntity: { ...cwe },
     },
     displayName: "EXPLOITS",
   };
 }
-
