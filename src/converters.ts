@@ -1,5 +1,4 @@
 import { RelationshipDirection } from "@jupiterone/jupiter-managed-integration-sdk";
-
 import {
   SNYK_CODEREPO_ENTITY_TYPE,
   SNYK_CODEREPO_FINDING_RELATIONSHIP_TYPE,
@@ -10,7 +9,6 @@ import {
   SNYK_FINDING_ENTITY_TYPE,
   SNYK_SERVICE_CODEREPO_RELATIONSHIP_TYPE,
 } from "./constants";
-
 import {
   CodeRepoEntity,
   CodeRepoFindingRelationship,
@@ -121,38 +119,6 @@ export function toFindingEntity(vuln: Vulnerability): FindingEntity {
   };
 }
 
-export function toServiceCodeRepoRelationship(
-  service: ServiceEntity,
-  project: CodeRepoEntity,
-): ServiceCodeRepoRelationship {
-  return {
-    _class: "EVALUATES",
-    _key: `${service._key}|evaluates|${project._key}`,
-    _type: SNYK_SERVICE_CODEREPO_RELATIONSHIP_TYPE,
-    _fromEntityKey: service._key,
-    _toEntityKey: project._key,
-    displayName: "EVALUATES",
-  };
-}
-
-export function toCodeRepoFindingRelationship(
-  project: CodeRepoEntity,
-  find: FindingEntity,
-): CodeRepoFindingRelationship {
-  return {
-    _class: "HAS",
-    _key: `${project._key}|has|${find._key}`,
-    _type: SNYK_CODEREPO_FINDING_RELATIONSHIP_TYPE,
-    _fromEntityKey: project._key,
-    _toEntityKey: find._key,
-    displayName: "HAS",
-  };
-}
-
-function getTime(time: Date | string | undefined | null): number | undefined {
-  return time ? new Date(time).getTime() : undefined;
-}
-
 export function toCVEEntities(vuln: Vulnerability): CVEEntity[] {
   const cveEntities: CVEEntity[] = [];
 
@@ -197,6 +163,34 @@ export function toCWEEntities(vuln: Vulnerability): CWEEntity[] {
   return cweEntities;
 }
 
+export function toServiceCodeRepoRelationship(
+  service: ServiceEntity,
+  project: CodeRepoEntity,
+): ServiceCodeRepoRelationship {
+  return {
+    _class: "EVALUATES",
+    _key: `${service._key}|evaluates|${project._key}`,
+    _type: SNYK_SERVICE_CODEREPO_RELATIONSHIP_TYPE,
+    _fromEntityKey: service._key,
+    _toEntityKey: project._key,
+    displayName: "EVALUATES",
+  };
+}
+
+export function toCodeRepoFindingRelationship(
+  project: CodeRepoEntity,
+  find: FindingEntity,
+): CodeRepoFindingRelationship {
+  return {
+    _class: "HAS",
+    _key: `${project._key}|has|${find._key}`,
+    _type: SNYK_CODEREPO_FINDING_RELATIONSHIP_TYPE,
+    _fromEntityKey: project._key,
+    _toEntityKey: find._key,
+    displayName: "HAS",
+  };
+}
+
 export function toFindingVulnerabilityRelationship(
   finding: FindingEntity,
   cve: CVEEntity,
@@ -231,4 +225,8 @@ export function toFindingWeaknessRelationship(
     },
     displayName: "EXPLOITS",
   };
+}
+
+function getTime(time: Date | string | undefined | null): number | undefined {
+  return time ? new Date(time).getTime() : undefined;
 }

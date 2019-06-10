@@ -1,9 +1,14 @@
 import {
   EntityFromIntegration,
-  RelationshipFromIntegration,
   MappedRelationshipFromIntegration,
+  RelationshipFromIntegration,
 } from "@jupiterone/jupiter-managed-integration-sdk";
 import { PersistedObjectAssignable } from "@jupiterone/jupiter-managed-integration-sdk/jupiter-types";
+
+export interface SnykIntegrationInstanceConfig {
+  SnykApiKey: string;
+  SnykOrgId: string;
+}
 
 export interface ServiceEntity extends EntityFromIntegration {
   category: string;
@@ -18,7 +23,7 @@ export interface CodeRepoEntity extends EntityFromIntegration {
   low_vulnerabilities: number;
   medium_vulnerabilities: number;
   high_vulnerabilities: number;
-  origin: string
+  origin: string;
 }
 
 export interface FindingEntity extends EntityFromIntegration {
@@ -43,15 +48,6 @@ export interface FindingEntity extends EntityFromIntegration {
   disclosureTime?: number; // string
 }
 
-export type ServiceCodeRepoRelationship = RelationshipFromIntegration;
-
-export type CodeRepoFindingRelationship = RelationshipFromIntegration;
-
-export interface SnykIntegrationInstanceConfig {
-  SnykApiKey: string;
-  SnykOrgId: string;
-}
-
 export interface CVEEntity extends PersistedObjectAssignable {
   name: string;
   references: string[];
@@ -62,6 +58,9 @@ export interface CWEEntity extends PersistedObjectAssignable {
   references: string[];
 }
 
+export type ServiceCodeRepoRelationship = RelationshipFromIntegration;
+
+export type CodeRepoFindingRelationship = RelationshipFromIntegration;
 
 export type FindingVulnerabilityRelationship = MappedRelationshipFromIntegration;
 

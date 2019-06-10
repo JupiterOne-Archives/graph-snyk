@@ -7,26 +7,24 @@ import {
   RelationshipFromIntegration,
   RelationshipOperation,
 } from "@jupiterone/jupiter-managed-integration-sdk";
-
 import {
   SNYK_CODEREPO_ENTITY_TYPE,
   SNYK_CODEREPO_FINDING_RELATIONSHIP_TYPE,
-  SNYK_SERVICE_CODEREPO_RELATIONSHIP_TYPE,
   SNYK_FINDING_CVE_RELATIONSHIP_TYPE,
   SNYK_FINDING_CWE_RELATIONSHIP_TYPE,
-  SNYK_SERVICE_ENTITY_TYPE,
   SNYK_FINDING_ENTITY_TYPE,
+  SNYK_SERVICE_CODEREPO_RELATIONSHIP_TYPE,
+  SNYK_SERVICE_ENTITY_TYPE,
 } from "./constants";
 import {
   CodeRepoEntity,
   CodeRepoFindingRelationship,
-  ServiceCodeRepoRelationship,
-  FindingVulnerabilityRelationship,
-  ServiceEntity,
-  FindingEntity,
   FindingCWERelationship,
+  FindingEntity,
+  FindingVulnerabilityRelationship,
+  ServiceCodeRepoRelationship,
+  ServiceEntity,
 } from "./types";
-
 
 export async function createOperationsFromFindings(
   context: IntegrationExecutionContext,
@@ -36,7 +34,7 @@ export async function createOperationsFromFindings(
   serviceCodeRepoRelationships: ServiceCodeRepoRelationship[],
   codeRepoFindingRelationships: CodeRepoFindingRelationship[],
   findingVulnerabilityRelationships: FindingVulnerabilityRelationship[],
-  findingWeaknessRelationships: FindingCWERelationship[]
+  findingWeaknessRelationships: FindingCWERelationship[],
 ): Promise<PersisterOperations> {
   const entityOperations = [
     ...(await toEntityOperations(
@@ -53,8 +51,7 @@ export async function createOperationsFromFindings(
       context,
       findingEntities,
       SNYK_FINDING_ENTITY_TYPE,
-    ))
-    
+    )),
   ];
 
   const relationshipOperations = [
@@ -77,8 +74,7 @@ export async function createOperationsFromFindings(
       context,
       findingWeaknessRelationships,
       SNYK_FINDING_CWE_RELATIONSHIP_TYPE,
-    ))
-    
+    )),
   ];
 
   return [entityOperations, relationshipOperations];
@@ -104,8 +100,9 @@ async function toRelationshipOperations<T extends RelationshipFromIntegration>(
   return persister.processRelationships(oldRelationships, relationships);
 }
 
-
-async function toMappedRelationshipOperations<T extends MappedRelationshipFromIntegration>(
+async function toMappedRelationshipOperations<
+  T extends MappedRelationshipFromIntegration
+>(
   context: IntegrationExecutionContext,
   relationships: T[],
   type: string,
@@ -114,4 +111,3 @@ async function toMappedRelationshipOperations<T extends MappedRelationshipFromIn
   const oldRelationships = await graph.findRelationshipsByType(type);
   return persister.processRelationships(oldRelationships, relationships);
 }
-
