@@ -86,9 +86,9 @@ export function toCodeRepoEntity(project: Project): CodeRepoEntity {
     id: project.id,
     created: getTime(project.created),
     totalDependencies: project.totalDependencies,
-    low_vulnerabilities: project.issueCountsBySeverity.low,
-    medium_vulnerabilities: project.issueCountsBySeverity.medium,
-    high_vulnerabilities: project.issueCountsBySeverity.high,
+    low_vulnerabilities: project.issueCountsBySeverity.low || 0,
+    medium_vulnerabilities: project.issueCountsBySeverity.medium || 0,
+    high_vulnerabilities: project.issueCountsBySeverity.high || 0,
     origin: project.origin,
   };
 }
