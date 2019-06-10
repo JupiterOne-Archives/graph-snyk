@@ -43,8 +43,8 @@ export default async function synchronize(
     _type: SNYK_SERVICE_ENTITY_TYPE,
     _class: ["Service", "Assessment"],
     displayName: `Snyk Scanner for ${config.SnykOrgId}`,
-    category: "snyk", // ?
-    handle: config.SnykApiKey, // ?
+    category: "snyk",
+    handle: config.SnykApiKey,
   };
   const serviceCodeRepoRelationships: ServiceCodeRepoRelationship[] = [];
   const codeRepoFindingRelationships: CodeRepoFindingRelationship[] = [];
@@ -70,10 +70,6 @@ export default async function synchronize(
     );
 
     vulnerabilities = (await Snyk.listIssues(config.SnykOrgId, project.id, {})).issues.vulnerabilities;
-    vulnerabilities = vulnerabilities.filter(  // FOR TESTING
-      vuln => vuln.identifiers.CVE.length >= 1, // FOR TESTING
-    ); // FOR TESTING
-  
 
     vulnerabilities.forEach((vulnerability: Vulnerability) => {
       const finding: FindingEntity = toFindingEntity(vulnerability);

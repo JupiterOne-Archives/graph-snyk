@@ -225,7 +225,6 @@ export function toFindingVulnerabilityRelationship(
       relationshipDirection: RelationshipDirection.FORWARD,
       targetFilterKeys: [["_type", "_key"]],
       targetEntity: { ...cve }
-      //skipTargetCreation: false
     },
     displayName: "IS",
   };
@@ -245,7 +244,6 @@ export function toFindingWeaknessRelationship(
       relationshipDirection: RelationshipDirection.FORWARD,
       targetFilterKeys: [["_type", "_key"]],
       targetEntity: { ...cwe }
-      //skipTargetCreation: false
     },
     displayName: "EXPLOITS",
   };
