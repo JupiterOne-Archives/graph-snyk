@@ -11,7 +11,6 @@ const project2 = {
   origin: "something else",
   name: "proj2",
   id: "asdf23asdf",
-  created: new Date("2016-02-02T04:05:06.000Z"),
   totalDependencies: 17,
   issueCountsBySeverity: { low: 17, medium: 0, high: 0 },
 };

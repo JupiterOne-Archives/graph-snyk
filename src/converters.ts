@@ -23,6 +23,10 @@ import {
 
 const cveLink = "https://nvd.nist.gov/vuln/detail/";
 
+function getTime(time: Date | string | undefined | null): number | undefined {
+  return time ? new Date(time).getTime() : undefined;
+}
+
 export interface Vulnerability {
   id: string;
   url: string;
@@ -225,8 +229,4 @@ export function toFindingWeaknessRelationship(
     },
     displayName: "EXPLOITS",
   };
-}
-
-function getTime(time: Date | string | undefined | null): number | undefined {
-  return time ? new Date(time).getTime() : undefined;
 }
