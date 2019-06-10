@@ -1,11 +1,9 @@
 import {
   EntityFromIntegration,
   RelationshipFromIntegration,
-  //MappedRelationshipFromIntegration
-  // GraphClient,
-  // IntegrationExecutionContext,
-  // PersisterClient,
+  MappedRelationshipFromIntegration,
 } from "@jupiterone/jupiter-managed-integration-sdk";
+import { PersistedObjectAssignable } from "@jupiterone/jupiter-managed-integration-sdk/jupiter-types";
 
 export interface ServiceEntity extends EntityFromIntegration {
   category: string;
@@ -54,11 +52,17 @@ export interface SnykIntegrationInstanceConfig {
   SnykOrgId: string;
 }
 
-/*
-export interface VulnerabilityEntity extends EntityFromIntegration {
-  name?: string;
-  description?: string;
+export interface CVEEntity extends PersistedObjectAssignable {
+  name: string;
+  references: string[];
 }
-*/
 
-export type FindingVulnerabilityRelationship = RelationshipFromIntegration; //MappedRelationshipFromIntegration;
+export interface CWEEntity extends PersistedObjectAssignable {
+  name: string;
+  references: string[];
+}
+
+
+export type FindingVulnerabilityRelationship = MappedRelationshipFromIntegration;
+
+export type FindingCWERelationship = MappedRelationshipFromIntegration;

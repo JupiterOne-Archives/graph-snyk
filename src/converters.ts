@@ -1,18 +1,19 @@
 
-/*
-import {
-  //EntityFromIntegration,
-  RelationshipDirection,
-} from "@jupiterone/jupiter-managed-integration-sdk";
-*/
 
 import {
-  // SNYK_SERVICE_ENTITY_TYPE,
+  RelationshipDirection,
+} from "@jupiterone/jupiter-managed-integration-sdk";
+
+
+import {
   SNYK_CODEREPO_ENTITY_TYPE,
   SNYK_CODEREPO_FINDING_RELATIONSHIP_TYPE,
   SNYK_SERVICE_CODEREPO_RELATIONSHIP_TYPE,
-  SNYK_FINDING_VULNERABILITY_RELATIONSHIP_TYPE,
-  SNYK_FINDING_ENTITY_TYPE
+  SNYK_FINDING_CVE_RELATIONSHIP_TYPE,
+  SNYK_FINDING_CWE_RELATIONSHIP_TYPE,
+  SNYK_CVE_ENTITY_TYPE,
+  SNYK_FINDING_ENTITY_TYPE,
+  SNYK_CWE_ENTITY_TYPE
 } from "./constants";
 
 import {
@@ -20,12 +21,15 @@ import {
   CodeRepoFindingRelationship,
   ServiceCodeRepoRelationship,
   FindingVulnerabilityRelationship,
+  FindingCWERelationship,
   ServiceEntity,
-  FindingEntity
-  //VulnerabilityEntity
+  FindingEntity,
+  CVEEntity,
+  CWEEntity
 } from "./types";
 
-import { CVE } from "./util/getCVE";
+const cveLink = "https://nvd.nist.gov/vuln/detail/";
+
 
 export interface Vulnerability {
   id: string;
@@ -39,13 +43,11 @@ export interface Vulnerability {
   severity: string;
   language: string;
   packageManager: string;
-  // semver: thing,
   publicationTime: Date; // string,
   disclosureTime: Date; // string,
   isUpgradable: string;
   isPatchable: string;
   identifiers: Identifier;
-  // credit: string[],
   // CVSSv3: string,
   cvssScore: number;
   patches: Patch[];
@@ -161,155 +163,91 @@ function getTime(time: Date | string | undefined | null): number | undefined {
 
 
 
-export function toVulnerabilityRelationship(
-  finding: FindingEntity,
-  cve: CVE
-): FindingVulnerabilityRelationship {
-  return {
-    _class: "HAS",
-    _key: `${finding._key}|is|${cve._key}`,
-    _type: SNYK_FINDING_VULNERABILITY_RELATIONSHIP_TYPE,
-    _fromEntityKey: finding._key,
-    _toEntityKey: cve._key,
-    displayName: "IS",
-  };
+export function toCVEEntities(vuln: Vulnerability): CVEEntity[] {
+  const cveEntities: CVEEntity[] = [];
+
+  for (const cve of vuln.identifiers.CVE) {
+    const cveLowerCase = cve.toLowerCase();
+    const cveUpperCase = cve.toUpperCase();
+    const link = cveLink + cveUpperCase;
+    cveEntities.push({
+      _class: "Vulnerability",
+      _key: cveLowerCase,
+      _type: SNYK_CVE_ENTITY_TYPE,
+      name: cveUpperCase,
+      displayName: cveUpperCase,
+      references: [link],
+      webLink: link,
+    });
+  }
+
+  return cveEntities;
+}
+
+
+export function toCWEEntities(vuln: Vulnerability): CWEEntity[] {
+  const cweEntities: CWEEntity[] = [];
+
+  for (const cwe of vuln.identifiers.CWE) {
+    const cweLowerCase = cwe.toLowerCase();
+    const cweUpperCase = cwe.toUpperCase();
+    const link = `https://capec.mitre.org/data/definitions/${cwe.split("-")[1]}.html`;
+    cweEntities.push({
+      _class: "Weakness",
+      _key: cweLowerCase,
+      _type: SNYK_CWE_ENTITY_TYPE,
+      name: cweUpperCase,
+      displayName: cweUpperCase,
+      references: [link],
+      webLink: link,
+    });
+  }
+
+  return cweEntities;
 }
 
 
 
 
-/*
-export function toVulnerabilityRelationship(
+
+
+
+export function toFindingVulnerabilityRelationship(
   finding: FindingEntity,
-  cve: CVE
+  cve: CVEEntity
 ): FindingVulnerabilityRelationship {
   return {
     _key: `${finding._key}|is|${cve._key}`,
     _class: "IS",
-    _type: SNYK_FINDING_VULNERABILITY_RELATIONSHIP_TYPE,
+    _type: SNYK_FINDING_CVE_RELATIONSHIP_TYPE,
     _mapping: {
       sourceEntityKey: finding._key,
       relationshipDirection: RelationshipDirection.FORWARD,
       targetFilterKeys: [["_type", "_key"]],
-      targetEntity: {
-        ...cve,
-      }
+      targetEntity: { ...cve }
+      //skipTargetCreation: false
     },
     displayName: "IS",
   };
 }
-*/
 
 
-
-
-
-
-
-
-// ---------------------------------------------------------------------------------------------
-/*
-import { Account, Device, User } from "./ProviderClient";
-import {
-  ACCOUNT_ENTITY_CLASS,
-  ACCOUNT_ENTITY_TYPE,
-  AccountEntity,
-  DEVICE_ENTITY_CLASS,
-  DEVICE_ENTITY_TYPE,
-  DeviceEntity,
-  USER_DEVICE_RELATIONSHIP_CLASS,
-  USER_DEVICE_RELATIONSHIP_TYPE,
-  USER_ENTITY_CLASS,
-  USER_ENTITY_TYPE,
-  UserEntity,
-} from "./types";
-
-export function createAccountEntity(data: Account): AccountEntity {
+export function toFindingWeaknessRelationship(
+  finding: FindingEntity,
+  cwe: CWEEntity
+): FindingCWERelationship {
   return {
-    _class: ACCOUNT_ENTITY_CLASS,
-    _key: `provider-account-${data.id}`,
-    _type: ACCOUNT_ENTITY_TYPE,
-    accountId: data.id,
-    displayName: data.name,
+    _key: `${finding._key}|is|${cwe._key}`,
+    _class: "EXPLOITS",
+    _type: SNYK_FINDING_CWE_RELATIONSHIP_TYPE,
+    _mapping: {
+      sourceEntityKey: finding._key,
+      relationshipDirection: RelationshipDirection.FORWARD,
+      targetFilterKeys: [["_type", "_key"]],
+      targetEntity: { ...cwe }
+      //skipTargetCreation: false
+    },
+    displayName: "EXPLOITS",
   };
 }
 
-export function createUserEntities(data: User[]): UserEntity[] {
-  return data.map(d => ({
-    _class: USER_ENTITY_CLASS,
-    _key: `provider-user-${d.id}`,
-    _type: USER_ENTITY_TYPE,
-    displayName: `${d.firstName} ${d.lastName}`,
-    userId: d.id,
-  }));
-}
-
-export function createDeviceEntities(data: Device[]): DeviceEntity[] {
-  return data.map(d => ({
-    _class: DEVICE_ENTITY_CLASS,
-    _key: `provider-device-id-${d.id}`,
-    _type: DEVICE_ENTITY_TYPE,
-    deviceId: d.id,
-    displayName: d.manufacturer,
-    ownerId: d.ownerId,
-  }));
-}
-
-export function createAccountRelationships(
-  account: AccountEntity,
-  entities: EntityFromIntegration[],
-  type: string,
-) {
-  const relationships = [];
-  for (const entity of entities) {
-    relationships.push(createAccountRelationship(account, entity, type));
-  }
-
-  return relationships;
-}
-
-export function createAccountRelationship(
-  account: AccountEntity,
-  entity: EntityFromIntegration,
-  type: string,
-): RelationshipFromIntegration {
-  return {
-    _class: "HAS",
-    _fromEntityKey: account._key,
-    _key: `${account._key}_has_${entity._key}`,
-    _toEntityKey: entity._key,
-    _type: type,
-  };
-}
-
-export function createUserDeviceRelationships(
-  users: UserEntity[],
-  devices: DeviceEntity[],
-) {
-  const usersById: { [id: string]: UserEntity } = {};
-  for (const user of users) {
-    usersById[user.userId] = user;
-  }
-
-  const relationships = [];
-  for (const device of devices) {
-    const user = usersById[device.ownerId];
-    relationships.push(createUserDeviceRelationship(user, device));
-  }
-
-  return relationships;
-}
-
-function createUserDeviceRelationship(
-  user: UserEntity,
-  device: DeviceEntity,
-): RelationshipFromIntegration {
-  return {
-    _class: USER_DEVICE_RELATIONSHIP_CLASS,
-    _fromEntityKey: user._key,
-    _key: `${user._key}_has_${device._key}`,
-    _toEntityKey: device._key,
-    _type: USER_DEVICE_RELATIONSHIP_TYPE,
-  };
-}
-*/

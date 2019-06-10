@@ -10,10 +10,12 @@ import {
   toCodeRepoEntity,
   toCodeRepoFindingRelationship,
   toServiceCodeRepoRelationship,
-  toVulnerabilityRelationship,
+  toFindingVulnerabilityRelationship,
+  toFindingWeaknessRelationship,
   toFindingEntity,
   Vulnerability,
-  //toVulnerabilityEntity,
+  toCVEEntities,
+  toCWEEntities,
 } from "./converters";
 import { createOperationsFromFindings } from "./createOperations";
 import {
@@ -23,13 +25,10 @@ import {
   ServiceEntity,
   SnykIntegrationInstanceConfig,
   FindingVulnerabilityRelationship,
+  FindingCWERelationship,
   FindingEntity,
 } from "./types";
 
-import { 
-  getCVE, 
-  CVE 
-} from "./util/getCVE";
 
 export default async function synchronize(
   context: IntegrationExecutionContext,
@@ -50,16 +49,15 @@ export default async function synchronize(
   const serviceCodeRepoRelationships: ServiceCodeRepoRelationship[] = [];
   const codeRepoFindingRelationships: CodeRepoFindingRelationship[] = [];
   const findingVulnerabilityRelationships: FindingVulnerabilityRelationship[] = [];
+  const findingCWERelationships: FindingCWERelationship[] = [];
   const serviceEntities: ServiceEntity[] = [service];
   const codeRepoEntities: CodeRepoEntity[] = [];
   const findingEntities: FindingEntity[] = [];
-  const cveEntities: CVE[] = [];
 
   let vulnerabilities: Vulnerability[];
-  let allProjects: Project[] = (await Snyk.listAllProjects(config.SnykOrgId))
-    .projects;
+  let allProjects: Project[] = (await Snyk.listAllProjects(config.SnykOrgId)).projects;
   allProjects = allProjects.filter(
-    project => project.origin === "bitbucket-cloud",
+    project => project.origin === "bitbucket-cloud"
   ); // only use projects imported through bitbucket cloud
 
   allProjects = allProjects.slice(10, 15); // shorten for testing purposes
@@ -82,14 +80,19 @@ export default async function synchronize(
       findingEntities.push(finding);
       codeRepoFindingRelationships.push(toCodeRepoFindingRelationship(proj, finding));
 
-      for (const cve of vulnerability.identifiers.CVE) {
-        const snykCVE: CVE = getCVE(cve);
-        cveEntities.push(snykCVE);
-        findingVulnerabilityRelationships.push(toVulnerabilityRelationship(finding, snykCVE));
+      const cveList = toCVEEntities(vulnerability);
+      const cweList = toCWEEntities(vulnerability);
+
+      for (const cve of cveList) {
+        findingVulnerabilityRelationships.push(toFindingVulnerabilityRelationship(finding, cve));
       }
+
+      for (const cwe of cweList) {
+        findingCWERelationships.push(toFindingWeaknessRelationship(finding, cwe));
+      }
+
     });
   }
-  //console.log(codeRepoEntities.length);
 
   return persister.publishPersisterOperations(
     await createOperationsFromFindings(
@@ -97,10 +100,10 @@ export default async function synchronize(
       serviceEntities,
       codeRepoEntities,
       findingEntities,
-      cveEntities,
       serviceCodeRepoRelationships,
       codeRepoFindingRelationships,
-      findingVulnerabilityRelationships
+      findingVulnerabilityRelationships,
+      findingCWERelationships
     ),
   );
 }

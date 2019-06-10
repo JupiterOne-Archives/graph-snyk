@@ -2,7 +2,7 @@ import {
   EntityFromIntegration,
   EntityOperation,
   IntegrationExecutionContext,
-  //MappedRelationshipFromIntegration,
+  MappedRelationshipFromIntegration,
   PersisterOperations,
   RelationshipFromIntegration,
   RelationshipOperation,
@@ -12,8 +12,8 @@ import {
   SNYK_CODEREPO_ENTITY_TYPE,
   SNYK_CODEREPO_FINDING_RELATIONSHIP_TYPE,
   SNYK_SERVICE_CODEREPO_RELATIONSHIP_TYPE,
-  SNYK_FINDING_VULNERABILITY_RELATIONSHIP_TYPE,
-  SNYK_VULNERABILITY_ENTITY_TYPE,
+  SNYK_FINDING_CVE_RELATIONSHIP_TYPE,
+  SNYK_FINDING_CWE_RELATIONSHIP_TYPE,
   SNYK_SERVICE_ENTITY_TYPE,
   SNYK_FINDING_ENTITY_TYPE,
 } from "./constants";
@@ -24,22 +24,19 @@ import {
   FindingVulnerabilityRelationship,
   ServiceEntity,
   FindingEntity,
+  FindingCWERelationship,
 } from "./types";
 
-import { 
-  //getCVE, 
-  CVE 
-} from "./util/getCVE";
 
 export async function createOperationsFromFindings(
   context: IntegrationExecutionContext,
   serviceEntities: ServiceEntity[],
   codeRepoEntities: CodeRepoEntity[],
   findingEntities: FindingEntity[],
-  cveEntities: CVE[],
   serviceCodeRepoRelationships: ServiceCodeRepoRelationship[],
   codeRepoFindingRelationships: CodeRepoFindingRelationship[],
-  findingVulnerabilityRelationships: FindingVulnerabilityRelationship[]
+  findingVulnerabilityRelationships: FindingVulnerabilityRelationship[],
+  findingWeaknessRelationships: FindingCWERelationship[]
 ): Promise<PersisterOperations> {
   const entityOperations = [
     ...(await toEntityOperations(
@@ -56,12 +53,8 @@ export async function createOperationsFromFindings(
       context,
       findingEntities,
       SNYK_FINDING_ENTITY_TYPE,
-    )),
-    ...(await toEntityOperations(
-      context,
-      cveEntities,
-      SNYK_VULNERABILITY_ENTITY_TYPE,
     ))
+    
   ];
 
   const relationshipOperations = [
@@ -75,18 +68,17 @@ export async function createOperationsFromFindings(
       codeRepoFindingRelationships,
       SNYK_CODEREPO_FINDING_RELATIONSHIP_TYPE,
     )),
-    ...(await toRelationshipOperations(
-      context,
-      findingVulnerabilityRelationships,
-      SNYK_FINDING_VULNERABILITY_RELATIONSHIP_TYPE,
-    ))
-    /*
     ...(await toMappedRelationshipOperations(
       context,
       findingVulnerabilityRelationships,
-      SNYK_FINDING_VULNERABILITY_RELATIONSHIP_TYPE,
+      SNYK_FINDING_CVE_RELATIONSHIP_TYPE,
+    )),
+    ...(await toMappedRelationshipOperations(
+      context,
+      findingWeaknessRelationships,
+      SNYK_FINDING_CWE_RELATIONSHIP_TYPE,
     ))
-    */
+    
   ];
 
   return [entityOperations, relationshipOperations];
@@ -112,16 +104,14 @@ async function toRelationshipOperations<T extends RelationshipFromIntegration>(
   return persister.processRelationships(oldRelationships, relationships);
 }
 
-/*
-  async function toMappedRelationshipOperations<
-    T extends MappedRelationshipFromIntegration
-  >(
-    context: IntegrationExecutionContext,
-    relationships: T[],
-    type: string,
-  ): Promise<RelationshipOperation[]> {
-    const { graph, persister } = context.clients.getClients();
-    const oldRelationships = await graph.findRelationshipsByType(type);
-    return persister.processRelationships(oldRelationships, relationships);
-  }
-  */
+
+async function toMappedRelationshipOperations<T extends MappedRelationshipFromIntegration>(
+  context: IntegrationExecutionContext,
+  relationships: T[],
+  type: string,
+): Promise<RelationshipOperation[]> {
+  const { graph, persister } = context.clients.getClients();
+  const oldRelationships = await graph.findRelationshipsByType(type);
+  return persister.processRelationships(oldRelationships, relationships);
+}
+
