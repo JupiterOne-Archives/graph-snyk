@@ -3,7 +3,7 @@ import {
   IntegrationInstanceConfigError,
   IntegrationValidationContext,
 } from "@jupiterone/jupiter-managed-integration-sdk";
-import SnykClient from "snyk-client";
+import SnykClient from "@jupiterone/snyk-client";
 import { SnykIntegrationInstanceConfig } from "./types";
 
 export default async function invocationValidator(

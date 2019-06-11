@@ -2,7 +2,7 @@ import {
   IntegrationExecutionContext,
   PersisterOperationsResult,
 } from "@jupiterone/jupiter-managed-integration-sdk";
-import SnykClient from "snyk-client";
+import SnykClient from "@jupiterone/snyk-client";
 import { SNYK_SERVICE_ENTITY_TYPE } from "./constants";
 import {
   Project,
@@ -56,7 +56,7 @@ export default async function synchronize(
   allProjects = allProjects.filter(
     project => project.origin === "bitbucket-cloud",
   ); // only use projects imported through bitbucket cloud
-  // allProjects = allProjects.slice(10, 15); // shorten for testing purposes
+  allProjects = allProjects.slice(10, 15); // shorten for testing purposes
 
   for (const project of allProjects) {
     const proj: CodeRepoEntity = toCodeRepoEntity(project);

@@ -1,1 +1,1 @@
-declare module "snyk-client";
+declare module "@jupiterone/snyk-client";

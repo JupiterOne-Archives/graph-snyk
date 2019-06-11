@@ -3,7 +3,7 @@ import mockSnykClient from "../test/mockSnykClient";
 import invocationValidator from "./invocationValidator";
 import { SnykIntegrationInstanceConfig } from "./types";
 
-jest.mock("snyk-client", () => {
+jest.mock("@jupiterone/snyk-client", () => {
   return jest.fn().mockImplementation(() => mockSnykClient);
 });
 

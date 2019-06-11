@@ -844,6 +844,14 @@
   resolved "https://registry.yarnpkg.com/@jupiterone/jupiter-managed-integration-sdk/-/jupiter-managed-integration-sdk-23.2.3.tgz#5f25eaa45d168b7bf250a27cbf4f7bc4224c709d"
   integrity sha512-ySuuDFHvd0CRD5y8dSbBs+I/0jEs6fHj7fgO6VzqrFcWxzIaC+FYL60kyf6GsFiMzdWMkK6WOUKDKvpFD0x0Hw==
 
+"@jupiterone/snyk-client@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@jupiterone/snyk-client/-/snyk-client-1.0.0.tgz#b0d76783636092aed285810bd6d3e4088b765539"
+  integrity sha512-q/XAlfkFp5t/H5QZFaHe1YmOZGPTOzm3fOYtqaGD/LvVpdaXf4EsR4TGovNxbLz9j3oD/PNuZlLYxvlsZbQhYg==
+  dependencies:
+    request "^2.88.0"
+    request-promise-native "^1.0.7"
+
 "@samverschueren/stream-to-observable@^0.3.0":
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/@samverschueren/stream-to-observable/-/stream-to-observable-0.3.0.tgz#ecdf48d532c58ea477acfcab80348424f8d0662f"
@@ -5109,7 +5117,7 @@ request-promise-core@1.1.2:
   dependencies:
     lodash "^4.17.11"
 
-request-promise-native@^1.0.5:
+request-promise-native@^1.0.5, request-promise-native@^1.0.7:
   version "1.0.7"
   resolved "https://registry.yarnpkg.com/request-promise-native/-/request-promise-native-1.0.7.tgz#a49868a624bdea5069f1251d0a836e0d89aa2c59"
   integrity sha512-rIMnbBdgNViL37nZ1b3L/VfPOpSi0TqVDQPAvO6U14lMzOLrt5nilxCQqtDKhZeDiW0/hkCXGoQjhgJd/tCh6w==
@@ -5118,7 +5126,7 @@ request-promise-native@^1.0.5:
     stealthy-require "^1.1.1"
     tough-cookie "^2.3.3"
 
-request@^2.87.0:
+request@^2.87.0, request@^2.88.0:
   version "2.88.0"
   resolved "https://registry.yarnpkg.com/request/-/request-2.88.0.tgz#9c2fca4f7d35b592efe57c7f0a55e81052124fef"
   integrity sha512-NAqBSrijGLZdM0WZNsInLJpkJokL72XYjUpnB0iwsRgxh7dB6COrHnTBNwN0E+lHDAJzu7kLAkDeY08z2/A0hg==
