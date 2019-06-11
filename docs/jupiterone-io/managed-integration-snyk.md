@@ -19,17 +19,19 @@ Snyk account.
 
 The following entity resources are ingested when the integration runs:
 
-| Entity Resource | \_type : \_class of the Entity |  
-| Scanner | `snyk_scan`:`Service` |  
-| Project | `code_repo` : `CodeRepo` |  
-| Finding | `snyk_finding` : `Finding` |
+| Entity Resource | \_type : \_class of the Entity |
+| --------------- | ------------------------------ |
+| Scanner         | `snyk_scan`:`Service`          |
+| Project         | `code_repo` : `CodeRepo`       |
+| Finding         | `snyk_finding` : `Finding`     |
 
 ## Relationships
 
 The following relationships are created/mapped:
 
-| From | Type | To |  
-| `snyk_scan` | **EVALUATES** | `code_repo` |  
-|`code_repo` | **HAS** | `snyk_finding` |
+| From        | Type          | To             |
+| ----------- | ------------- | -------------- |
+| `snyk_scan` | **EVALUATES** | `code_repo`    |
+| `code_repo` | **HAS**       | `snyk_finding` |
 
 [1]: https://jupiterone.io/
