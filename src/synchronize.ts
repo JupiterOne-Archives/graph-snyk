@@ -2,6 +2,7 @@ import {
   IntegrationExecutionContext,
   PersisterOperationsResult,
 } from "@jupiterone/jupiter-managed-integration-sdk";
+import SnykClient from "snyk-client";
 import { SNYK_SERVICE_ENTITY_TYPE } from "./constants";
 import {
   Project,
@@ -26,8 +27,6 @@ import {
   ServiceEntity,
   SnykIntegrationInstanceConfig,
 } from "./types";
-
-import SnykClient from "snyk-client";
 
 export default async function synchronize(
   context: IntegrationExecutionContext,
