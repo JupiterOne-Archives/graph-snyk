@@ -1,9 +1,9 @@
 {
-  "name": "@jupiterone/managed-integration-example",
+  "name": "@jupiterone/managed-integration-snyk",
   "version": "0.1.0",
-  "description": "An example JupiterOne managed integration.",
+  "description": "An example JupiterOne managed integration for Snyk.",
   "main": "dist/index.js",
-  "repository": "https://github.com/JupiterOne/managed-integration-example",
+  "repository": "https://github.com/JupiterOne/managed-integration-snyk",
   "license": "SEE LICENSE IN LICENSE",
   "files": [
     "LICENSE",
