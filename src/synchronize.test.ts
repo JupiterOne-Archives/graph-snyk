@@ -1,7 +1,7 @@
-import mockSnykClient from "../test/mockSnykClient";
-import executionHandler from "./executionHandler";
+import mockSnykClient from "../test/mockSnykClient"; // 1
 
 import { createTestIntegrationExecutionContext } from "@jupiterone/jupiter-managed-integration-sdk";
+import executionHandler from "./executionHandler"; // 2
 
 jest.mock("snyk-client", () => {
   return jest.fn().mockImplementation(() => mockSnykClient);
