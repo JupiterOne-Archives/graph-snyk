@@ -39,12 +39,11 @@ export interface Vulnerability {
   severity: string;
   language: string;
   packageManager: string;
-  publicationTime: Date; // string,
-  disclosureTime: Date; // string,
+  publicationTime: Date;
+  disclosureTime: Date;
   isUpgradable: string;
   isPatchable: string;
   identifiers: Identifier;
-  // CVSSv3: string,
   cvssScore: number;
   patches: Patch[];
   upgradePath: string[];
@@ -66,11 +65,8 @@ export interface Patch {
 export interface Project {
   name: string;
   id: string;
-  created: Date; // string,
+  created: Date;
   origin: string;
-  // type: string,
-  // readOnly: string,
-  // testFrequency: string,
   totalDependencies: number;
   issueCountsBySeverity: IssueCount;
 }

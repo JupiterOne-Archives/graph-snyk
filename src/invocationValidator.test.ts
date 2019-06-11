@@ -1,5 +1,4 @@
 import { createTestIntegrationExecutionContext } from "@jupiterone/jupiter-managed-integration-sdk";
-
 import mockSnykClient from "../test/mockSnykClient";
 import invocationValidator from "./invocationValidator";
 import { SnykIntegrationInstanceConfig } from "./types";
@@ -13,7 +12,6 @@ test("passes with valid config", async () => {
     SnykApiKey: "asdf",
     SnykOrgId: "asdfasdf",
   };
-
   const executionContext = createTestIntegrationExecutionContext({
     instance: {
       config: validConfig,
@@ -28,7 +26,6 @@ test("throws when access is denied", async () => {
     SnykApiKey: "asdf",
     SnykOrgId: "asdfasdf",
   };
-
   const executionContext = createTestIntegrationExecutionContext({
     instance: {
       config: validConfig,
@@ -49,12 +46,12 @@ test("throws error if no api key is provided", async () => {
     SnykApiKey: "",
     SnykOrgId: "asdfasdf",
   };
-
   const executionContext = createTestIntegrationExecutionContext({
     instance: {
       config: invalidConfig,
     },
   });
+
   await expect(invocationValidator(executionContext)).rejects.toThrow(
     "snykApiKey is required",
   );
@@ -65,12 +62,12 @@ test("throws error if no program handle is provided", async () => {
     SnykApiKey: "asdf",
     SnykOrgId: "",
   };
-
   const executionContext = createTestIntegrationExecutionContext({
     instance: {
       config: invalidConfig,
     },
   });
+
   await expect(invocationValidator(executionContext)).rejects.toThrow(
     "snykOrgId is required",
   );
@@ -78,6 +75,7 @@ test("throws error if no program handle is provided", async () => {
 
 test("throws error if config not provided", async () => {
   const executionContext = createTestIntegrationExecutionContext();
+
   await expect(invocationValidator(executionContext)).rejects.toThrow(
     "Missing configuration",
   );

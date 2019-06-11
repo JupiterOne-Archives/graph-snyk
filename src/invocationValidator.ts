@@ -1,11 +1,9 @@
-import SnykClient from "snyk-client";
-
 import {
   IntegrationInstanceAuthenticationError,
   IntegrationInstanceConfigError,
   IntegrationValidationContext,
 } from "@jupiterone/jupiter-managed-integration-sdk";
-
+import SnykClient from "snyk-client";
 import { SnykIntegrationInstanceConfig } from "./types";
 
 export default async function invocationValidator(
@@ -22,6 +20,7 @@ export default async function invocationValidator(
   }
 
   const provider = new SnykClient(config.SnykApiKey);
+
   try {
     await provider.verifyAccess(config.SnykOrgId);
   } catch (err) {

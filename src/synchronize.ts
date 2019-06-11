@@ -1,20 +1,6 @@
 import SnykClient from "snyk-client";
 
-import {
-  IntegrationExecutionContext,
-  PersisterOperationsResult,
-} from "@jupiterone/jupiter-managed-integration-sdk";
-
-import {
-  CodeRepoEntity,
-  CodeRepoFindingRelationship,
-  FindingCWERelationship,
-  FindingEntity,
-  FindingVulnerabilityRelationship,
-  ServiceCodeRepoRelationship,
-  ServiceEntity,
-  SnykIntegrationInstanceConfig,
-} from "./types";
+import { SNYK_SERVICE_ENTITY_TYPE } from "./constants";
 
 import {
   Project,
@@ -31,7 +17,21 @@ import {
 
 import { createOperationsFromFindings } from "./createOperations";
 
-import { SNYK_SERVICE_ENTITY_TYPE } from "./constants";
+import {
+  CodeRepoEntity,
+  CodeRepoFindingRelationship,
+  FindingCWERelationship,
+  FindingEntity,
+  FindingVulnerabilityRelationship,
+  ServiceCodeRepoRelationship,
+  ServiceEntity,
+  SnykIntegrationInstanceConfig,
+} from "./types";
+
+import {
+  IntegrationExecutionContext,
+  PersisterOperationsResult,
+} from "@jupiterone/jupiter-managed-integration-sdk";
 
 export default async function synchronize(
   context: IntegrationExecutionContext,

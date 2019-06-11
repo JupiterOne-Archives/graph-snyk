@@ -18,7 +18,7 @@ export interface ServiceEntity extends EntityFromIntegration {
 export interface CodeRepoEntity extends EntityFromIntegration {
   name: string;
   id: string;
-  created?: number; // string,
+  created?: number;
   totalDependencies: number;
   low_vulnerabilities: number;
   medium_vulnerabilities: number;
@@ -27,7 +27,6 @@ export interface CodeRepoEntity extends EntityFromIntegration {
 }
 
 export interface FindingEntity extends EntityFromIntegration {
-  // patches: Patch[], upgradePath: string[]??
   category: string;
   cvss: number;
   cwe: string[];
@@ -44,8 +43,8 @@ export interface FindingEntity extends EntityFromIntegration {
   packageManager: string;
   isUpgradable: string;
   isPatchable: string;
-  publicationTime?: number; // string,
-  disclosureTime?: number; // string
+  publicationTime?: number;
+  disclosureTime?: number;
 }
 
 export interface CVEEntity extends PersistedObjectAssignable {
