@@ -33,14 +33,14 @@ export default async function synchronize(
 ): Promise<PersisterOperationsResult> {
   const { persister } = context.clients.getClients();
   const config = context.instance.config as SnykIntegrationInstanceConfig;
-  const Snyk = new SnykClient(config.SnykApiKey, config.SnykOrgId);
+  const Snyk = new SnykClient(config.snykApiKey, config.snykOrgId);
   const service: ServiceEntity = {
-    _key: `hackerone:${config.SnykOrgId}`,
+    _key: `hackerone:${config.snykOrgId}`,
     _type: SNYK_SERVICE_ENTITY_TYPE,
     _class: ["Service", "Assessment"],
-    displayName: `Snyk Scanner for ${config.SnykOrgId}`,
+    displayName: `Snyk Scanner for ${config.snykOrgId}`,
     category: "snyk",
-    handle: config.SnykApiKey,
+    handle: config.snykApiKey,
   };
 
   const serviceCodeRepoRelationships: ServiceCodeRepoRelationship[] = [];
@@ -51,11 +51,11 @@ export default async function synchronize(
   const codeRepoEntities: CodeRepoEntity[] = [];
   const findingEntities: FindingEntity[] = [];
 
-  let allProjects: Project[] = (await Snyk.listAllProjects(config.SnykOrgId))
+  let allProjects: Project[] = (await Snyk.listAllProjects(config.snykOrgId))
     .projects;
   allProjects = allProjects.filter(
     project => project.origin === "bitbucket-cloud",
-  ); // only use projects imported through bitbucket cloud
+  );
   // allProjects = allProjects.slice(10, 15); // shorten for testing purposes
 
   for (const project of allProjects) {
@@ -66,7 +66,7 @@ export default async function synchronize(
     );
 
     const vulnerabilities: Vulnerability[] = (await Snyk.listIssues(
-      config.SnykOrgId,
+      config.snykOrgId,
       project.id,
       {},
     )).issues.vulnerabilities;

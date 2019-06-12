@@ -9,8 +9,8 @@ jest.mock("@jupiterone/snyk-client", () => {
 
 test("passes with valid config", async () => {
   const validConfig: SnykIntegrationInstanceConfig = {
-    SnykApiKey: "asdf",
-    SnykOrgId: "asdfasdf",
+    snykApiKey: "asdf",
+    snykOrgId: "asdfasdf",
   };
   const executionContext = createTestIntegrationExecutionContext({
     instance: {
@@ -23,8 +23,8 @@ test("passes with valid config", async () => {
 
 test("throws when access is denied", async () => {
   const validConfig: SnykIntegrationInstanceConfig = {
-    SnykApiKey: "asdf",
-    SnykOrgId: "asdfasdf",
+    snykApiKey: "asdf",
+    snykOrgId: "asdfasdf",
   };
   const executionContext = createTestIntegrationExecutionContext({
     instance: {
@@ -43,8 +43,8 @@ test("throws when access is denied", async () => {
 
 test("throws error if no api key is provided", async () => {
   const invalidConfig: SnykIntegrationInstanceConfig = {
-    SnykApiKey: "",
-    SnykOrgId: "asdfasdf",
+    snykApiKey: "",
+    snykOrgId: "asdfasdf",
   };
   const executionContext = createTestIntegrationExecutionContext({
     instance: {
@@ -59,8 +59,8 @@ test("throws error if no api key is provided", async () => {
 
 test("throws error if no program handle is provided", async () => {
   const invalidConfig: SnykIntegrationInstanceConfig = {
-    SnykApiKey: "asdf",
-    SnykOrgId: "",
+    snykApiKey: "asdf",
+    snykOrgId: "",
   };
   const executionContext = createTestIntegrationExecutionContext({
     instance: {

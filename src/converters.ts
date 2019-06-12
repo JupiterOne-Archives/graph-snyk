@@ -65,7 +65,7 @@ export interface Patch {
 export interface Project {
   name: string;
   id: string;
-  created: Date;
+  createdOn: Date;
   origin: string;
   totalDependencies: number;
   issueCountsBySeverity: IssueCount;
@@ -84,11 +84,11 @@ export function toCodeRepoEntity(project: Project): CodeRepoEntity {
     _type: SNYK_CODEREPO_ENTITY_TYPE,
     name: project.name,
     id: project.id,
-    created: getTime(project.created),
+    createdOn: getTime(project.createdOn),
     totalDependencies: project.totalDependencies,
-    low_vulnerabilities: project.issueCountsBySeverity.low || 0,
-    medium_vulnerabilities: project.issueCountsBySeverity.medium || 0,
-    high_vulnerabilities: project.issueCountsBySeverity.high || 0,
+    lowVulnerabilities: project.issueCountsBySeverity.low || 0,
+    mediumVulnerabilities: project.issueCountsBySeverity.medium || 0,
+    highVulnerabilities: project.issueCountsBySeverity.high || 0,
     origin: project.origin,
   };
 }
@@ -179,14 +179,14 @@ export function toServiceCodeRepoRelationship(
 
 export function toCodeRepoFindingRelationship(
   project: CodeRepoEntity,
-  find: FindingEntity,
+  finding: FindingEntity,
 ): CodeRepoFindingRelationship {
   return {
     _class: "HAS",
-    _key: `${project._key}|has|${find._key}`,
+    _key: `${project._key}|has|${finding._key}`,
     _type: SNYK_CODEREPO_FINDING_RELATIONSHIP_TYPE,
     _fromEntityKey: project._key,
-    _toEntityKey: find._key,
+    _toEntityKey: finding._key,
     displayName: "HAS",
   };
 }

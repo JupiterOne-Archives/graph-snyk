@@ -1,7 +1,7 @@
 # JupiterOne Managed Integration for Snyk
 
-[![Build Status](https://travis-ci.org/JupiterOne/managed-integration-snyk.svg?branch=master)](https://travis-ci.org/JupiterOne/managed-integration-snyk)
-[![Greenkeeper badge](https://badges.greenkeeper.io/JupiterOne/managed-integration-snyk.svg)](https://greenkeeper.io/)
+[![Build Status](https://travis-ci.org/JupiterOne/jupiter-integration-snyk.svg?branch=master)](https://travis-ci.org/JupiterOne/jupiter-integration-snyk)
+[![Greenkeeper badge](https://badges.greenkeeper.io/JupiterOne/jupiter-integration-snyk.svg)](https://greenkeeper.io/)
 
 A JupiterOne integration ingests information such as configurations and other
 metadata about digital and physical assets belonging to an organization. The

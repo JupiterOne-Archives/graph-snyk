@@ -6,8 +6,8 @@ import {
 import { PersistedObjectAssignable } from "@jupiterone/jupiter-managed-integration-sdk/jupiter-types";
 
 export interface SnykIntegrationInstanceConfig {
-  SnykApiKey: string;
-  SnykOrgId: string;
+  snykApiKey: string;
+  snykOrgId: string;
 }
 
 export interface ServiceEntity extends EntityFromIntegration {
@@ -18,11 +18,11 @@ export interface ServiceEntity extends EntityFromIntegration {
 export interface CodeRepoEntity extends EntityFromIntegration {
   name: string;
   id: string;
-  created?: number;
+  createdOn?: number;
   totalDependencies: number;
-  low_vulnerabilities: number;
-  medium_vulnerabilities: number;
-  high_vulnerabilities: number;
+  lowVulnerabilities: number;
+  mediumVulnerabilities: number;
+  highVulnerabilities: number;
   origin: string;
 }
 

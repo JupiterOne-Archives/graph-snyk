@@ -13,16 +13,16 @@ export default async function invocationValidator(
 
   if (!config) {
     throw new IntegrationInstanceConfigError("Missing configuration");
-  } else if (!config.SnykApiKey) {
+  } else if (!config.snykApiKey) {
     throw new IntegrationInstanceConfigError("snykApiKey is required");
-  } else if (!config.SnykOrgId) {
+  } else if (!config.snykOrgId) {
     throw new IntegrationInstanceConfigError("snykOrgId is required");
   }
 
-  const provider = new SnykClient(config.SnykApiKey);
+  const provider = new SnykClient(config.snykApiKey);
 
   try {
-    await provider.verifyAccess(config.SnykOrgId);
+    await provider.verifyAccess(config.snykOrgId);
   } catch (err) {
     throw new IntegrationInstanceAuthenticationError(err);
   }

@@ -106,7 +106,7 @@ const snykIssues = {
   issues: vulnObj,
 };
 
-module.exports = {
+export default {
   listAllProjects: jest.fn().mockResolvedValue(snykProjects),
   listIssues: jest.fn().mockResolvedValue(snykIssues),
   importProject: jest.fn(),
