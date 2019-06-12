@@ -4,7 +4,7 @@ import invocationConfig from "../src/index";
 
 const integrationConfig = {
   snykApiKey: process.env.SNYK_LOCAL_EXECUTION_API_KEY,
-  snykOrgId: process.env.SNYK_ORG_ID,
+  snykOrgId: process.env.SNYK_LOCAL_EXECUTION_ORG_ID,
 };
 
 const invocationArgs = {

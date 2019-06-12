@@ -12,8 +12,16 @@ target Snyk account and providing that credential to JupiterOne.
 The integration is triggered by an event containing the information for a
 specific integration instance.
 
-Snyk provides [detailed instructions on creating an API token][1] within your
-Snyk account.
+The integration instance configurations requires the following two parameters:
+
+- **Snyk API Key** (`snykApiKey`) In Snyk: In the upper right hand corner mouse
+  over your account name, where a drop down will appear. Click on
+  `account settings` and your API token will appear in a hidden form in the
+  middle of the page. Click show and copy your key.
+
+- **Snyk Organisation ID** (`snykOrgId`) In Snyk: Go to the dashboard. Click on
+  `manage organisation` on the far right of the screen across from `Dashboard`.
+  Here, your organisation ID is displayed.
 
 ## Entities
 
