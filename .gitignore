@@ -1,0 +1,7 @@
+node_modules/
+build/
+coverage/
+dist/
+yarn-error.log
+.env
+.vscode/
