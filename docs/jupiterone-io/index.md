@@ -35,5 +35,3 @@ The following relationships are created/mapped:
 | `code_repo`    | **HAS**       | `snyk_finding` |
 | `snyk_finding` | **IS**        | `cve`          |
 | `snyk_finding` | **EXPLOITS**  | `cwe`          |
-
-[1]: https://jupiterone.io/
