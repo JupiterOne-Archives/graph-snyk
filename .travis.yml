@@ -15,7 +15,7 @@ deploy:
   provider: npm
   email: npm@jupiterone.io
   api_key:
-    secure: 'travis encrypt <npm@jupiterone.io API key from Dashlane>'
+    secure: "Lt6GPWjRbQduI57OcWnsbJyH3wZryMZqjXERvMQXEHNVbMUdbTrLrP7PTMnepbbjmqhjwpPXy7kpeMJi787ixCO4ozgQtOKBgiFJTGCU2zBO9lOQ9FGYLQqZ8Jy42e7oL3uxDhahbQ0fzAtvZAr8vcMV93AqdMfosFqLVWgj+WBQYXsSYkwov0z/3OoCOQ/g9TT1rSUV7FVmeOwNJZM6VK41DLc26GGdFR2jGAif5sxhou5u5hZYW+YxdVZOrc5jLs6uqnywVQorWK2IWfDpkuOycfSgdnurcB4OJjVtyAggD0fhPVXe3XjPOxS8azKnUEu6jxaiKvqQeAwpMrNerGqkp/AAzU4MFgA6zAiKoKgF5UWo1+wI128RW8nwTsWsFlB2k96tA15w4N5BrMCI8uR8JHU93Pp20EhZCDcA2AQowk5Ukv7Awc/hpix6c1D6Y0SOjDFvH3rdH1sRualpg4HNK39/Uxs9LLBtyPKYcEUOPlJr6vJQ2myotxJFz6OEZhST/m6nwIOrY9kq9qBVHcVjW04othhezmlg2BWsVmTWOCI/waO0f2BoAVmBFT2My9Eq+LsvROKVPzVE2/sW6CT2uV2BfDz/dtutzQnp9VzQVvOLvHXs7r0d2AOXlj4SQNU9pz71YVW1/pPkod7r6u6xkkqvhmcq1Xz+F8lTHJ0="
   skip_cleanup: true
   on:
     tags: true
