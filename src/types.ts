@@ -16,7 +16,7 @@ export interface ServiceEntity extends EntityFromIntegration {
 }
 
 export interface CodeRepoEntity extends EntityFromIntegration {
-  name: string;
+  displayName: string;
   id: string;
   createdOn?: number;
   totalDependencies: number;
