@@ -146,7 +146,7 @@ export function toCWEEntities(vuln: Vulnerability): CWEEntity[] {
   for (const cwe of vuln.identifiers.CWE) {
     const cweLowerCase = cwe.toLowerCase();
     const cweUpperCase = cwe.toUpperCase();
-    const link = `https://capec.mitre.org/data/definitions/${
+    const link = `https://cwe.mitre.org/data/definitions/${
       cwe.split("-")[1]
     }.html`;
     cweEntities.push({
