@@ -82,7 +82,7 @@ export function toCodeRepoEntity(project: Project): CodeRepoEntity {
     _class: "CodeRepo",
     _key: `snyk-project-${project.name}`,
     _type: SNYK_CODEREPO_ENTITY_TYPE,
-    name: project.name,
+    displayName: project.name,
     id: project.id,
     createdOn: getTime(project.createdOn),
     totalDependencies: project.totalDependencies,
