@@ -839,10 +839,10 @@
     "@types/istanbul-reports" "^1.1.1"
     "@types/yargs" "^12.0.9"
 
-"@jupiterone/jupiter-managed-integration-sdk@^23.0.2":
-  version "23.2.3"
-  resolved "https://registry.yarnpkg.com/@jupiterone/jupiter-managed-integration-sdk/-/jupiter-managed-integration-sdk-23.2.3.tgz#5f25eaa45d168b7bf250a27cbf4f7bc4224c709d"
-  integrity sha512-ySuuDFHvd0CRD5y8dSbBs+I/0jEs6fHj7fgO6VzqrFcWxzIaC+FYL60kyf6GsFiMzdWMkK6WOUKDKvpFD0x0Hw==
+"@jupiterone/jupiter-managed-integration-sdk@^23.0.3":
+  version "23.2.4"
+  resolved "https://registry.yarnpkg.com/@jupiterone/jupiter-managed-integration-sdk/-/jupiter-managed-integration-sdk-23.2.4.tgz#d970dc82b8c650b8e73ade268cea62fba94becda"
+  integrity sha512-uaXDSLIxLtVxe0tkS0TzjHuaSjbm+csSWcU0mJqwT08W5q6eRCr0WY01cj9DdEuTzihvUj2LWWJkRhbTRLT1Aw==
 
 "@jupiterone/snyk-client@^1.0.0":
   version "1.0.0"
