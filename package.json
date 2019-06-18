@@ -28,7 +28,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@jupiterone/jupiter-managed-integration-sdk": "^23.0.3",
+    "@jupiterone/jupiter-managed-integration-sdk": "^24.0.3",
     "@jupiterone/snyk-client": "^1.0.0"
   },
   "devDependencies": {
