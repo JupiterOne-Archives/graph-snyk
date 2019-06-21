@@ -16,6 +16,7 @@ import {
   //toServiceCodeRepoRelationship,
   Vulnerability,
   toServiceFindingRelationship,
+  ////toServiceFindingRelationship,
 } from "./converters";
 import { createOperationsFromFindings } from "./createOperations";
 import {
@@ -37,30 +38,28 @@ export default async function synchronize(
   const config = context.instance.config as SnykIntegrationInstanceConfig;
   const Snyk = new SnykClient(config.snykApiKey, config.snykOrgId);
   const service: ServiceEntity = {
-    _key: `hackerone:${config.snykOrgId}`,
+    _key: `snyk:${config.snykOrgId}`,
     _type: SNYK_SERVICE_ENTITY_TYPE,
     _class: ["Service", "Account"],
     displayName: `Snyk Scanner for Bitbucket Projects`,
   };
 
-  //const serviceCodeRepoRelationships: ServiceCodeRepoRelationship[] = [];
-  //const codeRepoFindingRelationships: CodeRepoFindingRelationship[] = [];
   const serviceFindingRelationships: ServiceFindingRelationship[] = [];
   const findingVulnerabilityRelationships: FindingVulnerabilityRelationship[] = [];
   const findingCWERelationships: FindingCWERelationship[] = [];
   const serviceEntities: ServiceEntity[] = [service];
-  //const codeRepoEntities: CodeRepoEntity[] = [];
   const findingEntities: FindingEntity[] = [];
-  //////const findingIds: String[] = [];
+  let dup: Boolean = false;
 
   let allProjects: Project[] = (await Snyk.listAllProjects(config.snykOrgId))
     .projects;
   allProjects = allProjects.filter(
     project => project.origin === "bitbucket-cloud",
   );
-  allProjects = allProjects.slice(10, 40); // shorten for testing purposes
+  allProjects = allProjects.slice(10, 15); // shorten for testing purposes
 
   for (const project of allProjects) {
+    dup = false;
     let fullProjectName: string = project.name;
     let piecedName: string[] = fullProjectName.split(":");
     let projectName: string = piecedName[0];
@@ -75,10 +74,6 @@ export default async function synchronize(
     
     vulnerabilities.forEach((vulnerability: Vulnerability) => {
       const finding: FindingEntity = toFindingEntity(vulnerability);
-      finding.targets.push(projectName);
-      finding.identifiedInFile = packageFileName
-      findingEntities.push(finding);
-      serviceFindingRelationships.push(toServiceFindingRelationship(service, finding));
 
       const cveList = toCVEEntities(vulnerability);
       for (const cve of cveList) {
@@ -97,46 +92,37 @@ export default async function synchronize(
 
 
 
-      
-      /*
-      if (findingIds.includes(finding.id) == false) {
-        findingIds.push(finding.id);
+      findingEntities.forEach(function(part, index, list) {
+        if ((list[index].id === finding.id) && (list[index].targets.includes(projectName) === false)) {
+          list[index].targets.push(projectName);
+          list[index].identifiedInFile = packageFileName;
+          dup = true;
+        } else if (list[index].id === finding.id) {
+          dup = true;
+        }
+      });
+
+      if (dup === false) {
+        finding.targets.push(projectName);
+        finding.identifiedInFile = packageFileName;
         findingEntities.push(finding);
       }
-
-      for (let findingInList of findingEntities) {
-        if (findingInList.id === finding.id) {
-          finding.targets.push(projectName);
-          console.log(finding.id + ": " + finding.targets.length);
-          finding.identifiedInFile = packageFileName;
-          break;
-        }
-      }
-      */
-
     });
-
-    
-    findingEntities.forEach((finding: FindingEntity) => {
-      if (finding.targets.length > 1) {
-        console.log("GOT EMMMMMM");
-      }
-    });
-    
-    
 
 
   }
+
+  findingEntities.forEach((finding: FindingEntity) => {
+    console.log(finding.targets);
+    serviceFindingRelationships.push(toServiceFindingRelationship(service, finding));
+  });
 
   return persister.publishPersisterOperations(
     await createOperationsFromFindings(
       context,
       serviceEntities,
-      //codeRepoEntities,
       findingEntities,
-      //serviceCodeRepoRelationships,
-      //codeRepoFindingRelationships,
-      serviceFindingRelationships, //
+      serviceFindingRelationships,
       findingVulnerabilityRelationships,
       findingCWERelationships,
     ),
