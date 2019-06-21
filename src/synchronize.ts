@@ -6,29 +6,22 @@ import SnykClient from "@jupiterone/snyk-client";
 import { SNYK_SERVICE_ENTITY_TYPE } from "./constants";
 import {
   Project,
-  //toCodeRepoEntity,
-  //toCodeRepoFindingRelationship,
   toCVEEntities,
   toCWEEntities,
   toFindingEntity,
   toFindingVulnerabilityRelationship,
   toFindingWeaknessRelationship,
-  //toServiceCodeRepoRelationship,
-  Vulnerability,
   toServiceFindingRelationship,
-  ////toServiceFindingRelationship,
+  Vulnerability,
 } from "./converters";
 import { createOperationsFromFindings } from "./createOperations";
 import {
-  //CodeRepoEntity,
-  //CodeRepoFindingRelationship,
   FindingCWERelationship,
   FindingEntity,
   FindingVulnerabilityRelationship,
-  //ServiceCodeRepoRelationship,
   ServiceEntity,
-  SnykIntegrationInstanceConfig,
   ServiceFindingRelationship,
+  SnykIntegrationInstanceConfig,
 } from "./types";
 
 export default async function synchronize(
@@ -41,6 +34,7 @@ export default async function synchronize(
     _key: `snyk:${config.snykOrgId}`,
     _type: SNYK_SERVICE_ENTITY_TYPE,
     _class: ["Service", "Account"],
+    category: "third party vulnerability scanning",
     displayName: `Snyk Scanner for Bitbucket Projects`,
   };
 
@@ -49,7 +43,7 @@ export default async function synchronize(
   const findingCWERelationships: FindingCWERelationship[] = [];
   const serviceEntities: ServiceEntity[] = [service];
   const findingEntities: FindingEntity[] = [];
-  let dup: Boolean = false;
+  let dup: boolean = false;
 
   let allProjects: Project[] = (await Snyk.listAllProjects(config.snykOrgId))
     .projects;
@@ -60,18 +54,17 @@ export default async function synchronize(
 
   for (const project of allProjects) {
     dup = false;
-    let fullProjectName: string = project.name;
-    let piecedName: string[] = fullProjectName.split(":");
-    let projectName: string = piecedName[0];
-    let packageFileName = piecedName[1];
-
+    const fullProjectName: string = project.name;
+    const piecedName: string[] = fullProjectName.split(":");
+    const projectName: string = piecedName[0];
+    const packageFileName = piecedName[1];
 
     const vulnerabilities: Vulnerability[] = (await Snyk.listIssues(
       config.snykOrgId,
       project.id,
       {},
     )).issues.vulnerabilities;
-    
+
     vulnerabilities.forEach((vulnerability: Vulnerability) => {
       const finding: FindingEntity = toFindingEntity(vulnerability);
 
@@ -89,11 +82,11 @@ export default async function synchronize(
         );
       }
 
-
-
-
-      findingEntities.forEach(function(part, index, list) {
-        if ((list[index].id === finding.id) && (list[index].targets.includes(projectName) === false)) {
+      findingEntities.forEach((part, index, list) => {
+        if (
+          list[index].id === finding.id &&
+          list[index].targets.includes(projectName) === false
+        ) {
           list[index].targets.push(projectName);
           list[index].identifiedInFile = packageFileName;
           dup = true;
@@ -108,13 +101,13 @@ export default async function synchronize(
         findingEntities.push(finding);
       }
     });
-
-
   }
 
   findingEntities.forEach((finding: FindingEntity) => {
-    console.log(finding.targets);
-    serviceFindingRelationships.push(toServiceFindingRelationship(service, finding));
+    // console.log(finding.targets);
+    serviceFindingRelationships.push(
+      toServiceFindingRelationship(service, finding),
+    );
   });
 
   return persister.publishPersisterOperations(

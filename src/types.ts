@@ -10,20 +10,9 @@ export interface SnykIntegrationInstanceConfig {
   snykOrgId: string;
 }
 
-export interface ServiceEntity extends EntityFromIntegration {}
-
-/*
-export interface CodeRepoEntity extends EntityFromIntegration {
-  displayName: string;
-  id: string;
-  createdOn?: number;
-  totalDependencies: number;
-  lowVulnerabilities: number;
-  mediumVulnerabilities: number;
-  highVulnerabilities: number;
-  origin: string;
+export interface ServiceEntity extends EntityFromIntegration {
+  category: string;
 }
-*/
 
 export interface FindingEntity extends EntityFromIntegration {
   category: string;
@@ -44,9 +33,9 @@ export interface FindingEntity extends EntityFromIntegration {
   isPatchable: string;
   publicationTime?: number;
   disclosureTime?: number;
-  open: Boolean; //new
-  targets: string[]; //new- list of project names associated
-  identifiedInFile: string; //new -- package.json, requirements.txt, etc
+  open: boolean;
+  targets: string[];
+  identifiedInFile: string;
 }
 
 export interface CVEEntity extends PersistedObjectAssignable {
@@ -59,11 +48,7 @@ export interface CWEEntity extends PersistedObjectAssignable {
   references: string[];
 }
 
-//export type ServiceCodeRepoRelationship = RelationshipFromIntegration;
-
-//export type CodeRepoFindingRelationship = RelationshipFromIntegration;
-
-export type ServiceFindingRelationship = RelationshipFromIntegration; //new
+export type ServiceFindingRelationship = RelationshipFromIntegration;
 
 export type FindingVulnerabilityRelationship = MappedRelationshipFromIntegration;
 
