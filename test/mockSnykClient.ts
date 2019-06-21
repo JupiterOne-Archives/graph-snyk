@@ -96,7 +96,29 @@ const vuln3 = {
   upgradePath: ["none"],
 };
 
-const vulnArr = [vuln1, vuln2, vuln3];
+const vuln4 = {
+  id: "low vuln",
+  url: "apps.snyk.io/vulnerability/lowvuln",
+  title: "Dont worry",
+  type: "vulnerability",
+  description: "this vulnerability wont ruin everything",
+  from: ["package100"],
+  package: "random package",
+  version: "1.1",
+  severity: "low",
+  language: "Python",
+  packageManager: "Pip",
+  publicationTime: new Date("2016-02-27T04:05:06.000Z"),
+  disclosureTime: new Date("2016-02-27T04:05:06.000Z"),
+  isUpgradable: false,
+  isPatchable: false,
+  identifiers: { CVE: [], CWE: ["CWE-200"] },
+  cvssScore: 1.0,
+  patches: [],
+  upgradePath: ["none"],
+};
+
+const vulnArr = [vuln1, vuln2, vuln3, vuln4];
 
 const vulnObj = {
   vulnerabilities: vulnArr,

@@ -50,10 +50,9 @@ export default async function synchronize(
   allProjects = allProjects.filter(
     project => project.origin === "bitbucket-cloud",
   );
-  allProjects = allProjects.slice(10, 15); // shorten for testing purposes
+  // allProjects = allProjects.slice(10, 15); // shorten for testing purposes
 
   for (const project of allProjects) {
-    dup = false;
     const fullProjectName: string = project.name;
     const piecedName: string[] = fullProjectName.split(":");
     const projectName: string = piecedName[0];
@@ -82,6 +81,7 @@ export default async function synchronize(
         );
       }
 
+      dup = false;
       findingEntities.forEach((part, index, list) => {
         if (
           list[index].id === finding.id &&
@@ -104,7 +104,6 @@ export default async function synchronize(
   }
 
   findingEntities.forEach((finding: FindingEntity) => {
-    // console.log(finding.targets);
     serviceFindingRelationships.push(
       toServiceFindingRelationship(service, finding),
     );
