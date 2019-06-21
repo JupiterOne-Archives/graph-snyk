@@ -8,31 +8,34 @@ import {
   RelationshipOperation,
 } from "@jupiterone/jupiter-managed-integration-sdk";
 import {
-  SNYK_CODEREPO_ENTITY_TYPE,
-  SNYK_CODEREPO_FINDING_RELATIONSHIP_TYPE,
+  //SNYK_CODEREPO_ENTITY_TYPE,
+  //SNYK_CODEREPO_FINDING_RELATIONSHIP_TYPE,
   SNYK_FINDING_CVE_RELATIONSHIP_TYPE,
   SNYK_FINDING_CWE_RELATIONSHIP_TYPE,
   SNYK_FINDING_ENTITY_TYPE,
-  SNYK_SERVICE_CODEREPO_RELATIONSHIP_TYPE,
+  //SNYK_SERVICE_CODEREPO_RELATIONSHIP_TYPE,
+  SNYK_SERVICE_SNYK_FINDING_RELATIONSHIP_TYPE, //
   SNYK_SERVICE_ENTITY_TYPE,
 } from "./constants";
 import {
-  CodeRepoEntity,
-  CodeRepoFindingRelationship,
+  //CodeRepoEntity,
+  //CodeRepoFindingRelationship,
   FindingCWERelationship,
   FindingEntity,
   FindingVulnerabilityRelationship,
-  ServiceCodeRepoRelationship,
+  //ServiceCodeRepoRelationship,
+  ServiceFindingRelationship,
   ServiceEntity,
 } from "./types";
 
 export async function createOperationsFromFindings(
   context: IntegrationExecutionContext,
   serviceEntities: ServiceEntity[],
-  codeRepoEntities: CodeRepoEntity[],
+  //codeRepoEntities: CodeRepoEntity[],
   findingEntities: FindingEntity[],
-  serviceCodeRepoRelationships: ServiceCodeRepoRelationship[],
-  codeRepoFindingRelationships: CodeRepoFindingRelationship[],
+  //serviceCodeRepoRelationships: ServiceCodeRepoRelationship[],
+  //codeRepoFindingRelationships: CodeRepoFindingRelationship[],
+  serviceFindingRelationships: ServiceFindingRelationship[], //
   findingVulnerabilityRelationships: FindingVulnerabilityRelationship[],
   findingWeaknessRelationships: FindingCWERelationship[],
 ): Promise<PersisterOperations> {
@@ -42,11 +45,13 @@ export async function createOperationsFromFindings(
       serviceEntities,
       SNYK_SERVICE_ENTITY_TYPE,
     )),
+    /*
     ...(await toEntityOperations(
       context,
       codeRepoEntities,
       SNYK_CODEREPO_ENTITY_TYPE,
     )),
+    */
     ...(await toEntityOperations(
       context,
       findingEntities,
@@ -55,6 +60,7 @@ export async function createOperationsFromFindings(
   ];
 
   const relationshipOperations = [
+    /*
     ...(await toRelationshipOperations(
       context,
       serviceCodeRepoRelationships,
@@ -64,6 +70,12 @@ export async function createOperationsFromFindings(
       context,
       codeRepoFindingRelationships,
       SNYK_CODEREPO_FINDING_RELATIONSHIP_TYPE,
+    )),
+    */
+     ...(await toRelationshipOperations(
+      context,
+      serviceFindingRelationships,
+      SNYK_SERVICE_SNYK_FINDING_RELATIONSHIP_TYPE,
     )),
     ...(await toMappedRelationshipOperations(
       context,
