@@ -844,13 +844,19 @@
   resolved "https://registry.yarnpkg.com/@jupiterone/jupiter-managed-integration-sdk/-/jupiter-managed-integration-sdk-24.0.3.tgz#08341dc8e0fdb5b319e46dec5e60394a52044a75"
   integrity sha512-Qif5J3glncNThi3DM2cMExFYebIEuuqu/bQPFOTdvKwN44WtZBTSXqgNDqnfSnkZpsu7eYmt+8bkup0ke7WX4A==
 
-"@jupiterone/snyk-client@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@jupiterone/snyk-client/-/snyk-client-1.0.0.tgz#b0d76783636092aed285810bd6d3e4088b765539"
-  integrity sha512-q/XAlfkFp5t/H5QZFaHe1YmOZGPTOzm3fOYtqaGD/LvVpdaXf4EsR4TGovNxbLz9j3oD/PNuZlLYxvlsZbQhYg==
+"@jupiterone/snyk-client@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@jupiterone/snyk-client/-/snyk-client-1.0.1.tgz#3ab168701e920c03c7814f5dce1ac6279513569a"
+  integrity sha512-dvy+SfCwFbhao0j65M7irkYudLt9w/bmo0LqB5HOO6WYtFCnw+VwWYy0ZaAK5ykXd8nXWZeh44OePLOK7DJMQQ==
   dependencies:
+    "@lifeomic/attempt" "^3.0.0"
     request "^2.88.0"
     request-promise-native "^1.0.7"
+
+"@lifeomic/attempt@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@lifeomic/attempt/-/attempt-3.0.0.tgz#75fecc204f8b0ac18b5363b4404bb32450f01859"
+  integrity sha512-Ibk4Vfl46dSrhtH5fHsrTA4waAuyP7/qcr3uo0mO70azRc6LWgJILlMy3B1oOvyiN9jQcdqwsThaQkPKLiYKTg==
 
 "@samverschueren/stream-to-observable@^0.3.0":
   version "0.3.0"
