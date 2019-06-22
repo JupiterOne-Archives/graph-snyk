@@ -8,31 +8,25 @@ import {
   RelationshipOperation,
 } from "@jupiterone/jupiter-managed-integration-sdk";
 import {
-  SNYK_CODEREPO_ENTITY_TYPE,
-  SNYK_CODEREPO_FINDING_RELATIONSHIP_TYPE,
   SNYK_FINDING_CVE_RELATIONSHIP_TYPE,
   SNYK_FINDING_CWE_RELATIONSHIP_TYPE,
   SNYK_FINDING_ENTITY_TYPE,
-  SNYK_SERVICE_CODEREPO_RELATIONSHIP_TYPE,
   SNYK_SERVICE_ENTITY_TYPE,
+  SNYK_SERVICE_SNYK_FINDING_RELATIONSHIP_TYPE,
 } from "./constants";
 import {
-  CodeRepoEntity,
-  CodeRepoFindingRelationship,
   FindingCWERelationship,
   FindingEntity,
   FindingVulnerabilityRelationship,
-  ServiceCodeRepoRelationship,
   ServiceEntity,
+  ServiceFindingRelationship,
 } from "./types";
 
 export async function createOperationsFromFindings(
   context: IntegrationExecutionContext,
   serviceEntities: ServiceEntity[],
-  codeRepoEntities: CodeRepoEntity[],
   findingEntities: FindingEntity[],
-  serviceCodeRepoRelationships: ServiceCodeRepoRelationship[],
-  codeRepoFindingRelationships: CodeRepoFindingRelationship[],
+  serviceFindingRelationships: ServiceFindingRelationship[],
   findingVulnerabilityRelationships: FindingVulnerabilityRelationship[],
   findingWeaknessRelationships: FindingCWERelationship[],
 ): Promise<PersisterOperations> {
@@ -44,11 +38,6 @@ export async function createOperationsFromFindings(
     )),
     ...(await toEntityOperations(
       context,
-      codeRepoEntities,
-      SNYK_CODEREPO_ENTITY_TYPE,
-    )),
-    ...(await toEntityOperations(
-      context,
       findingEntities,
       SNYK_FINDING_ENTITY_TYPE,
     )),
@@ -57,13 +46,8 @@ export async function createOperationsFromFindings(
   const relationshipOperations = [
     ...(await toRelationshipOperations(
       context,
-      serviceCodeRepoRelationships,
-      SNYK_SERVICE_CODEREPO_RELATIONSHIP_TYPE,
-    )),
-    ...(await toRelationshipOperations(
-      context,
-      codeRepoFindingRelationships,
-      SNYK_CODEREPO_FINDING_RELATIONSHIP_TYPE,
+      serviceFindingRelationships,
+      SNYK_SERVICE_SNYK_FINDING_RELATIONSHIP_TYPE,
     )),
     ...(await toMappedRelationshipOperations(
       context,

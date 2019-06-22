@@ -1,24 +1,20 @@
 import { RelationshipDirection } from "@jupiterone/jupiter-managed-integration-sdk";
 import {
-  SNYK_CODEREPO_ENTITY_TYPE,
-  SNYK_CODEREPO_FINDING_RELATIONSHIP_TYPE,
   SNYK_CVE_ENTITY_TYPE,
   SNYK_CWE_ENTITY_TYPE,
   SNYK_FINDING_CVE_RELATIONSHIP_TYPE,
   SNYK_FINDING_CWE_RELATIONSHIP_TYPE,
   SNYK_FINDING_ENTITY_TYPE,
-  SNYK_SERVICE_CODEREPO_RELATIONSHIP_TYPE,
+  SNYK_SERVICE_SNYK_FINDING_RELATIONSHIP_TYPE,
 } from "./constants";
 import {
-  CodeRepoEntity,
-  CodeRepoFindingRelationship,
   CVEEntity,
   CWEEntity,
   FindingCWERelationship,
   FindingEntity,
   FindingVulnerabilityRelationship,
-  ServiceCodeRepoRelationship,
   ServiceEntity,
+  ServiceFindingRelationship,
 } from "./types";
 
 const cveLink = "https://nvd.nist.gov/vuln/detail/";
@@ -27,7 +23,7 @@ function getTime(time: Date | string): number {
   return new Date(time).getTime();
 }
 
-export interface Vulnerability {
+export interface SnykVulnIssue {
   id: string;
   url: string;
   title: string;
@@ -77,28 +73,12 @@ export interface IssueCount {
   high: number;
 }
 
-export function toCodeRepoEntity(project: Project): CodeRepoEntity {
-  return {
-    _class: "CodeRepo",
-    _key: `snyk-project-${project.name}`,
-    _type: SNYK_CODEREPO_ENTITY_TYPE,
-    displayName: project.name,
-    id: project.id,
-    createdOn: getTime(project.createdOn),
-    totalDependencies: project.totalDependencies,
-    lowVulnerabilities: project.issueCountsBySeverity.low || 0,
-    mediumVulnerabilities: project.issueCountsBySeverity.medium || 0,
-    highVulnerabilities: project.issueCountsBySeverity.high || 0,
-    origin: project.origin,
-  };
-}
-
-export function toFindingEntity(vuln: Vulnerability): FindingEntity {
+export function toFindingEntity(vuln: SnykVulnIssue): FindingEntity {
   return {
     _class: "Finding",
     _key: `snyk-project-finding-${vuln.id}`,
     _type: SNYK_FINDING_ENTITY_TYPE,
-    category: "snyk scan finding",
+    category: "application",
     cvss: vuln.cvssScore,
     cwe: vuln.identifiers.CWE,
     cve: vuln.identifiers.CVE,
@@ -116,13 +96,16 @@ export function toFindingEntity(vuln: Vulnerability): FindingEntity {
     isPatchable: vuln.isPatchable,
     publicationTime: getTime(vuln.publicationTime),
     disclosureTime: getTime(vuln.disclosureTime),
+    open: true,
+    targets: [],
+    identifiedInFile: "",
   };
 }
 
-export function toCVEEntities(vuln: Vulnerability): CVEEntity[] {
+export function toCVEEntities(finding: FindingEntity): CVEEntity[] {
   const cveEntities: CVEEntity[] = [];
 
-  for (const cve of vuln.identifiers.CVE) {
+  for (const cve of finding.cve) {
     const cveLowerCase = cve.toLowerCase();
     const cveUpperCase = cve.toUpperCase();
     const link = cveLink + cveUpperCase;
@@ -140,10 +123,10 @@ export function toCVEEntities(vuln: Vulnerability): CVEEntity[] {
   return cveEntities;
 }
 
-export function toCWEEntities(vuln: Vulnerability): CWEEntity[] {
+export function toCWEEntities(finding: FindingEntity): CWEEntity[] {
   const cweEntities: CWEEntity[] = [];
 
-  for (const cwe of vuln.identifiers.CWE) {
+  for (const cwe of finding.cwe) {
     const cweLowerCase = cwe.toLowerCase();
     const cweUpperCase = cwe.toUpperCase();
     const link = `https://cwe.mitre.org/data/definitions/${
@@ -163,31 +146,17 @@ export function toCWEEntities(vuln: Vulnerability): CWEEntity[] {
   return cweEntities;
 }
 
-export function toServiceCodeRepoRelationship(
+export function toServiceFindingRelationship(
   service: ServiceEntity,
-  project: CodeRepoEntity,
-): ServiceCodeRepoRelationship {
-  return {
-    _class: "EVALUATES",
-    _key: `${service._key}|evaluates|${project._key}`,
-    _type: SNYK_SERVICE_CODEREPO_RELATIONSHIP_TYPE,
-    _fromEntityKey: service._key,
-    _toEntityKey: project._key,
-    displayName: "EVALUATES",
-  };
-}
-
-export function toCodeRepoFindingRelationship(
-  project: CodeRepoEntity,
   finding: FindingEntity,
-): CodeRepoFindingRelationship {
+): ServiceFindingRelationship {
   return {
-    _class: "HAS",
-    _key: `${project._key}|has|${finding._key}`,
-    _type: SNYK_CODEREPO_FINDING_RELATIONSHIP_TYPE,
-    _fromEntityKey: project._key,
+    _class: "IDENTIFIED",
+    _key: `${service._key}|identified|${finding._key}`,
+    _type: SNYK_SERVICE_SNYK_FINDING_RELATIONSHIP_TYPE,
+    _fromEntityKey: service._key,
     _toEntityKey: finding._key,
-    displayName: "HAS",
+    displayName: "IDENTIFIED",
   };
 }
 
