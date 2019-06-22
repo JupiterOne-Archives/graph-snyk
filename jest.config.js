@@ -5,17 +5,21 @@ module.exports = {
     "^.+\\.ts?$": "ts-jest",
   },
   testMatch: ["<rootDir>/src/**/*.test.{js,ts}"],
-  collectCoverageFrom: ["src/**/*.ts", "!src/index.ts"],
+  collectCoverageFrom: [
+    "src/**/*.ts",
+    "!src/index.ts",
+    "!src/@jupiterone/snyk-client.d.ts",
+  ],
   moduleFileExtensions: [...defaults.moduleFileExtensions, "ts"],
   testEnvironment: "node",
   clearMocks: true,
   collectCoverage: true,
   coverageThreshold: {
     global: {
-      statements: 10,
-      branches: 10,
-      functions: 10,
-      lines: 10,
+      statements: 100,
+      branches: 100,
+      functions: 100,
+      lines: 100,
     },
   },
 };

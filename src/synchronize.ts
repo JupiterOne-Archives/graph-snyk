@@ -6,13 +6,13 @@ import SnykClient from "@jupiterone/snyk-client";
 import { SNYK_SERVICE_ENTITY_TYPE } from "./constants";
 import {
   Project,
+  SnykVulnIssue,
   toCVEEntities,
   toCWEEntities,
   toFindingEntity,
   toFindingVulnerabilityRelationship,
   toFindingWeaknessRelationship,
   toServiceFindingRelationship,
-  Vulnerability,
 } from "./converters";
 import { createOperationsFromFindings } from "./createOperations";
 import {
@@ -30,80 +30,68 @@ export default async function synchronize(
   const { persister } = context.clients.getClients();
   const config = context.instance.config as SnykIntegrationInstanceConfig;
   const Snyk = new SnykClient(config.snykApiKey, config.snykOrgId);
+
   const service: ServiceEntity = {
     _key: `snyk:${config.snykOrgId}`,
     _type: SNYK_SERVICE_ENTITY_TYPE,
     _class: ["Service", "Account"],
-    category: "third party vulnerability scanning",
-    displayName: `Snyk Scanner for Bitbucket Projects`,
+    category: "code dependency scan",
+    displayName: `snyk/${config.snykOrgId}`,
   };
-
   const serviceFindingRelationships: ServiceFindingRelationship[] = [];
+
   const findingVulnerabilityRelationships: FindingVulnerabilityRelationship[] = [];
   const findingCWERelationships: FindingCWERelationship[] = [];
   const serviceEntities: ServiceEntity[] = [service];
   const findingEntities: FindingEntity[] = [];
-  let dup: boolean = false;
 
-  let allProjects: Project[] = (await Snyk.listAllProjects(config.snykOrgId))
+  type FindingsMap = {
+    [key: string]: FindingEntity;
+  };
+
+  const findingsById: FindingsMap = {};
+
+  const allProjects: Project[] = (await Snyk.listAllProjects(config.snykOrgId))
     .projects;
-  allProjects = allProjects.filter(
-    project => project.origin === "bitbucket-cloud",
-  );
-  // allProjects = allProjects.slice(10, 15); // shorten for testing purposes
 
   for (const project of allProjects) {
-    const fullProjectName: string = project.name;
-    const piecedName: string[] = fullProjectName.split(":");
-    const projectName: string = piecedName[0];
-    const packageFileName = piecedName[1];
-
-    const vulnerabilities: Vulnerability[] = (await Snyk.listIssues(
+    const name: string[] = project.name.split(":");
+    const projectName = name[0];
+    const packageName = name[1];
+    const vulnerabilities: SnykVulnIssue[] = (await Snyk.listIssues(
       config.snykOrgId,
       project.id,
       {},
     )).issues.vulnerabilities;
 
-    vulnerabilities.forEach((vulnerability: Vulnerability) => {
-      const finding: FindingEntity = toFindingEntity(vulnerability);
-
-      const cveList = toCVEEntities(vulnerability);
-      for (const cve of cveList) {
-        findingVulnerabilityRelationships.push(
-          toFindingVulnerabilityRelationship(finding, cve),
-        );
-      }
-
-      const cweList = toCWEEntities(vulnerability);
-      for (const cwe of cweList) {
-        findingCWERelationships.push(
-          toFindingWeaknessRelationship(finding, cwe),
-        );
-      }
-
-      dup = false;
-      findingEntities.forEach((part, index, list) => {
-        if (
-          list[index].id === finding.id &&
-          list[index].targets.includes(projectName) === false
-        ) {
-          list[index].targets.push(projectName);
-          list[index].identifiedInFile = packageFileName;
-          dup = true;
-        } else if (list[index].id === finding.id) {
-          dup = true;
+    vulnerabilities.forEach((vulnerability: SnykVulnIssue) => {
+      const finding = toFindingEntity(vulnerability);
+      if (findingsById[finding.id]) {
+        if (!findingsById[finding.id].targets.includes(projectName)) {
+          findingsById[finding.id].targets.push(projectName);
         }
-      });
-
-      if (dup === false) {
+      } else {
         finding.targets.push(projectName);
-        finding.identifiedInFile = packageFileName;
+        finding.identifiedInFile = packageName;
+        findingsById[finding.id] = finding;
         findingEntities.push(finding);
       }
     });
   }
 
   findingEntities.forEach((finding: FindingEntity) => {
+    const cveList = toCVEEntities(finding);
+    for (const cve of cveList) {
+      findingVulnerabilityRelationships.push(
+        toFindingVulnerabilityRelationship(finding, cve),
+      );
+    }
+
+    const cweList = toCWEEntities(finding);
+    for (const cwe of cweList) {
+      findingCWERelationships.push(toFindingWeaknessRelationship(finding, cwe));
+    }
+
     serviceFindingRelationships.push(
       toServiceFindingRelationship(service, finding),
     );

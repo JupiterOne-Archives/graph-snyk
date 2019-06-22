@@ -23,7 +23,7 @@ function getTime(time: Date | string): number {
   return new Date(time).getTime();
 }
 
-export interface Vulnerability {
+export interface SnykVulnIssue {
   id: string;
   url: string;
   title: string;
@@ -73,7 +73,7 @@ export interface IssueCount {
   high: number;
 }
 
-export function toFindingEntity(vuln: Vulnerability): FindingEntity {
+export function toFindingEntity(vuln: SnykVulnIssue): FindingEntity {
   return {
     _class: "Finding",
     _key: `snyk-project-finding-${vuln.id}`,
@@ -102,10 +102,10 @@ export function toFindingEntity(vuln: Vulnerability): FindingEntity {
   };
 }
 
-export function toCVEEntities(vuln: Vulnerability): CVEEntity[] {
+export function toCVEEntities(finding: FindingEntity): CVEEntity[] {
   const cveEntities: CVEEntity[] = [];
 
-  for (const cve of vuln.identifiers.CVE) {
+  for (const cve of finding.cve) {
     const cveLowerCase = cve.toLowerCase();
     const cveUpperCase = cve.toUpperCase();
     const link = cveLink + cveUpperCase;
@@ -123,10 +123,10 @@ export function toCVEEntities(vuln: Vulnerability): CVEEntity[] {
   return cveEntities;
 }
 
-export function toCWEEntities(vuln: Vulnerability): CWEEntity[] {
+export function toCWEEntities(finding: FindingEntity): CWEEntity[] {
   const cweEntities: CWEEntity[] = [];
 
-  for (const cwe of vuln.identifiers.CWE) {
+  for (const cwe of finding.cwe) {
     const cweLowerCase = cwe.toLowerCase();
     const cweUpperCase = cwe.toUpperCase();
     const link = `https://cwe.mitre.org/data/definitions/${
