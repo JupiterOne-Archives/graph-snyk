@@ -844,10 +844,10 @@
   resolved "https://registry.yarnpkg.com/@jupiterone/jupiter-managed-integration-sdk/-/jupiter-managed-integration-sdk-24.0.3.tgz#08341dc8e0fdb5b319e46dec5e60394a52044a75"
   integrity sha512-Qif5J3glncNThi3DM2cMExFYebIEuuqu/bQPFOTdvKwN44WtZBTSXqgNDqnfSnkZpsu7eYmt+8bkup0ke7WX4A==
 
-"@jupiterone/snyk-client@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@jupiterone/snyk-client/-/snyk-client-1.0.1.tgz#3ab168701e920c03c7814f5dce1ac6279513569a"
-  integrity sha512-dvy+SfCwFbhao0j65M7irkYudLt9w/bmo0LqB5HOO6WYtFCnw+VwWYy0ZaAK5ykXd8nXWZeh44OePLOK7DJMQQ==
+"@jupiterone/snyk-client@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@jupiterone/snyk-client/-/snyk-client-1.0.2.tgz#5e8597e8937b3be075a6673df06a9d226a05d975"
+  integrity sha512-gkOW8BCQFAc/1xdQ/Z2LYbnteOGjLEpEgudf4ARFd8Mndh7pCIDaJhxAVW253lgugnD0GpHJJyRZOhzeZ/DB+w==
   dependencies:
     "@lifeomic/attempt" "^3.0.0"
     request "^2.88.0"
