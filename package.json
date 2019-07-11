@@ -1,6 +1,6 @@
 {
   "name": "@jupiterone/jupiter-integration-snyk",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "description": "A JupiterOne managed integration for Snyk.",
   "main": "dist/index.js",
   "repository": "https://github.com/JupiterOne/jupiter-integration-snyk",
