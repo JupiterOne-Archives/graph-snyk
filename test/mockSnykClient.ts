@@ -129,7 +129,7 @@ const license1 = {
   severity: "high",
   language: "python",
   packageManager: "pip",
-  semver: { vulnerable: [Array] },
+  semver: { vulnerable: [] },
 };
 
 const vulnArr = [vuln1, vuln2, vuln3, vuln4];

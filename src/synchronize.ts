@@ -59,29 +59,24 @@ export default async function synchronize(
     const projectName = name[0];
     const packageName = name[1];
 
-    const vulnerabilities: SnykVulnIssue[] = (await Snyk.listIssues(
+    const listIssuesRes = (await Snyk.listIssues(
       config.snykOrgId,
       project.id,
       {},
-    )).issues.vulnerabilities;
+    )).issues;
 
-    const licenses: SnykVulnIssue[] = (await Snyk.listIssues(
-      config.snykOrgId,
-      project.id,
-      {},
-    )).issues.licenses;
-
+    const vulnerabilities: SnykVulnIssue[] = listIssuesRes.vulnerabilities;
     vulnerabilities.forEach((vuln: SnykVulnIssue) => {
       vuln.type = "vulnerability";
     });
 
+    const licenses: SnykVulnIssue[] = listIssuesRes.licenses;
     licenses.forEach((license: SnykVulnIssue) => {
       license.type = "license";
       license.identifiers = { CVE: [], CWE: [] };
     });
 
     const snykIssues: SnykVulnIssue[] = vulnerabilities.concat(licenses);
-
     snykIssues.forEach((issue: SnykVulnIssue) => {
       const finding = toFindingEntity(issue);
       if (findingsById[finding.id]) {
