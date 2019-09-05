@@ -29,7 +29,8 @@
   },
   "dependencies": {
     "@jupiterone/jupiter-managed-integration-sdk": "^24.0.3",
-    "@jupiterone/snyk-client": "^1.0.2"
+    "@jupiterone/snyk-client": "^1.0.2",
+    "set-value": "^3.0.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.2.3",
