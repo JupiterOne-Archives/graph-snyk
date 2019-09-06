@@ -98,6 +98,7 @@ export function toFindingEntity(vuln: SnykVulnIssue): FindingEntity {
     disclosureTime: getTime(vuln.disclosureTime),
     open: true,
     targets: [],
+    type: vuln.type,
     identifiedInFile: "",
   };
 }

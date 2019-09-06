@@ -35,6 +35,7 @@ export interface FindingEntity extends EntityFromIntegration {
   disclosureTime?: number;
   open: boolean;
   targets: string[];
+  type: string;
   identifiedInFile: string;
 }
 
