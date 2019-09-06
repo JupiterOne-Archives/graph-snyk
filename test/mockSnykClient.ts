@@ -118,10 +118,27 @@ const vuln4 = {
   upgradePath: ["none"],
 };
 
+const license1 = {
+  id: "snyk:lic:pip:objectpath:AGPL-3.0",
+  url: "https://snyk.io/vuln/snyk:lic:pip:objectpath:AGPL-3.0",
+  title: "AGPL-3.0 license",
+  type: "license",
+  from: ["objectpath@0.5"],
+  package: "objectpath",
+  version: "0.5",
+  severity: "high",
+  language: "python",
+  packageManager: "pip",
+  semver: { vulnerable: [] },
+};
+
 const vulnArr = [vuln1, vuln2, vuln3, vuln4];
+
+const licenseArr = [license1];
 
 const vulnObj = {
   vulnerabilities: vulnArr,
+  licenses: licenseArr,
 };
 
 const snykIssues = {
