@@ -28,7 +28,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@jupiterone/jupiter-managed-integration-sdk": "^24.0.3",
+    "@jupiterone/jupiter-managed-integration-sdk": "25.0.0-secretsmanager.0",
     "@jupiterone/snyk-client": "^1.0.2"
   },
   "devDependencies": {
@@ -40,6 +40,7 @@
     "@babel/preset-typescript": "^7.1.0",
     "@types/bunyan": "^1.8.5",
     "@types/fs-extra": "^7.0.0",
+    "@types/gremlin": "^3.4.2",
     "@types/jest": "^24.0.0",
     "@types/node": "~8.10.0",
     "bunyan": "^1.8.12",
