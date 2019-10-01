@@ -3,7 +3,7 @@
   "version": "0.2.2",
   "description": "A JupiterOne managed integration for Snyk.",
   "main": "dist/index.js",
-  "repository": "https://github.com/JupiterOne/jupiter-integration-snyk",
+  "repository": "https://github.com/JupiterOne/graph-snyk",
   "license": "SEE LICENSE IN LICENSE",
   "files": [
     "LICENSE",
