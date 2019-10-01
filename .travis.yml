@@ -19,5 +19,5 @@ deploy:
   on:
     tags: true
     branch: master
-    repo: JupiterOne/jupiter-integration-snyk
+    repo: JupiterOne/graph-snyk
     node: '8'
