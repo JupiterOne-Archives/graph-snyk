@@ -7,6 +7,7 @@ module.exports = {
   testMatch: ["<rootDir>/src/**/*.test.{js,ts}"],
   collectCoverageFrom: [
     "src/**/*.ts",
+    "!src/executionHandler.ts",
     "!src/index.ts",
     "!src/@jupiterone/snyk-client.d.ts",
   ],
