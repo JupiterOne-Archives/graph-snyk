@@ -3,7 +3,7 @@ import {
   MappedRelationshipFromIntegration,
   RelationshipFromIntegration,
 } from "@jupiterone/jupiter-managed-integration-sdk";
-import { PersistedObjectAssignable } from "@jupiterone/jupiter-managed-integration-sdk/jupiter-types";
+import { TargetEntityProperties } from "@jupiterone/jupiter-managed-integration-sdk/jupiter-types";
 
 export interface SnykIntegrationInstanceConfig {
   snykApiKey: string;
@@ -39,12 +39,12 @@ export interface FindingEntity extends EntityFromIntegration {
   identifiedInFile: string;
 }
 
-export interface CVEEntity extends PersistedObjectAssignable {
+export interface CVEEntity extends TargetEntityProperties {
   name: string;
   references: string[];
 }
 
-export interface CWEEntity extends PersistedObjectAssignable {
+export interface CWEEntity extends TargetEntityProperties {
   name: string;
   references: string[];
 }

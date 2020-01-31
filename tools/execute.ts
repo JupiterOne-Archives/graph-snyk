@@ -1,6 +1,6 @@
 /* tslint:disable:no-console */
 import { executeIntegrationLocal } from "@jupiterone/jupiter-managed-integration-sdk";
-import invocationConfig from "../src/index";
+import { stepFunctionsInvocationConfig } from "../src/index";
 
 const integrationConfig = {
   snykApiKey: process.env.SNYK_LOCAL_EXECUTION_API_KEY,
@@ -13,7 +13,7 @@ const invocationArgs = {
 
 executeIntegrationLocal(
   integrationConfig,
-  invocationConfig,
+  stepFunctionsInvocationConfig,
   invocationArgs,
 ).catch(err => {
   console.error(err);

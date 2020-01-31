@@ -173,7 +173,7 @@ export function toFindingVulnerabilityRelationship(
       sourceEntityKey: finding._key,
       relationshipDirection: RelationshipDirection.FORWARD,
       targetFilterKeys: [["_type", "_key"]],
-      targetEntity: cve as any,
+      targetEntity: cve,
     },
     displayName: "IS",
   };
@@ -191,7 +191,7 @@ export function toFindingWeaknessRelationship(
       sourceEntityKey: finding._key,
       relationshipDirection: RelationshipDirection.FORWARD,
       targetFilterKeys: [["_type", "_key"]],
-      targetEntity: cwe as any,
+      targetEntity: cwe,
     },
     displayName: "EXPLOITS",
   };

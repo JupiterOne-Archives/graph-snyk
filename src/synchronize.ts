@@ -27,6 +27,7 @@ import {
 export default async function synchronize(
   context: IntegrationExecutionContext,
 ): Promise<PersisterOperationsResult> {
+  const logger = context.logger;
   const { persister } = context.clients.getClients();
   const config = context.instance.config as SnykIntegrationInstanceConfig;
   const Snyk = new SnykClient(config.snykApiKey, config.snykOrgId);
@@ -54,16 +55,32 @@ export default async function synchronize(
   const allProjects: Project[] = (await Snyk.listAllProjects(config.snykOrgId))
     .projects;
 
+  logger.info(
+    {
+      projects: allProjects.length,
+    },
+    "Fetched projects",
+  );
+
   for (const project of allProjects) {
     const name: string[] = project.name.split(":");
     const projectName = name[0];
     const packageName = name[1];
 
-    const listIssuesRes = (await Snyk.listIssues(
-      config.snykOrgId,
-      project.id,
-      {},
-    )).issues;
+    const listIssuesRes = (
+      await Snyk.listIssues(config.snykOrgId, project.id, {})
+    ).issues;
+
+    logger.info(
+      {
+        project: {
+          id: project.id,
+        },
+        vulnerabilities: listIssuesRes.vulnerabilities.length,
+        licenses: listIssuesRes.licenses.length,
+      },
+      "Fetched project issues",
+    );
 
     const vulnerabilities: SnykVulnIssue[] = listIssuesRes.vulnerabilities;
     vulnerabilities.forEach((vuln: SnykVulnIssue) => {
