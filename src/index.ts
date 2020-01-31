@@ -3,9 +3,17 @@ import { IntegrationInvocationConfig } from "@jupiterone/jupiter-managed-integra
 import executionHandler from "./executionHandler";
 import invocationValidator from "./invocationValidator";
 
-const invocationConfig: IntegrationInvocationConfig = {
-  executionHandler,
+export const stepFunctionsInvocationConfig: IntegrationInvocationConfig = {
   invocationValidator,
+  integrationStepPhases: [
+    {
+      steps: [
+        {
+          id: "synchronize",
+          name: "Synchronize",
+          executionHandler,
+        },
+      ],
+    },
+  ],
 };
-
-export default invocationConfig;
