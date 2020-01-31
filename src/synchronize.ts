@@ -67,11 +67,9 @@ export default async function synchronize(
     const projectName = name[0];
     const packageName = name[1];
 
-    const listIssuesRes = (await Snyk.listIssues(
-      config.snykOrgId,
-      project.id,
-      {},
-    )).issues;
+    const listIssuesRes = (
+      await Snyk.listIssues(config.snykOrgId, project.id, {})
+    ).issues;
 
     logger.info(
       {

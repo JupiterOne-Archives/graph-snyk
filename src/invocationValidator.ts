@@ -8,7 +8,7 @@ import { SnykIntegrationInstanceConfig } from "./types";
 
 export default async function invocationValidator(
   context: IntegrationValidationContext,
-) {
+): Promise<void> {
   const config = context.instance.config as SnykIntegrationInstanceConfig;
 
   if (!config) {
