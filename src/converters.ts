@@ -79,7 +79,8 @@ export function toFindingEntity(vuln: SnykVulnIssue): FindingEntity {
     _key: `snyk-project-finding-${vuln.id}`,
     _type: SNYK_FINDING_ENTITY_TYPE,
     category: "application",
-    cvss: vuln.cvssScore,
+    score: vuln.cvssScore,
+    cvssScore: vuln.cvssScore,
     cwe: vuln.identifiers.CWE,
     cve: vuln.identifiers.CVE,
     description: vuln.description,
@@ -117,6 +118,7 @@ export function toCVEEntities(finding: FindingEntity): CVEEntity[] {
       _type: SNYK_CVE_ENTITY_TYPE,
       name: cveUpperCase,
       displayName: cveUpperCase,
+      cvssScore: finding.cvssScore,
       references: [link],
       webLink: link,
     });
