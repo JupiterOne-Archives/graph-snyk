@@ -1,6 +1,6 @@
 {
   "name": "@jupiterone/graph-snyk",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A JupiterOne managed integration for Snyk.",
   "main": "dist/index.js",
   "repository": "https://github.com/JupiterOne/graph-snyk",
