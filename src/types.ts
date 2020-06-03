@@ -16,13 +16,15 @@ export interface ServiceEntity extends EntityFromIntegration {
 
 export interface FindingEntity extends EntityFromIntegration {
   category: string;
-  cvss: number;
+  score: number;
+  cvssScore: number;
   cwe: string[];
   cve: string[];
   description: string;
   displayName: string;
   webLink: string;
   id: string;
+  numericSeverity: number;
   severity: string;
   from: string[];
   package: string;
