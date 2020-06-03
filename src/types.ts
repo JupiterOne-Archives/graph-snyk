@@ -23,6 +23,7 @@ export interface FindingEntity extends EntityFromIntegration {
   displayName: string;
   webLink: string;
   id: string;
+  numericSeverity: number;
   severity: string;
   from: string[];
   package: string;

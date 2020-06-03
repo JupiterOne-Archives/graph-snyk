@@ -86,6 +86,7 @@ export function toFindingEntity(vuln: SnykVulnIssue): FindingEntity {
     displayName: vuln.title,
     webLink: vuln.url,
     id: vuln.id,
+    numericSeverity: vuln.cvssScore,
     severity: vuln.severity,
     from: vuln.from,
     package: vuln.package,
