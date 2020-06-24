@@ -26,8 +26,8 @@ export default async function validateInvocation(
     throw new IntegrationProviderAuthenticationError({
       cause: err,
       endpoint: `https://snyk.io/api/v1/org/${config.snykOrgId}/members`,
-      status: err.status,
-      statusText: err.statusText || err.message,
+      status: err.response?.statusCode || err.statusCode || err.status,
+      statusText: err.response?.statusMessage || err.statusText || err.message,
     });
   }
 }
