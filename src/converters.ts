@@ -1,23 +1,21 @@
-import { RelationshipDirection } from "@jupiterone/jupiter-managed-integration-sdk";
 import {
-  SNYK_CVE_ENTITY_TYPE,
-  SNYK_CWE_ENTITY_TYPE,
-  SNYK_FINDING_CVE_RELATIONSHIP_TYPE,
-  SNYK_FINDING_CWE_RELATIONSHIP_TYPE,
-  SNYK_FINDING_ENTITY_TYPE,
-  SNYK_SERVICE_SNYK_FINDING_RELATIONSHIP_TYPE,
-} from "./constants";
-import {
-  CVEEntity,
-  CWEEntity,
-  FindingCWERelationship,
-  FindingEntity,
-  FindingVulnerabilityRelationship,
-  ServiceEntity,
-  ServiceFindingRelationship,
-} from "./types";
+  Entity,
+  Relationship,
+  RelationshipDirection,
+} from '@jupiterone/integration-sdk-core';
+import { FindingEntity } from './types';
 
-const cveLink = "https://nvd.nist.gov/vuln/detail/";
+export const SNYK_SERVICE_ENTITY_TYPE = 'snyk_account';
+export const SNYK_FINDING_ENTITY_TYPE = 'snyk_finding';
+export const SNYK_CVE_ENTITY_TYPE = 'cve';
+export const SNYK_CWE_ENTITY_TYPE = 'cwe';
+
+export const SNYK_SERVICE_SNYK_FINDING_RELATIONSHIP_TYPE =
+  'snyk_service_identified_snyk_finding';
+export const SNYK_FINDING_CVE_RELATIONSHIP_TYPE = 'snyk_finding_is_cve';
+export const SNYK_FINDING_CWE_RELATIONSHIP_TYPE = 'snyk_finding_exploits_cwe';
+
+const cveLink = 'https://nvd.nist.gov/vuln/detail/';
 
 function getTime(time: Date | string): number {
   return new Date(time).getTime();
@@ -73,12 +71,22 @@ export interface IssueCount {
   high: number;
 }
 
-export function toFindingEntity(vuln: SnykVulnIssue): FindingEntity {
+export function createServiceEntity(orgId: string): Entity {
   return {
-    _class: "Finding",
+    _key: `snyk:${orgId}`,
+    _type: SNYK_SERVICE_ENTITY_TYPE,
+    _class: ['Service', 'Account'],
+    category: 'code dependency scan',
+    displayName: `snyk/${orgId}`,
+  };
+}
+
+export function createFindingEntity(vuln: SnykVulnIssue): FindingEntity {
+  return {
+    _class: 'Finding',
     _key: `snyk-project-finding-${vuln.id}`,
     _type: SNYK_FINDING_ENTITY_TYPE,
-    category: "application",
+    category: 'application',
     score: vuln.cvssScore,
     cvssScore: vuln.cvssScore,
     cwe: vuln.identifiers.CWE,
@@ -101,19 +109,19 @@ export function toFindingEntity(vuln: SnykVulnIssue): FindingEntity {
     open: true,
     targets: [],
     type: vuln.type,
-    identifiedInFile: "",
+    identifiedInFile: '',
   };
 }
 
-export function toCVEEntities(finding: FindingEntity): CVEEntity[] {
-  const cveEntities: CVEEntity[] = [];
+export function createCVEEntities(finding: FindingEntity): Entity[] {
+  const cveEntities: Entity[] = [];
 
   for (const cve of finding.cve) {
     const cveLowerCase = cve.toLowerCase();
     const cveUpperCase = cve.toUpperCase();
     const link = cveLink + cveUpperCase;
     cveEntities.push({
-      _class: "Vulnerability",
+      _class: 'Vulnerability',
       _key: cveLowerCase,
       _type: SNYK_CVE_ENTITY_TYPE,
       name: cveUpperCase,
@@ -127,17 +135,17 @@ export function toCVEEntities(finding: FindingEntity): CVEEntity[] {
   return cveEntities;
 }
 
-export function toCWEEntities(finding: FindingEntity): CWEEntity[] {
-  const cweEntities: CWEEntity[] = [];
+export function createCWEEntities(finding: FindingEntity): Entity[] {
+  const cweEntities: Entity[] = [];
 
   for (const cwe of finding.cwe) {
     const cweLowerCase = cwe.toLowerCase();
     const cweUpperCase = cwe.toUpperCase();
     const link = `https://cwe.mitre.org/data/definitions/${
-      cwe.split("-")[1]
+      cwe.split('-')[1]
     }.html`;
     cweEntities.push({
-      _class: "Weakness",
+      _class: 'Weakness',
       _key: cweLowerCase,
       _type: SNYK_CWE_ENTITY_TYPE,
       name: cweUpperCase,
@@ -150,52 +158,52 @@ export function toCWEEntities(finding: FindingEntity): CWEEntity[] {
   return cweEntities;
 }
 
-export function toServiceFindingRelationship(
-  service: ServiceEntity,
-  finding: FindingEntity,
-): ServiceFindingRelationship {
+export function createServiceFindingRelationship(
+  service: Entity,
+  finding: Entity,
+): Relationship {
   return {
-    _class: "IDENTIFIED",
+    _class: 'IDENTIFIED',
     _key: `${service._key}|identified|${finding._key}`,
     _type: SNYK_SERVICE_SNYK_FINDING_RELATIONSHIP_TYPE,
     _fromEntityKey: service._key,
     _toEntityKey: finding._key,
-    displayName: "IDENTIFIED",
+    displayName: 'IDENTIFIED',
   };
 }
 
-export function toFindingVulnerabilityRelationship(
-  finding: FindingEntity,
-  cve: CVEEntity,
-): FindingVulnerabilityRelationship {
+export function createFindingVulnerabilityRelationship(
+  finding: Entity,
+  cve: Entity,
+): Relationship {
   return {
     _key: `${finding._key}|is|${cve._key}`,
-    _class: "IS",
+    _class: 'IS',
     _type: SNYK_FINDING_CVE_RELATIONSHIP_TYPE,
     _mapping: {
       sourceEntityKey: finding._key,
       relationshipDirection: RelationshipDirection.FORWARD,
-      targetFilterKeys: [["_type", "_key"]],
+      targetFilterKeys: [['_type', '_key']],
       targetEntity: cve,
     },
-    displayName: "IS",
+    displayName: 'IS',
   };
 }
 
-export function toFindingWeaknessRelationship(
-  finding: FindingEntity,
-  cwe: CWEEntity,
-): FindingCWERelationship {
+export function createFindingWeaknessRelationship(
+  finding: Entity,
+  cwe: Entity,
+): Relationship {
   return {
     _key: `${finding._key}|is|${cwe._key}`,
-    _class: "EXPLOITS",
+    _class: 'EXPLOITS',
     _type: SNYK_FINDING_CWE_RELATIONSHIP_TYPE,
     _mapping: {
       sourceEntityKey: finding._key,
       relationshipDirection: RelationshipDirection.FORWARD,
-      targetFilterKeys: [["_type", "_key"]],
+      targetFilterKeys: [['_type', '_key']],
       targetEntity: cwe,
     },
-    displayName: "EXPLOITS",
+    displayName: 'EXPLOITS',
   };
 }
