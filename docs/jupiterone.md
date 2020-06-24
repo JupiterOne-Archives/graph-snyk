@@ -1,4 +1,4 @@
-# Snyk
+# Integration with JupiterOne
 
 ## Overview
 

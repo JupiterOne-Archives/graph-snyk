@@ -1,58 +1,24 @@
 import {
-  EntityFromIntegration,
-  MappedRelationshipFromIntegration,
-  RelationshipFromIntegration,
-} from "@jupiterone/jupiter-managed-integration-sdk";
-import { TargetEntityProperties } from "@jupiterone/jupiter-managed-integration-sdk/jupiter-types";
+  Entity,
+  IntegrationInstanceConfig,
+} from '@jupiterone/integration-sdk-core';
 
-export interface SnykIntegrationInstanceConfig {
-  snykApiKey: string;
+/**
+ * Properties provided by the `IntegrationInstance.config`. This reflects the
+ * same properties defined by `instanceConfigFields`.
+ */
+export interface IntegrationConfig extends IntegrationInstanceConfig {
   snykOrgId: string;
+  snykApiKey: string;
 }
 
-export interface ServiceEntity extends EntityFromIntegration {
-  category: string;
-}
-
-export interface FindingEntity extends EntityFromIntegration {
-  category: string;
-  score: number;
-  cvssScore: number;
-  cwe: string[];
-  cve: string[];
-  description: string;
-  displayName: string;
-  webLink: string;
+/**
+ * A convenience type to communicate properties referenced across
+ * steps/converters.
+ */
+export type FindingEntity = Entity & {
   id: string;
-  numericSeverity: number;
-  severity: string;
-  from: string[];
-  package: string;
-  version: string;
-  language: string;
-  packageManager: string;
-  isUpgradable: string;
-  isPatchable: string;
-  publicationTime?: number;
-  disclosureTime?: number;
-  open: boolean;
+  cve: string[];
+  cwe: string[];
   targets: string[];
-  type: string;
-  identifiedInFile: string;
-}
-
-export interface CVEEntity extends TargetEntityProperties {
-  name: string;
-  references: string[];
-}
-
-export interface CWEEntity extends TargetEntityProperties {
-  name: string;
-  references: string[];
-}
-
-export type ServiceFindingRelationship = RelationshipFromIntegration;
-
-export type FindingVulnerabilityRelationship = MappedRelationshipFromIntegration;
-
-export type FindingCWERelationship = MappedRelationshipFromIntegration;
+};

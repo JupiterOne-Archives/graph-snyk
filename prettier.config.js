@@ -1,4 +1,1 @@
-module.exports = {
-  trailingComma: "all",
-  proseWrap: "always",
-};
+module.exports = require('@jupiterone/integration-sdk-dev-tools/config/prettier');
