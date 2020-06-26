@@ -1,6 +1,6 @@
 {
   "name": "@jupiterone/graph-snyk",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "A JupiterOne integration for Snyk.",
   "license": "MPL-2.0",
   "main": "dist/index.js",
@@ -24,12 +24,12 @@
     "prepack": "yarn build"
   },
   "peerDependencies": {
-    "@jupiterone/integration-sdk-core": "^2.1.1"
+    "@jupiterone/integration-sdk-core": "^2.2.0"
   },
   "devDependencies": {
-    "@jupiterone/integration-sdk-core": "^2.1.1",
-    "@jupiterone/integration-sdk-dev-tools": "^2.1.1",
-    "@jupiterone/integration-sdk-testing": "^2.1.1",
+    "@jupiterone/integration-sdk-core": "^2.2.0",
+    "@jupiterone/integration-sdk-dev-tools": "^2.2.0",
+    "@jupiterone/integration-sdk-testing": "^2.2.0",
     "ts-node": "^8.10.2"
   },
   "dependencies": {
