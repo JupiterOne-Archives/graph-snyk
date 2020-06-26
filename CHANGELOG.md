@@ -8,9 +8,12 @@ and this project adheres to
 
 ## [Unreleased]
 
+## 2.0.4 - 2020-06-26
+
 ### Fixed
 
 - Removed dupliate CWE/CVE entities.
+- Handle no issues on response error.
 
 ## 2.0.3 - 2020-06-26
 
