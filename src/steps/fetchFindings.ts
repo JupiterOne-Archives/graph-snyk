@@ -1,12 +1,13 @@
 import {
+  Entity,
   IntegrationStep,
   IntegrationStepExecutionContext,
 } from '@jupiterone/integration-sdk-core';
 import SnykClient from '@jupiterone/snyk-client';
 
 import {
-  createCVEEntities,
-  createCWEEntities,
+  createCVEEntity,
+  createCWEEntity,
   createFindingEntity,
   createFindingVulnerabilityRelationship,
   createFindingWeaknessRelationship,
@@ -16,10 +17,6 @@ import {
   SnykVulnIssue,
 } from '../converters';
 import { FindingEntity, IntegrationConfig } from '../types';
-
-type FindingsMap = {
-  [key: string]: FindingEntity;
-};
 
 const step: IntegrationStep<IntegrationConfig> = {
   id: 'fetch-findings',
@@ -39,9 +36,12 @@ const step: IntegrationStep<IntegrationConfig> = {
     logger,
   }: IntegrationStepExecutionContext<IntegrationConfig>) {
     const config = instance.config;
-    const findingsById: FindingsMap = {};
-
     const snyk = new SnykClient(config.snykApiKey, config.snykOrgId);
+
+    const findingEntities: { [key: string]: FindingEntity } = {};
+    const cveEntities: { [cve: string]: Entity } = {};
+    const cweEntities: { [cwe: string]: Entity } = {};
+
     const allProjects: Project[] = (
       await snyk.listAllProjects(config.snykOrgId)
     ).projects;
@@ -90,28 +90,34 @@ const step: IntegrationStep<IntegrationConfig> = {
       const snykIssues: SnykVulnIssue[] = vulnerabilities.concat(licenses);
       for (const issue of snykIssues) {
         const finding = createFindingEntity(issue);
-        if (findingsById[finding.id]) {
-          if (!findingsById[finding.id].targets.includes(projectName)) {
-            findingsById[finding.id].targets.push(projectName);
+        if (findingEntities[finding.id]) {
+          if (!findingEntities[finding.id].targets.includes(projectName)) {
+            findingEntities[finding.id].targets.push(projectName);
           }
         } else {
           finding.targets.push(projectName);
           finding.identifiedInFile = packageName;
-          findingsById[finding.id] = finding;
+          findingEntities[finding.id] = finding;
 
-          const cveList = createCVEEntities(finding);
-          for (const cve of cveList) {
-            await jobState.addEntity(cve);
+          for (const cve of finding.cve) {
+            let cveEntity = cveEntities[cve];
+            if (!cveEntity) {
+              cveEntity = createCVEEntity(cve, issue.cvssScore);
+              cveEntities[cve] = cveEntity;
+            }
             await jobState.addRelationship(
-              createFindingVulnerabilityRelationship(finding, cve),
+              createFindingVulnerabilityRelationship(finding, cveEntity),
             );
           }
 
-          const cweList = createCWEEntities(finding);
-          for (const cwe of cweList) {
-            await jobState.addEntity(cwe);
+          for (const cwe of finding.cwe) {
+            let cweEntity = cweEntities[cwe];
+            if (!cweEntity) {
+              cweEntity = createCWEEntity(cwe);
+              cweEntities[cwe] = cweEntity;
+            }
             await jobState.addRelationship(
-              createFindingWeaknessRelationship(finding, cwe),
+              createFindingWeaknessRelationship(finding, cweEntity),
             );
           }
 
@@ -122,7 +128,9 @@ const step: IntegrationStep<IntegrationConfig> = {
       }
     }
 
-    await jobState.addEntities(Object.values(findingsById));
+    await jobState.addEntities(Object.values(cweEntities));
+    await jobState.addEntities(Object.values(cveEntities));
+    await jobState.addEntities(Object.values(findingEntities));
   },
 };
 
