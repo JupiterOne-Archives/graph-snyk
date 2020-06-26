@@ -3,6 +3,7 @@ import {
   Relationship,
   RelationshipDirection,
 } from '@jupiterone/integration-sdk-core';
+
 import { FindingEntity } from './types';
 
 export const SNYK_SERVICE_ENTITY_TYPE = 'snyk_account';
@@ -15,7 +16,7 @@ export const SNYK_SERVICE_SNYK_FINDING_RELATIONSHIP_TYPE =
 export const SNYK_FINDING_CVE_RELATIONSHIP_TYPE = 'snyk_finding_is_cve';
 export const SNYK_FINDING_CWE_RELATIONSHIP_TYPE = 'snyk_finding_exploits_cwe';
 
-const cveLink = 'https://nvd.nist.gov/vuln/detail/';
+const CVE_URL_BASE = 'https://nvd.nist.gov/vuln/detail/';
 
 function getTime(time: Date | string): number {
   return new Date(time).getTime();
@@ -113,49 +114,37 @@ export function createFindingEntity(vuln: SnykVulnIssue): FindingEntity {
   };
 }
 
-export function createCVEEntities(finding: FindingEntity): Entity[] {
-  const cveEntities: Entity[] = [];
-
-  for (const cve of finding.cve) {
-    const cveLowerCase = cve.toLowerCase();
-    const cveUpperCase = cve.toUpperCase();
-    const link = cveLink + cveUpperCase;
-    cveEntities.push({
-      _class: 'Vulnerability',
-      _key: cveLowerCase,
-      _type: SNYK_CVE_ENTITY_TYPE,
-      name: cveUpperCase,
-      displayName: cveUpperCase,
-      cvssScore: finding.cvssScore,
-      references: [link],
-      webLink: link,
-    });
-  }
-
-  return cveEntities;
+export function createCVEEntity(cve: string, cvssScore: number): Entity {
+  const cveLowerCase = cve.toLowerCase();
+  const cveUpperCase = cve.toUpperCase();
+  const link = CVE_URL_BASE + cveUpperCase;
+  return {
+    _class: 'Vulnerability',
+    _key: cveLowerCase,
+    _type: SNYK_CVE_ENTITY_TYPE,
+    name: cveUpperCase,
+    displayName: cveUpperCase,
+    cvssScore: cvssScore,
+    references: [link],
+    webLink: link,
+  };
 }
 
-export function createCWEEntities(finding: FindingEntity): Entity[] {
-  const cweEntities: Entity[] = [];
-
-  for (const cwe of finding.cwe) {
-    const cweLowerCase = cwe.toLowerCase();
-    const cweUpperCase = cwe.toUpperCase();
-    const link = `https://cwe.mitre.org/data/definitions/${
-      cwe.split('-')[1]
-    }.html`;
-    cweEntities.push({
-      _class: 'Weakness',
-      _key: cweLowerCase,
-      _type: SNYK_CWE_ENTITY_TYPE,
-      name: cweUpperCase,
-      displayName: cweUpperCase,
-      references: [link],
-      webLink: link,
-    });
-  }
-
-  return cweEntities;
+export function createCWEEntity(cwe: string): Entity {
+  const cweLowerCase = cwe.toLowerCase();
+  const cweUpperCase = cwe.toUpperCase();
+  const link = `https://cwe.mitre.org/data/definitions/${
+    cwe.split('-')[1]
+  }.html`;
+  return {
+    _class: 'Weakness',
+    _key: cweLowerCase,
+    _type: SNYK_CWE_ENTITY_TYPE,
+    name: cweUpperCase,
+    displayName: cweUpperCase,
+    references: [link],
+    webLink: link,
+  };
 }
 
 export function createServiceFindingRelationship(
