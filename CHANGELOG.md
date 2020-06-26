@@ -8,6 +8,12 @@ and this project adheres to
 
 ## [Unreleased]
 
+## 2.0.3 - 2020-06-26
+
+### Fixed
+
+- Add entities to job state 🤦🏼‍♂️
+
 ## 2.0.2 - 2020-06-24
 
 ### Changed
