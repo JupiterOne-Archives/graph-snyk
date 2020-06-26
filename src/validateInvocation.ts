@@ -1,10 +1,9 @@
 import {
   IntegrationExecutionContext,
-  IntegrationProviderAuthenticationError,
   IntegrationValidationError,
 } from '@jupiterone/integration-sdk-core';
-import SnykClient from '@jupiterone/snyk-client';
 
+import { APIClient } from './client';
 import { IntegrationConfig } from './types';
 
 export default async function validateInvocation(
@@ -18,16 +17,6 @@ export default async function validateInvocation(
     );
   }
 
-  const apiClient = new SnykClient(config.snykApiKey);
-
-  try {
-    await apiClient.verifyAccess(config.snykOrgId);
-  } catch (err) {
-    throw new IntegrationProviderAuthenticationError({
-      cause: err,
-      endpoint: `https://snyk.io/api/v1/org/${config.snykOrgId}/members`,
-      status: err.response?.statusCode || err.statusCode || err.status,
-      statusText: err.response?.statusMessage || err.statusText || err.message,
-    });
-  }
+  const apiClient = new APIClient(context.logger, config);
+  await apiClient.verifyAuthentication();
 }

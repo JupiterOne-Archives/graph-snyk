@@ -3,8 +3,8 @@ import {
   IntegrationStep,
   IntegrationStepExecutionContext,
 } from '@jupiterone/integration-sdk-core';
-import SnykClient from '@jupiterone/snyk-client';
 
+import { APIClient } from '../client';
 import {
   createCVEEntity,
   createCWEEntity,
@@ -13,10 +13,14 @@ import {
   createFindingWeaknessRelationship,
   createServiceEntity,
   createServiceFindingRelationship,
-  Project,
-  SnykVulnIssue,
 } from '../converters';
 import { FindingEntity, IntegrationConfig } from '../types';
+
+type EntityCache = {
+  findingEntities: { [key: string]: FindingEntity };
+  cveEntities: { [cve: string]: Entity };
+  cweEntities: { [cwe: string]: Entity };
+};
 
 const step: IntegrationStep<IntegrationConfig> = {
   id: 'fetch-findings',
@@ -35,75 +39,40 @@ const step: IntegrationStep<IntegrationConfig> = {
     instance,
     logger,
   }: IntegrationStepExecutionContext<IntegrationConfig>) {
-    const config = instance.config;
-    const snyk = new SnykClient(config.snykApiKey, config.snykOrgId);
+    const orgId = instance.config.snykOrgId;
+    const apiClient = new APIClient(logger, instance.config);
 
-    const findingEntities: { [key: string]: FindingEntity } = {};
-    const cveEntities: { [cve: string]: Entity } = {};
-    const cweEntities: { [cwe: string]: Entity } = {};
+    const entityCache: EntityCache = {
+      findingEntities: {},
+      cveEntities: {},
+      cweEntities: {},
+    };
 
-    const allProjects: Project[] = (
-      await snyk.listAllProjects(config.snykOrgId)
-    ).projects;
+    const serviceEntity = createServiceEntity(orgId);
 
-    logger.info(
-      {
-        projects: allProjects.length,
-      },
-      'Fetched projects',
-    );
+    await apiClient.iterateProjects(async (project) => {
+      const [projectName, packageName] = project.name.split(':');
 
-    const service = createServiceEntity(config.snykOrgId);
-    await jobState.addEntity(service);
-
-    for (const project of allProjects) {
-      const name: string[] = project.name.split(':');
-      const projectName = name[0];
-      const packageName = name[1];
-
-      const listIssuesRes = (
-        await snyk.listIssues(config.snykOrgId, project.id, {})
-      ).issues;
-
-      logger.info(
-        {
-          project: {
-            id: project.id,
-          },
-          vulnerabilities: listIssuesRes.vulnerabilities.length,
-          licenses: listIssuesRes.licenses.length,
-        },
-        'Fetched project issues',
-      );
-
-      const vulnerabilities: SnykVulnIssue[] = listIssuesRes.vulnerabilities;
-      vulnerabilities.forEach((vuln: SnykVulnIssue) => {
-        vuln.type = 'vulnerability';
-      });
-
-      const licenses: SnykVulnIssue[] = listIssuesRes.licenses;
-      licenses.forEach((license: SnykVulnIssue) => {
-        license.type = 'license';
-        license.identifiers = { CVE: [], CWE: [] };
-      });
-
-      const snykIssues: SnykVulnIssue[] = vulnerabilities.concat(licenses);
-      for (const issue of snykIssues) {
+      await apiClient.iterateIssues(project, async (issue) => {
         const finding = createFindingEntity(issue);
-        if (findingEntities[finding.id]) {
-          if (!findingEntities[finding.id].targets.includes(projectName)) {
-            findingEntities[finding.id].targets.push(projectName);
+        if (entityCache.findingEntities[finding.id]) {
+          if (
+            !entityCache.findingEntities[finding.id].targets.includes(
+              projectName,
+            )
+          ) {
+            entityCache.findingEntities[finding.id].targets.push(projectName);
           }
         } else {
           finding.targets.push(projectName);
           finding.identifiedInFile = packageName;
-          findingEntities[finding.id] = finding;
+          entityCache.findingEntities[finding.id] = finding;
 
           for (const cve of finding.cve) {
-            let cveEntity = cveEntities[cve];
+            let cveEntity = entityCache.cveEntities[cve];
             if (!cveEntity) {
               cveEntity = createCVEEntity(cve, issue.cvssScore);
-              cveEntities[cve] = cveEntity;
+              entityCache.cveEntities[cve] = cveEntity;
             }
             await jobState.addRelationship(
               createFindingVulnerabilityRelationship(finding, cveEntity),
@@ -111,10 +80,10 @@ const step: IntegrationStep<IntegrationConfig> = {
           }
 
           for (const cwe of finding.cwe) {
-            let cweEntity = cweEntities[cwe];
+            let cweEntity = entityCache.cweEntities[cwe];
             if (!cweEntity) {
               cweEntity = createCWEEntity(cwe);
-              cweEntities[cwe] = cweEntity;
+              entityCache.cweEntities[cwe] = cweEntity;
             }
             await jobState.addRelationship(
               createFindingWeaknessRelationship(finding, cweEntity),
@@ -122,15 +91,16 @@ const step: IntegrationStep<IntegrationConfig> = {
           }
 
           await jobState.addRelationship(
-            createServiceFindingRelationship(service, finding),
+            createServiceFindingRelationship(serviceEntity, finding),
           );
         }
-      }
-    }
+      });
+    });
 
-    await jobState.addEntities(Object.values(cweEntities));
-    await jobState.addEntities(Object.values(cveEntities));
-    await jobState.addEntities(Object.values(findingEntities));
+    await jobState.addEntity(serviceEntity);
+    await jobState.addEntities(Object.values(entityCache.cweEntities));
+    await jobState.addEntities(Object.values(entityCache.cveEntities));
+    await jobState.addEntities(Object.values(entityCache.findingEntities));
   },
 };
 
