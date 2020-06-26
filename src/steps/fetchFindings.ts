@@ -24,7 +24,15 @@ type FindingsMap = {
 const step: IntegrationStep<IntegrationConfig> = {
   id: 'fetch-findings',
   name: 'Fetch findings',
-  types: [],
+  types: [
+    'cve',
+    'cwe',
+    'snyk_account',
+    'snyk_finding',
+    'snyk_finding_is_cve',
+    'snyk_finding_exploits_cwe',
+    'snyk_service_identified_snyk_finding',
+  ],
   async executionHandler({
     jobState,
     instance,
@@ -46,6 +54,7 @@ const step: IntegrationStep<IntegrationConfig> = {
     );
 
     const service = createServiceEntity(config.snykOrgId);
+    await jobState.addEntity(service);
 
     for (const project of allProjects) {
       const name: string[] = project.name.split(':');
@@ -92,6 +101,7 @@ const step: IntegrationStep<IntegrationConfig> = {
 
           const cveList = createCVEEntities(finding);
           for (const cve of cveList) {
+            await jobState.addEntity(cve);
             await jobState.addRelationship(
               createFindingVulnerabilityRelationship(finding, cve),
             );
@@ -99,6 +109,7 @@ const step: IntegrationStep<IntegrationConfig> = {
 
           const cweList = createCWEEntities(finding);
           for (const cwe of cweList) {
+            await jobState.addEntity(cwe);
             await jobState.addRelationship(
               createFindingWeaknessRelationship(finding, cwe),
             );
@@ -110,6 +121,8 @@ const step: IntegrationStep<IntegrationConfig> = {
         }
       }
     }
+
+    await jobState.addEntities(Object.values(findingsById));
   },
 };
 
