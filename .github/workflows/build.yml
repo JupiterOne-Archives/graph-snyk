@@ -35,11 +35,6 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master'
-    strategy:
-      fail-fast: false
-      matrix:
-        node-version: [12.x]
-        os: [ubuntu-latest]
 
     steps:
       - name: Setup Node
