@@ -1,5 +1,25 @@
 # Integration with JupiterOne
 
+## Snyk + JupiterOne Integration Benefits
+
+- Visualize Snyk code repositories and findings in the JupiterOne graph.
+- Monitor Snyk findings within the alerts app.
+- Monitor changes to Snyk code repositories using JupiterOne
+  alerts.
+
+## How it Works
+
+- JupiterOne periodically fetches Snyk repositories and findings to update the graph.
+- Write JupiterOne queries to review and monitor updates to the graph.
+- Configure alerts to reduce the noise of findings.
+- Configure alerts to take action when the JupiterOne graph changes.
+
+## Requirements
+
+- JupiterOne requires the organization id where your Snyk projects reside as well as the 
+API Key configured to authenticate with Snyk.
+- You must have permission in JupiterOne to install new integrations.
+
 ## Overview
 
 JupiterOne provides a managed integration with Snyk. The integration connects
