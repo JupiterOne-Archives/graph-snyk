@@ -32,6 +32,12 @@ export class APIClient {
     try {
       await this.snyk.verifyAccess(this.config.snykOrgId);
     } catch (err) {
+      this.logger.error(
+        {
+          err,
+        },
+        'Error verifying authentication',
+      );
       throw new IntegrationProviderAuthenticationError({
         cause: err,
         endpoint: `https://snyk.io/api/v1/org/${this.config.snykOrgId}/members`,
@@ -52,6 +58,12 @@ export class APIClient {
     try {
       response = await this.snyk.listAllProjects(this.config.snykOrgId);
     } catch (err) {
+      this.logger.error(
+        {
+          err,
+        },
+        'Error listing projects',
+      );
       throw new IntegrationProviderAPIError({
         cause: err,
         endpoint: 'listAllProjects',
@@ -91,6 +103,13 @@ export class APIClient {
         {},
       );
     } catch (err) {
+      this.logger.error(
+        {
+          err,
+          projectId: project.id,
+        },
+        'Error listing issues for project',
+      );
       throw new IntegrationProviderAPIError({
         cause: err,
         endpoint: `listIssues project '${project.id}'`,
