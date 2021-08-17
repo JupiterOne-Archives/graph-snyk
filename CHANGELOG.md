@@ -8,6 +8,10 @@ and this project adheres to
 
 ## [Unreleased]
 
+### Fixed
+
+- Automatically retry `503` errors by bumping `@jupiterone/snyk-client`
+
 ## 2.0.4 - 2020-06-26
 
 ### Fixed

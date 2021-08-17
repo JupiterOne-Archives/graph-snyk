@@ -64,7 +64,7 @@ will load in your configuration from `src/index.ts`.
 ### Development
 
 Please reference the JupiterOne integration
-[development documentation](https://github.com/JupiterOne/sdk/blob/master/docs/integrations/development.md)
+[development documentation](https://github.com/JupiterOne/sdk/blob/main/docs/integrations/development.md)
 for more information on how to use the SDK.
 
 See [docs/development.md](docs/development.md) for details about how to get

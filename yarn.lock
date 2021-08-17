@@ -542,10 +542,10 @@
     "@types/pollyjs__persister" "^2.0.1"
     lodash "^4.17.15"
 
-"@jupiterone/snyk-client@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@jupiterone/snyk-client/-/snyk-client-1.0.2.tgz#5e8597e8937b3be075a6673df06a9d226a05d975"
-  integrity sha512-gkOW8BCQFAc/1xdQ/Z2LYbnteOGjLEpEgudf4ARFd8Mndh7pCIDaJhxAVW253lgugnD0GpHJJyRZOhzeZ/DB+w==
+"@jupiterone/snyk-client@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@jupiterone/snyk-client/-/snyk-client-1.1.0.tgz#22379ba879a201c459dcce3c93be098478bd70a5"
+  integrity sha512-ujIfzv4v0d9b+m2Q5tx83/VWYh2zEn+giWqWHEOpivQsHQm9YhJI4UJ2F3g/+Gjr9hUbv5s5fEKaks+1La3wbQ==
   dependencies:
     "@lifeomic/attempt" "^3.0.0"
     request "^2.88.0"
