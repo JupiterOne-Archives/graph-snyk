@@ -5,8 +5,27 @@ import {
 } from '@jupiterone/integration-sdk-core';
 import SnykClient from '@jupiterone/snyk-client';
 
-import { Project, SnykVulnIssue } from './converters';
+import { Project, SnykVulnIssue } from './types';
 import { IntegrationConfig } from './types';
+
+interface ListProjectsResponse {
+  org: {
+    name: string;
+    id: string;
+  };
+  projects: Project[];
+}
+
+interface ListIssuesResponse {
+  ok: boolean;
+  deprecated: string;
+  issues: {
+    vulnerabilities: SnykVulnIssue[];
+    licenses: SnykVulnIssue[];
+  };
+  dependencyCount: number;
+  packageManager: string;
+}
 
 export type ResourceIteratee<T> = (each: T) => Promise<void> | void;
 
@@ -19,13 +38,13 @@ export type ResourceIteratee<T> = (each: T) => Promise<void> | void;
  * resources.
  */
 export class APIClient {
-  private snyk: any;
+  private snyk: SnykClient;
 
   constructor(
     readonly logger: IntegrationLogger,
     readonly config: IntegrationConfig,
   ) {
-    this.snyk = new SnykClient(config.snykApiKey, config.snykOrgId);
+    this.snyk = new SnykClient(config.snykApiKey);
   }
 
   public async verifyAuthentication(): Promise<void> {
@@ -54,7 +73,7 @@ export class APIClient {
   public async iterateProjects(
     iteratee: ResourceIteratee<Project>,
   ): Promise<void> {
-    let response: any;
+    let response: ListProjectsResponse;
     try {
       response = await this.snyk.listAllProjects(this.config.snykOrgId);
     } catch (err) {
@@ -95,7 +114,7 @@ export class APIClient {
     project: Project,
     iteratee: ResourceIteratee<SnykVulnIssue>,
   ): Promise<void> {
-    let response: any;
+    let response: ListIssuesResponse;
     try {
       response = await this.snyk.listIssues(
         this.config.snykOrgId,

@@ -5,62 +5,22 @@ import {
 } from '@jupiterone/integration-sdk-core';
 import { Entities, Relationships } from './constants';
 
-import { CVEEntity, CWEEntity, FindingEntity } from './types';
+import { CVEEntity, CWEEntity, FindingEntity, SnykVulnIssue } from './types';
+
+export const SNYK_SERVICE_ENTITY_TYPE = 'snyk_account';
+export const SNYK_FINDING_ENTITY_TYPE = 'snyk_finding';
+export const SNYK_CVE_ENTITY_TYPE = 'cve';
+export const SNYK_CWE_ENTITY_TYPE = 'cwe';
+
+export const SNYK_SERVICE_SNYK_FINDING_RELATIONSHIP_TYPE =
+  'snyk_service_identified_snyk_finding';
+export const SNYK_FINDING_CVE_RELATIONSHIP_TYPE = 'snyk_finding_is_cve';
+export const SNYK_FINDING_CWE_RELATIONSHIP_TYPE = 'snyk_finding_exploits_cwe';
 
 const CVE_URL_BASE = 'https://nvd.nist.gov/vuln/detail/';
 
 function getTime(time: Date | string): number {
   return new Date(time).getTime();
-}
-
-export interface SnykVulnIssue {
-  id: string;
-  url: string;
-  title: string;
-  type: string;
-  description: string;
-  from: string[];
-  package: string;
-  version: string;
-  severity: string;
-  language: string;
-  packageManager: string;
-  publicationTime: Date;
-  disclosureTime: Date;
-  isUpgradable: string;
-  isPatchable: string;
-  identifiers: Identifier;
-  cvssScore: number;
-  patches: Patch[];
-  upgradePath: string[];
-}
-
-export interface Identifier {
-  CVE: string[];
-  CWE: string[];
-}
-
-export interface Patch {
-  id: string;
-  urls: string[];
-  version: string;
-  comments: string[];
-  modificationTime: Date;
-}
-
-export interface Project {
-  name: string;
-  id: string;
-  createdOn: Date;
-  origin: string;
-  totalDependencies: number;
-  issueCountsBySeverity: IssueCount;
-}
-
-export interface IssueCount {
-  low: number;
-  medium: number;
-  high: number;
 }
 
 export function createServiceEntity(orgId: string): Entity {

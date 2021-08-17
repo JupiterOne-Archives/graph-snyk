@@ -45,3 +45,53 @@ export interface CWEEntity {
   webLink: string;
   [k: string]: string | string[];
 };
+
+export interface SnykVulnIssue {
+  id: string;
+  url: string;
+  title: string;
+  type: string;
+  description: string;
+  from: string[];
+  package: string;
+  version: string;
+  severity: string;
+  language: string;
+  packageManager: string;
+  publicationTime: Date;
+  disclosureTime: Date;
+  isUpgradable: string;
+  isPatchable: string;
+  identifiers: Identifier;
+  cvssScore: number;
+  patches: Patch[];
+  upgradePath: string[];
+}
+
+interface Identifier {
+  CVE: string[];
+  CWE: string[];
+}
+
+interface Patch {
+  id: string;
+  urls: string[];
+  version: string;
+  comments: string[];
+  modificationTime: Date;
+}
+
+export interface Project {
+  name: string;
+  id: string;
+  createdOn: Date;
+  origin: string;
+  totalDependencies: number;
+  issueCountsBySeverity: IssueCount;
+}
+
+interface IssueCount {
+  low: number;
+  medium: number;
+  high: number;
+}
