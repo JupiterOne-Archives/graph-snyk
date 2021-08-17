@@ -20,7 +20,7 @@
     "test": "jest --passWithNoTests",
     "test:ci": "yarn lint && yarn type-check && yarn test",
     "build": "tsc -p tsconfig.dist.json --declaration",
-    "prepush": "yarn lint && yarn type-check && jest --changedSince master",
+    "prepush": "yarn lint && yarn type-check && jest --changedSince main",
     "prepack": "yarn build"
   },
   "peerDependencies": {
