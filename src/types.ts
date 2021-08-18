@@ -22,3 +22,26 @@ export type FindingEntity = Entity & {
   cwe: string[];
   targets: string[];
 };
+
+export interface CVEEntity {
+  _class: string;
+  _key: string;
+  _type: string;
+  name: string;
+  displayName: string;
+  cvssScore: number;
+  references: string[];
+  webLink: string;
+  [k: string]: string | string[] | number;
+};
+
+export interface CWEEntity {
+  _class: string;
+  _key: string;
+  _type: string;
+  name: string;
+  displayName: string;
+  references: string[];
+  webLink: string;
+  [k: string]: string | string[];
+};

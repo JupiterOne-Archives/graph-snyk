@@ -1,10 +1,10 @@
 import {
-  Entity,
   IntegrationStep,
   IntegrationStepExecutionContext,
 } from '@jupiterone/integration-sdk-core';
 
 import { APIClient } from '../client';
+import { Entities, Relationships } from '../constants';
 import {
   createCVEEntity,
   createCWEEntity,
@@ -14,25 +14,27 @@ import {
   createServiceEntity,
   createServiceFindingRelationship,
 } from '../converters';
-import { FindingEntity, IntegrationConfig } from '../types';
+import { CVEEntity, CWEEntity, FindingEntity, IntegrationConfig } from '../types';
 
 type EntityCache = {
   findingEntities: { [key: string]: FindingEntity };
-  cveEntities: { [cve: string]: Entity };
-  cweEntities: { [cwe: string]: Entity };
+  cveEntities: { [cve: string]: CVEEntity };
+  cweEntities: { [cwe: string]: CWEEntity };
 };
 
 const step: IntegrationStep<IntegrationConfig> = {
   id: 'fetch-findings',
   name: 'Fetch findings',
-  types: [
-    'cve',
-    'cwe',
-    'snyk_account',
-    'snyk_finding',
-    'snyk_finding_is_cve',
-    'snyk_finding_exploits_cwe',
-    'snyk_service_identified_snyk_finding',
+  entities: [
+    Entities.CVE,
+    Entities.CWE,
+    Entities.SNYK_ACCOUNT,
+    Entities.SNYK_FINDING,
+  ],
+  relationships: [
+    Relationships.FINDING_IS_CVE,
+    Relationships.FINDING_EXPLOITS_CWE,
+    Relationships.SERVICE_IDENTIFIED_FINDING,
   ],
   async executionHandler({
     jobState,

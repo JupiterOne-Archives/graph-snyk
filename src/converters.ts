@@ -3,18 +3,9 @@ import {
   Relationship,
   RelationshipDirection,
 } from '@jupiterone/integration-sdk-core';
+import { Entities, Relationships } from './constants';
 
-import { FindingEntity } from './types';
-
-export const SNYK_SERVICE_ENTITY_TYPE = 'snyk_account';
-export const SNYK_FINDING_ENTITY_TYPE = 'snyk_finding';
-export const SNYK_CVE_ENTITY_TYPE = 'cve';
-export const SNYK_CWE_ENTITY_TYPE = 'cwe';
-
-export const SNYK_SERVICE_SNYK_FINDING_RELATIONSHIP_TYPE =
-  'snyk_service_identified_snyk_finding';
-export const SNYK_FINDING_CVE_RELATIONSHIP_TYPE = 'snyk_finding_is_cve';
-export const SNYK_FINDING_CWE_RELATIONSHIP_TYPE = 'snyk_finding_exploits_cwe';
+import { CVEEntity, CWEEntity, FindingEntity } from './types';
 
 const CVE_URL_BASE = 'https://nvd.nist.gov/vuln/detail/';
 
@@ -75,8 +66,8 @@ export interface IssueCount {
 export function createServiceEntity(orgId: string): Entity {
   return {
     _key: `snyk:${orgId}`,
-    _type: SNYK_SERVICE_ENTITY_TYPE,
-    _class: ['Service', 'Account'],
+    _type: Entities.SNYK_ACCOUNT._type,
+    _class: Entities.SNYK_ACCOUNT._class,
     category: 'code dependency scan',
     displayName: `snyk/${orgId}`,
   };
@@ -84,9 +75,9 @@ export function createServiceEntity(orgId: string): Entity {
 
 export function createFindingEntity(vuln: SnykVulnIssue): FindingEntity {
   return {
-    _class: 'Finding',
+    _class: Entities.SNYK_FINDING._class,
     _key: `snyk-project-finding-${vuln.id}`,
-    _type: SNYK_FINDING_ENTITY_TYPE,
+    _type: Entities.SNYK_FINDING._type,
     category: 'application',
     score: vuln.cvssScore,
     cvssScore: vuln.cvssScore,
@@ -114,14 +105,14 @@ export function createFindingEntity(vuln: SnykVulnIssue): FindingEntity {
   };
 }
 
-export function createCVEEntity(cve: string, cvssScore: number): Entity {
+export function createCVEEntity(cve: string, cvssScore: number): CVEEntity {
   const cveLowerCase = cve.toLowerCase();
   const cveUpperCase = cve.toUpperCase();
   const link = CVE_URL_BASE + cveUpperCase;
   return {
-    _class: 'Vulnerability',
+    _class: Entities.CVE._type,
     _key: cveLowerCase,
-    _type: SNYK_CVE_ENTITY_TYPE,
+    _type: Entities.CVE._class,
     name: cveUpperCase,
     displayName: cveUpperCase,
     cvssScore: cvssScore,
@@ -130,16 +121,16 @@ export function createCVEEntity(cve: string, cvssScore: number): Entity {
   };
 }
 
-export function createCWEEntity(cwe: string): Entity {
+export function createCWEEntity(cwe: string): CWEEntity {
   const cweLowerCase = cwe.toLowerCase();
   const cweUpperCase = cwe.toUpperCase();
   const link = `https://cwe.mitre.org/data/definitions/${
     cwe.split('-')[1]
   }.html`;
   return {
-    _class: 'Weakness',
+    _class: Entities.CWE._class,
     _key: cweLowerCase,
-    _type: SNYK_CWE_ENTITY_TYPE,
+    _type: Entities.CWE._type,
     name: cweUpperCase,
     displayName: cweUpperCase,
     references: [link],
@@ -154,7 +145,7 @@ export function createServiceFindingRelationship(
   return {
     _class: 'IDENTIFIED',
     _key: `${service._key}|identified|${finding._key}`,
-    _type: SNYK_SERVICE_SNYK_FINDING_RELATIONSHIP_TYPE,
+    _type: Relationships.SERVICE_IDENTIFIED_FINDING._type,
     _fromEntityKey: service._key,
     _toEntityKey: finding._key,
     displayName: 'IDENTIFIED',
@@ -163,12 +154,12 @@ export function createServiceFindingRelationship(
 
 export function createFindingVulnerabilityRelationship(
   finding: Entity,
-  cve: Entity,
+  cve: CVEEntity,
 ): Relationship {
   return {
     _key: `${finding._key}|is|${cve._key}`,
     _class: 'IS',
-    _type: SNYK_FINDING_CVE_RELATIONSHIP_TYPE,
+    _type: Relationships.FINDING_IS_CVE._type,
     _mapping: {
       sourceEntityKey: finding._key,
       relationshipDirection: RelationshipDirection.FORWARD,
@@ -181,12 +172,12 @@ export function createFindingVulnerabilityRelationship(
 
 export function createFindingWeaknessRelationship(
   finding: Entity,
-  cwe: Entity,
+  cwe: CWEEntity,
 ): Relationship {
   return {
     _key: `${finding._key}|is|${cwe._key}`,
     _class: 'EXPLOITS',
-    _type: SNYK_FINDING_CWE_RELATIONSHIP_TYPE,
+    _type: Relationships.FINDING_EXPLOITS_CWE._type,
     _mapping: {
       sourceEntityKey: finding._key,
       relationshipDirection: RelationshipDirection.FORWARD,
