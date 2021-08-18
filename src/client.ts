@@ -5,7 +5,7 @@ import {
 } from '@jupiterone/integration-sdk-core';
 import SnykClient from '@jupiterone/snyk-client';
 
-import { Project, SnykVulnIssue } from './types';
+import { AggregatedIssue, Project } from './types';
 import { IntegrationConfig } from './types';
 
 interface ListProjectsResponse {
@@ -16,15 +16,8 @@ interface ListProjectsResponse {
   projects: Project[];
 }
 
-interface ListIssuesResponse {
-  ok: boolean;
-  deprecated: string;
-  issues: {
-    vulnerabilities: SnykVulnIssue[];
-    licenses: SnykVulnIssue[];
-  };
-  dependencyCount: number;
-  packageManager: string;
+interface ListAggregatedIssuesResponse {
+  issues: AggregatedIssue[];
 }
 
 export type ResourceIteratee<T> = (each: T) => Promise<void> | void;
@@ -112,11 +105,11 @@ export class APIClient {
    */
   public async iterateIssues(
     project: Project,
-    iteratee: ResourceIteratee<SnykVulnIssue>,
+    iteratee: ResourceIteratee<AggregatedIssue>,
   ): Promise<void> {
-    let response: ListIssuesResponse;
+    let response: ListAggregatedIssuesResponse;
     try {
-      response = await this.snyk.listIssues(
+      response = await this.snyk.listAggregatedIssues(
         this.config.snykOrgId,
         project.id,
         {},
@@ -127,38 +120,29 @@ export class APIClient {
           err,
           projectId: project.id,
         },
-        'Error listing issues for project',
+        'Error listing aggregated issues for project',
       );
       throw new IntegrationProviderAPIError({
         cause: err,
-        endpoint: `listIssues project '${project.id}'`,
+        endpoint: `listAggregatedIssues project '${project.id}'`,
         status: 'unknown',
         statusText: 'Unexpected error',
       });
     }
 
-    const issues = response?.issues;
-    if (issues) {
+    if (response?.issues) {
       this.logger.info(
         {
           project: {
             id: project.id,
           },
-          vulnerabilities: issues.vulnerabilities.length,
-          licenses: issues.licenses.length,
+          issues: response.issues.length,
         },
         'Fetched project issues',
       );
 
-      for (const vuln of issues?.vulnerabilities) {
-        vuln.type = 'vulnerability';
-        await iteratee(vuln);
-      }
-
-      for (const license of issues?.licenses) {
-        license.type = 'license';
-        license.identifiers = { CVE: [], CWE: [] };
-        await iteratee(license);
+      for (const issue of response.issues) {
+        await iteratee(issue);
       }
     } else {
       this.logger.info({ project: { id: project.id } }, 'No issues found');
