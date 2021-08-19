@@ -8,6 +8,11 @@ and this project adheres to
 
 ## [Unreleased]
 
+### Changed
+
+- Use the `/aggregated-issues` endpoint to list issues, which is recommended by
+  Snyk, rather than the deprecated `/issues` endpoint.
+
 ## 2.0.5 - 2021-08-18
 
 ### Fixed
