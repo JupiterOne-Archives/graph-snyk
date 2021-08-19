@@ -1,5 +1,14 @@
 import { RelationshipClass } from '@jupiterone/integration-sdk-core';
 
+export const SetDataKeys = {
+  ACCOUNT_ENTITY: 'ACCOUNT_ENTITY',
+};
+
+export const StepIds = {
+  FETCH_ACCOUNT: 'fetch-account',
+  FETCH_FINDINGS: 'fetch-findings',
+};
+
 export const Entities = {
   CVE: {
     _type: 'cve',
