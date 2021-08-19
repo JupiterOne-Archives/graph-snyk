@@ -10,6 +10,8 @@ and this project adheres to
 
 ### Changed
 
+- Stop creating explicit `cve` and `cwe` entities. Instead, only create mapped
+  relationships to `cve` and `cwe` entities that allow the target to be created.
 - Use the `/aggregated-issues` endpoint to list issues, which is recommended by
   Snyk, rather than the deprecated `/issues` endpoint.
 

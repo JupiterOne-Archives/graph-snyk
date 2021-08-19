@@ -23,29 +23,6 @@ export type FindingEntity = Entity & {
   targets: string[];
 };
 
-export interface CVEEntity {
-  _class: string;
-  _key: string;
-  _type: string;
-  name: string;
-  displayName: string;
-  cvssScore: string | number;
-  references: string[];
-  webLink: string;
-  [k: string]: string | string[] | number;
-};
-
-export interface CWEEntity {
-  _class: string;
-  _key: string;
-  _type: string;
-  name: string;
-  displayName: string;
-  references: string[];
-  webLink: string;
-  [k: string]: string | string[];
-};
-
 /**
  * These properties were manually written based on Snyk API docs.
  * See https://snyk.docs.apiary.io/#reference/projects/aggregated-project-issues/list-all-aggregated-issues

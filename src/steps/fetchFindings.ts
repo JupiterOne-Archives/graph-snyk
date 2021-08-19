@@ -1,33 +1,34 @@
 import {
+  createMappedRelationship,
   Entity,
+  getRawData,
   IntegrationError,
   IntegrationStep,
   IntegrationStepExecutionContext,
   JobState,
+  RelationshipClass,
 } from '@jupiterone/integration-sdk-core';
 
 import { APIClient } from '../client';
-import { Entities, Relationships, SetDataKeys, StepIds } from '../constants';
 import {
-  createCVEEntity,
-  createCWEEntity,
+  Entities,
+  MappedRelationships,
+  Relationships,
+  SetDataKeys,
+  StepIds,
+  TargetEntities,
+} from '../constants';
+import {
   createFindingEntity,
-  createFindingVulnerabilityRelationship,
-  createFindingWeaknessRelationship,
   createServiceEntity,
   createServiceFindingRelationship,
 } from '../converters';
-import {
-  CVEEntity,
-  CWEEntity,
-  FindingEntity,
-  IntegrationConfig,
-} from '../types';
+import { AggregatedIssue, FindingEntity, IntegrationConfig } from '../types';
+
+const CVE_URL_BASE = 'https://nvd.nist.gov/vuln/detail/';
 
 type EntityCache = {
   findingEntities: { [key: string]: FindingEntity };
-  cveEntities: { [cve: string]: CVEEntity };
-  cweEntities: { [cwe: string]: CWEEntity };
 };
 
 export async function getAccountEntity(jobState: JobState): Promise<Entity> {
@@ -67,8 +68,6 @@ async function fetchFindings({
 
   const entityCache: EntityCache = {
     findingEntities: {},
-    cveEntities: {},
-    cweEntities: {},
   };
 
   await apiClient.iterateProjects(async (project) => {
@@ -86,29 +85,6 @@ async function fetchFindings({
         finding.targets.push(projectName);
         finding.identifiedInFile = packageName;
         entityCache.findingEntities[finding.id] = finding;
-
-        for (const cve of finding.cve || []) {
-          let cveEntity = entityCache.cveEntities[cve];
-          if (!cveEntity) {
-            cveEntity = createCVEEntity(cve, issue.issueData.cvssScore!);
-            entityCache.cveEntities[cve] = cveEntity;
-          }
-          await jobState.addRelationship(
-            createFindingVulnerabilityRelationship(finding, cveEntity),
-          );
-        }
-
-        for (const cwe of finding.cwe || []) {
-          let cweEntity = entityCache.cweEntities[cwe];
-          if (!cweEntity) {
-            cweEntity = createCWEEntity(cwe);
-            entityCache.cweEntities[cwe] = cweEntity;
-          }
-          await jobState.addRelationship(
-            createFindingWeaknessRelationship(finding, cweEntity),
-          );
-        }
-
         await jobState.addRelationship(
           createServiceFindingRelationship(serviceEntity, finding),
         );
@@ -116,9 +92,67 @@ async function fetchFindings({
     });
   });
 
-  await jobState.addEntities(Object.values(entityCache.cweEntities));
-  await jobState.addEntities(Object.values(entityCache.cveEntities));
   await jobState.addEntities(Object.values(entityCache.findingEntities));
+}
+
+async function buildFindingCveCweRelationships({
+  jobState,
+  logger,
+}: IntegrationStepExecutionContext<IntegrationConfig>) {
+  await jobState.iterateEntities(
+    { _type: Entities.SNYK_FINDING._type },
+    async (issueEntity) => {
+      const issue = getRawData<AggregatedIssue>(issueEntity);
+
+      if (!issue) {
+        logger.warn(
+          {
+            issue: { _key: issueEntity._key },
+          },
+          `Could not get raw data for ${Entities.SNYK_FINDING._type} entity.`,
+        );
+        return;
+      }
+
+      for (const cve of issue.issueData.identifiers?.CVE || []) {
+        await jobState.addRelationship(
+          createMappedRelationship({
+            source: issueEntity,
+            _class: RelationshipClass.IS,
+            _type: MappedRelationships.FINDING_IS_CVE._type,
+            target: {
+              _class: TargetEntities.CVE._class,
+              _type: TargetEntities.CVE._type,
+              _key: cve.toLowerCase(),
+              name: cve.toUpperCase(),
+              displayName: cve.toUpperCase(),
+              webLink: CVE_URL_BASE + cve.toUpperCase(),
+            },
+          }),
+        );
+      }
+
+      for (const cwe of issue.issueData.identifiers?.CWE || []) {
+        await jobState.addRelationship(
+          createMappedRelationship({
+            source: issueEntity,
+            _class: RelationshipClass.EXPLOITS,
+            _type: MappedRelationships.FINDING_EXPLOITS_CWE._type,
+            target: {
+              _class: TargetEntities.CWE._class,
+              _type: TargetEntities.CWE._type,
+              _key: cwe.toLowerCase(),
+              name: cwe.toUpperCase(),
+              displayName: cwe.toUpperCase(),
+              webLink: `https://cwe.mitre.org/data/definitions/${
+                cwe.split('-')[1]
+              }.html`,
+            },
+          }),
+        );
+      }
+    },
+  );
 }
 
 export const steps: IntegrationStep<IntegrationConfig>[] = [
@@ -132,13 +166,21 @@ export const steps: IntegrationStep<IntegrationConfig>[] = [
   {
     id: StepIds.FETCH_FINDINGS,
     name: 'Fetch findings',
-    entities: [Entities.CVE, Entities.CWE, Entities.SNYK_FINDING],
-    relationships: [
-      Relationships.FINDING_IS_CVE,
-      Relationships.FINDING_EXPLOITS_CWE,
-      Relationships.SERVICE_IDENTIFIED_FINDING,
-    ],
+    entities: [Entities.SNYK_FINDING],
+    relationships: [Relationships.SERVICE_IDENTIFIED_FINDING],
     dependsOn: [StepIds.FETCH_ACCOUNT],
     executionHandler: fetchFindings,
+  },
+  {
+    id: StepIds.BUILD_FINDING_CVE_CWE_RELATIONSHIPS,
+    name: 'Build Issue -> CVE/CWE Relationships',
+    entities: [],
+    relationships: [],
+    mappedRelationships: [
+      MappedRelationships.FINDING_IS_CVE,
+      MappedRelationships.FINDING_EXPLOITS_CWE,
+    ],
+    dependsOn: [StepIds.FETCH_FINDINGS],
+    executionHandler: buildFindingCveCweRelationships,
   },
 ];
