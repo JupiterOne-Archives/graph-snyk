@@ -70,10 +70,10 @@ const step: IntegrationStep<IntegrationConfig> = {
           finding.identifiedInFile = packageName;
           entityCache.findingEntities[finding.id] = finding;
 
-          for (const cve of finding.cve) {
+          for (const cve of finding.cve || []) {
             let cveEntity = entityCache.cveEntities[cve];
             if (!cveEntity) {
-              cveEntity = createCVEEntity(cve, issue.cvssScore);
+              cveEntity = createCVEEntity(cve, issue.issueData.cvssScore!);
               entityCache.cveEntities[cve] = cveEntity;
             }
             await jobState.addRelationship(
@@ -81,7 +81,7 @@ const step: IntegrationStep<IntegrationConfig> = {
             );
           }
 
-          for (const cwe of finding.cwe) {
+          for (const cwe of finding.cwe || []) {
             let cweEntity = entityCache.cweEntities[cwe];
             if (!cweEntity) {
               cweEntity = createCWEEntity(cwe);
