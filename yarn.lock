@@ -611,10 +611,10 @@
     deepmerge "^4.2.2"
     lodash "^4.17.15"
 
-"@jupiterone/snyk-client@^1.1.1":
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/@jupiterone/snyk-client/-/snyk-client-1.1.1.tgz#8adb19a84afd673eb9a737a849096a21e81fad6a"
-  integrity sha512-Ww9ISKBTYnPT+TFH8RzjPW4Nx5EVcyLRTVLfkLxdualtv1znYDghAeyGZ9unLoJ0b94Lx5BGpN1ElBFHdeES8g==
+"@jupiterone/snyk-client@^1.1.2":
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/@jupiterone/snyk-client/-/snyk-client-1.1.2.tgz#9e889b9ebb1c45e775f594bd438928e5d3ce9c2c"
+  integrity sha512-2lijsXTmaYNl5/iMqqovicsjUB9R+3t9/2ghuisD2x09qiWPi5al2kiEqJvGZNvVvV3MFZMq+TtaU6Of7cHyuQ==
   dependencies:
     "@lifeomic/attempt" "^3.0.0"
     request "^2.88.0"

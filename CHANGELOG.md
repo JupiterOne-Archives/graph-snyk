@@ -8,6 +8,12 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [2.1.1] - 2021-08-23
+
+### Fixed
+
+- Bump `@jupiterone/graph-snyk@^1.1.2` to retry 5xx errors.
+
 ## [2.1.0] - 2021-08-19
 
 ### Changed
