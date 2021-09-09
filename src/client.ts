@@ -5,8 +5,20 @@ import {
 } from '@jupiterone/integration-sdk-core';
 import SnykClient from '@jupiterone/snyk-client';
 
-import { Project, SnykVulnIssue } from './converters';
+import { AggregatedIssue, Project } from './types';
 import { IntegrationConfig } from './types';
+
+interface ListProjectsResponse {
+  org: {
+    name: string;
+    id: string;
+  };
+  projects: Project[];
+}
+
+interface ListAggregatedIssuesResponse {
+  issues: AggregatedIssue[];
+}
 
 export type ResourceIteratee<T> = (each: T) => Promise<void> | void;
 
@@ -19,19 +31,25 @@ export type ResourceIteratee<T> = (each: T) => Promise<void> | void;
  * resources.
  */
 export class APIClient {
-  private snyk: any;
+  private snyk: SnykClient;
 
   constructor(
     readonly logger: IntegrationLogger,
     readonly config: IntegrationConfig,
   ) {
-    this.snyk = new SnykClient(config.snykApiKey, config.snykOrgId);
+    this.snyk = new SnykClient(config.snykApiKey);
   }
 
   public async verifyAuthentication(): Promise<void> {
     try {
       await this.snyk.verifyAccess(this.config.snykOrgId);
     } catch (err) {
+      this.logger.error(
+        {
+          err,
+        },
+        'Error verifying authentication',
+      );
       throw new IntegrationProviderAuthenticationError({
         cause: err,
         endpoint: `https://snyk.io/api/v1/org/${this.config.snykOrgId}/members`,
@@ -48,10 +66,16 @@ export class APIClient {
   public async iterateProjects(
     iteratee: ResourceIteratee<Project>,
   ): Promise<void> {
-    let response: any;
+    let response: ListProjectsResponse;
     try {
       response = await this.snyk.listAllProjects(this.config.snykOrgId);
     } catch (err) {
+      this.logger.error(
+        {
+          err,
+        },
+        'Error listing projects',
+      );
       throw new IntegrationProviderAPIError({
         cause: err,
         endpoint: 'listAllProjects',
@@ -81,46 +105,44 @@ export class APIClient {
    */
   public async iterateIssues(
     project: Project,
-    iteratee: ResourceIteratee<SnykVulnIssue>,
+    iteratee: ResourceIteratee<AggregatedIssue>,
   ): Promise<void> {
-    let response: any;
+    let response: ListAggregatedIssuesResponse;
     try {
-      response = await this.snyk.listIssues(
+      response = await this.snyk.listAggregatedIssues(
         this.config.snykOrgId,
         project.id,
         {},
       );
     } catch (err) {
+      this.logger.error(
+        {
+          err,
+          projectId: project.id,
+        },
+        'Error listing aggregated issues for project',
+      );
       throw new IntegrationProviderAPIError({
         cause: err,
-        endpoint: `listIssues project '${project.id}'`,
+        endpoint: `listAggregatedIssues project '${project.id}'`,
         status: 'unknown',
         statusText: 'Unexpected error',
       });
     }
 
-    const issues = response?.issues;
-    if (issues) {
+    if (response?.issues) {
       this.logger.info(
         {
           project: {
             id: project.id,
           },
-          vulnerabilities: issues.vulnerabilities.length,
-          licenses: issues.licenses.length,
+          issues: response.issues.length,
         },
         'Fetched project issues',
       );
 
-      for (const vuln of issues?.vulnerabilities) {
-        vuln.type = 'vulnerability';
-        await iteratee(vuln);
-      }
-
-      for (const license of issues?.licenses) {
-        license.type = 'license';
-        license.identifiers = { CVE: [], CWE: [] };
-        await iteratee(license);
+      for (const issue of response.issues) {
+        await iteratee(issue);
       }
     } else {
       this.logger.info({ project: { id: project.id } }, 'No issues found');

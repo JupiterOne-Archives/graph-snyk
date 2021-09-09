@@ -8,6 +8,33 @@ and this project adheres to
 
 ## [Unreleased]
 
+### Added
+
+- Added Snyk integration spec - see `./docs/spec/index.ts`
+
+### Changed
+
+- Isolated `fetch-account` step
+
+## [2.1.1] - 2021-08-23
+
+### Fixed
+
+- Bump `@jupiterone/graph-snyk@^1.1.2` to retry 5xx errors.
+
+## [2.1.0] - 2021-08-19
+
+### Changed
+
+- Use the `/aggregated-issues` endpoint to list issues, which is recommended by
+  Snyk, rather than the deprecated `/issues` endpoint.
+
+## 2.0.5 - 2021-08-18
+
+### Fixed
+
+- Automatically retry `503` errors by bumping `@jupiterone/snyk-client`
+
 ## 2.0.4 - 2020-06-26
 
 ### Fixed

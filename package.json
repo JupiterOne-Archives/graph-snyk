@@ -1,6 +1,6 @@
 {
   "name": "@jupiterone/graph-snyk",
-  "version": "2.0.4",
+  "version": "2.1.1",
   "description": "A JupiterOne integration for Snyk.",
   "license": "MPL-2.0",
   "main": "dist/index.js",
@@ -14,25 +14,27 @@
   "scripts": {
     "start": "j1-integration collect",
     "graph": "j1-integration visualize",
+    "visualize-types": "j1-integration visualize-types",
+    "visualize-spec": "j1-integration visualize-types -p docs/spec -o .j1-integration/types-graph/index.spec.html",
     "lint": "eslint . --cache --fix --ext .ts,.tsx",
     "format": "prettier --write '**/*.{ts,js,json,css,md,yml}'",
     "type-check": "tsc",
     "test": "jest --passWithNoTests",
     "test:ci": "yarn lint && yarn type-check && yarn test",
     "build": "tsc -p tsconfig.dist.json --declaration",
-    "prepush": "yarn lint && yarn type-check && jest --changedSince master",
+    "prepush": "yarn lint && yarn type-check && jest --changedSince main",
     "prepack": "yarn build"
   },
   "peerDependencies": {
-    "@jupiterone/integration-sdk-core": "^2.2.0"
+    "@jupiterone/integration-sdk-core": "^6.19.0"
   },
   "devDependencies": {
-    "@jupiterone/integration-sdk-core": "^2.2.0",
-    "@jupiterone/integration-sdk-dev-tools": "^2.2.0",
-    "@jupiterone/integration-sdk-testing": "^2.2.0",
+    "@jupiterone/integration-sdk-core": "^6.19.0",
+    "@jupiterone/integration-sdk-dev-tools": "^6.19.0",
+    "@jupiterone/integration-sdk-testing": "^6.19.0",
     "ts-node": "^8.10.2"
   },
   "dependencies": {
-    "@jupiterone/snyk-client": "^1.0.2"
+    "@jupiterone/snyk-client": "^1.1.2"
   }
 }
