@@ -12,18 +12,17 @@ export const invocationConfig: IntegrationSpecConfig<IntegrationConfig> = {
        * ENDPOINT: GET https://snyk.io/api/v1/org/{orgId}/settings
        * PATTERN: Singleton
        */
-      id: 'fetch-organization',
-      name: 'Fetch Organization',
+      id: 'fetch-account',
+      name: 'Fetch Account',
       entities: [
         {
-          resourceName: 'Snyk Organization',
-          _type: 'snyk_organization',
-          _class: 'Account',
+          resourceName: 'Snyk Account',
+          _type: 'snyk_account',
+          _class: ['Service', 'Account'],
         },
       ],
       relationships: [],
-      dependsOn: [],
-      implemented: false,
+      implemented: true,
     },
     {
       /**
