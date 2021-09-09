@@ -100,7 +100,7 @@ export const invocationConfig: IntegrationSpecConfig<IntegrationConfig> = {
        * ENDPOINT: n/a
        * PATTERN: Build Child Relationships
        */
-      id: 'build-issuce-cve-cwe-relationships',
+      id: 'build-issue-cve-cwe-relationships',
       name: 'Build Issue -> CVE/CWE Relationships',
       entities: [],
       relationships: [],
