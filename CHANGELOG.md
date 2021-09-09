@@ -12,6 +12,10 @@ and this project adheres to
 
 - Added Snyk integration spec - see `./docs/spec/index.ts`
 
+### Changed
+
+- Isolated `fetch-account` step
+
 ## [2.1.1] - 2021-08-23
 
 ### Fixed
