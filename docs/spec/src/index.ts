@@ -1,14 +1,11 @@
 import {
-  IntegrationInvocationConfig,
+  IntegrationSpecConfig,
   RelationshipClass,
   RelationshipDirection,
 } from '@jupiterone/integration-sdk-core';
 import { IntegrationConfig } from '../../../src/types';
 
-// eslint-disable-next-line @typescript-eslint/no-empty-function
-const executionHandler = () => {};
-
-export const invocationConfig: IntegrationInvocationConfig<IntegrationConfig> = {
+export const invocationConfig: IntegrationSpecConfig<IntegrationConfig> = {
   integrationSteps: [
     {
       /**
@@ -26,7 +23,7 @@ export const invocationConfig: IntegrationInvocationConfig<IntegrationConfig> = 
       ],
       relationships: [],
       dependsOn: [],
-      executionHandler,
+      implemented: false,
     },
     {
       /**
@@ -51,7 +48,7 @@ export const invocationConfig: IntegrationInvocationConfig<IntegrationConfig> = 
         },
       ],
       dependsOn: ['fetch-organization'],
-      executionHandler,
+      implemented: false,
     },
     {
       /**
@@ -72,7 +69,7 @@ export const invocationConfig: IntegrationInvocationConfig<IntegrationConfig> = 
         },
       ],
       dependsOn: ['fetch-projects'],
-      executionHandler,
+      implemented: false,
     },
     {
       /**
@@ -97,7 +94,7 @@ export const invocationConfig: IntegrationInvocationConfig<IntegrationConfig> = 
         },
       ],
       dependsOn: ['fetch-projects'],
-      executionHandler,
+      implemented: false,
     },
     {
       /**
@@ -125,7 +122,7 @@ export const invocationConfig: IntegrationInvocationConfig<IntegrationConfig> = 
         },
       ],
       dependsOn: ['fetch-project-issues'],
-      executionHandler,
+      implemented: false,
     },
   ],
 };

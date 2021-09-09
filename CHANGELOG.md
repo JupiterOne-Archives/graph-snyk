@@ -8,6 +8,10 @@ and this project adheres to
 
 ## [Unreleased]
 
+### Added
+
+- Added Snyk integration spec - see `./docs/spec/index.ts`
+
 ## [2.1.1] - 2021-08-23
 
 ### Fixed
