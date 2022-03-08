@@ -8,6 +8,8 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [2.1.2] - 2022-03-08
+
 ### Fixed
 
 - Incorrect mapping of `_type` and `_class` properties for `CVEEntity`
