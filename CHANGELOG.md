@@ -8,6 +8,10 @@ and this project adheres to
 
 ## [Unreleased]
 
+### Fixed
+
+- Incorrect mapping of `_type` and `_class` properties for `CVEEntity`
+
 ### Added
 
 - Added Snyk integration spec - see `./docs/spec/index.ts`

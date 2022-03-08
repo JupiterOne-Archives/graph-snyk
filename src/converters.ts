@@ -68,9 +68,9 @@ export function createCVEEntity(
   const cveUpperCase = cve.toUpperCase();
   const link = CVE_URL_BASE + cveUpperCase;
   return {
-    _class: Entities.CVE._type,
+    _class: Entities.CVE._class,
     _key: cveLowerCase,
-    _type: Entities.CVE._class,
+    _type: Entities.CVE._type,
     name: cveUpperCase,
     displayName: cveUpperCase,
     cvssScore: cvssScore,
