@@ -88,7 +88,8 @@ The following entities are created:
 | CVE          | `cve`          | `Vulnerability`      |
 | CWE          | `cwe`          | `Weakness`           |
 | Snyk Account | `snyk_account` | `Service`, `Account` |
-| Snyk Issue   | `snyk_finding` | `Finding`            |
+| Snyk Project | `snyk_project` | `Project`            |
+| snyk issue   | `snyk_finding` | `finding`            |
 
 ### Relationships
 
@@ -96,6 +97,7 @@ The following relationships are created:
 
 | Source Entity `_type` | Relationship `_class` | Target Entity `_type` |
 | --------------------- | --------------------- | --------------------- |
+| `snyk_account`        | **HAS**               | `snyk_project`        |
 | `snyk_finding`        | **EXPLOITS**          | `cwe`                 |
 | `snyk_finding`        | **IS**                | `cve`                 |
 | `snyk_account`        | **IDENTIFIED**        | `snyk_finding`        |

@@ -8,6 +8,12 @@ and this project adheres to
 
 ## [Unreleased]
 
+- Support for ingesting the following **new** entities:
+
+  | Resources    | Entity `_type` | Entity `_class` |
+  | ------------ | -------------- | --------------- |
+  | Snyk Project | `snyk_project` | `Project`       |
+
 ## [2.1.2] - 2022-03-08
 
 ### Fixed

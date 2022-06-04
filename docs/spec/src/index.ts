@@ -3,7 +3,7 @@ import {
   RelationshipClass,
   RelationshipDirection,
 } from '@jupiterone/integration-sdk-core';
-import { IntegrationConfig } from '../../../src/types';
+import { IntegrationConfig } from '../../../src/config';
 
 export const invocationConfig: IntegrationSpecConfig<IntegrationConfig> = {
   integrationSteps: [
@@ -35,7 +35,7 @@ export const invocationConfig: IntegrationSpecConfig<IntegrationConfig> = {
         {
           resourceName: 'Snyk Project',
           _type: 'snyk_project',
-          _class: 'Project',
+          _class: ['Project'],
         },
       ],
       relationships: [

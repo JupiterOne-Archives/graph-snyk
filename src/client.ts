@@ -4,9 +4,8 @@ import {
   IntegrationProviderAuthenticationError,
 } from '@jupiterone/integration-sdk-core';
 import SnykClient from '@jupiterone/snyk-client';
-
+import { IntegrationConfig } from './config';
 import { AggregatedIssue, Project } from './types';
-import { IntegrationConfig } from './types';
 
 interface ListProjectsResponse {
   org: {
@@ -44,12 +43,13 @@ export class APIClient {
     try {
       await this.snyk.verifyAccess(this.config.snykOrgId);
     } catch (err) {
-      this.logger.error(
+      this.logger.info(
         {
           err,
         },
         'Error verifying authentication',
       );
+
       throw new IntegrationProviderAuthenticationError({
         cause: err,
         endpoint: `https://snyk.io/api/v1/org/${this.config.snykOrgId}/members`,
@@ -104,27 +104,27 @@ export class APIClient {
    * @param iteratee receives each resource and produces entities/relationships
    */
   public async iterateIssues(
-    project: Project,
+    projectId: string,
     iteratee: ResourceIteratee<AggregatedIssue>,
   ): Promise<void> {
     let response: ListAggregatedIssuesResponse;
     try {
       response = await this.snyk.listAggregatedIssues(
         this.config.snykOrgId,
-        project.id,
+        projectId,
         {},
       );
     } catch (err) {
       this.logger.error(
         {
           err,
-          projectId: project.id,
+          projectId,
         },
         'Error listing aggregated issues for project',
       );
       throw new IntegrationProviderAPIError({
         cause: err,
-        endpoint: `listAggregatedIssues project '${project.id}'`,
+        endpoint: `listAggregatedIssues project '${projectId}'`,
         status: 'unknown',
         statusText: 'Unexpected error',
       });
@@ -133,9 +133,7 @@ export class APIClient {
     if (response?.issues) {
       this.logger.info(
         {
-          project: {
-            id: project.id,
-          },
+          projectId,
           issues: response.issues.length,
         },
         'Fetched project issues',
@@ -145,7 +143,7 @@ export class APIClient {
         await iteratee(issue);
       }
     } else {
-      this.logger.info({ project: { id: project.id } }, 'No issues found');
+      this.logger.info({ projectId }, 'No issues found');
     }
   }
 }

@@ -6,6 +6,7 @@ export const SetDataKeys = {
 
 export const StepIds = {
   FETCH_ACCOUNT: 'fetch-account',
+  FETCH_PROJECTS: 'fetch-projects',
   FETCH_FINDINGS: 'fetch-findings',
 };
 
@@ -27,8 +28,13 @@ export const Entities = {
   },
   SNYK_FINDING: {
     _type: 'snyk_finding',
-    _class: 'Finding',
-    resourceName: 'Snyk Issue',
+    _class: 'finding',
+    resourceName: 'snyk issue',
+  },
+  PROJECT: {
+    _type: 'snyk_project',
+    _class: ['Project'],
+    resourceName: 'Snyk Project',
   },
 };
 
@@ -50,5 +56,11 @@ export const Relationships = {
     sourceType: Entities.SNYK_ACCOUNT._type,
     _class: RelationshipClass.IDENTIFIED,
     targetType: Entities.SNYK_FINDING._type,
+  },
+  ACCOUNT_PROJECT: {
+    _type: 'snyk_account_has_project',
+    sourceType: Entities.SNYK_ACCOUNT._type,
+    _class: RelationshipClass.HAS,
+    targetType: Entities.PROJECT._type,
   },
 };

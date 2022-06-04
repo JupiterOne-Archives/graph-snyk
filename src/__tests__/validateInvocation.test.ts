@@ -1,7 +1,5 @@
 import { createMockExecutionContext } from '@jupiterone/integration-sdk-testing';
-
-import { IntegrationConfig } from '../types';
-import validateInvocation from '../validateInvocation';
+import { IntegrationConfig, validateInvocation } from '../config';
 import mockSnykClient from './mockSnykClient';
 
 jest.mock('@jupiterone/snyk-client', () => {

@@ -1,16 +1,4 @@
-import {
-  Entity,
-  IntegrationInstanceConfig,
-} from '@jupiterone/integration-sdk-core';
-
-/**
- * Properties provided by the `IntegrationInstance.config`. This reflects the
- * same properties defined by `instanceConfigFields`.
- */
-export interface IntegrationConfig extends IntegrationInstanceConfig {
-  snykOrgId: string;
-  snykApiKey: string;
-}
+import { Entity } from '@jupiterone/integration-sdk-core';
 
 /**
  * A convenience type to communicate properties referenced across
@@ -33,7 +21,7 @@ export interface CVEEntity {
   references: string[];
   webLink: string;
   [k: string]: string | string[] | number;
-};
+}
 
 export interface CWEEntity {
   _class: string;
@@ -44,7 +32,7 @@ export interface CWEEntity {
   references: string[];
   webLink: string;
   [k: string]: string | string[];
-};
+}
 
 /**
  * These properties were manually written based on Snyk API docs.
