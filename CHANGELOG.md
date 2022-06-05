@@ -15,6 +15,19 @@ and this project adheres to
   | Snyk Project              | `snyk_project` | `Project`       |
   | Snyk Organization Members | `snyk_user`    | `User`          |
 
+- Added support for ingesting the following **new** relationships:
+
+  | Source         | class   | Target         |
+  | -------------- | ------- | -------------- |
+  | `snyk_account` | **HAS** | `snyk_project` |
+  | `snyk_account` | **HAS** | `snyk_user`    |
+
+- Added support for ingesting the following **new** mapped relationships:
+
+  | Source         | class     | Target     |
+  | -------------- | --------- | ---------- |
+  | `snyk_project` | **SCANS** | `CodeRepo` |
+
 ## [2.1.2] - 2022-03-08
 
 ### Fixed
