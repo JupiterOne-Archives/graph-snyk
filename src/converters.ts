@@ -33,7 +33,7 @@ const SEVERITY_TO_NUMERIC_SEVERITY_MAP = new Map<string, number>([
   ['low', 2],
   ['medium', 5],
   ['high', 7],
-  ['critical', 7],
+  ['critical', 10],
 ]);
 
 export function getNumericSeverityFromIssueSeverity(
