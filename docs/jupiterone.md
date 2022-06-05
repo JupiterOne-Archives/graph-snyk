@@ -89,7 +89,7 @@ The following entities are created:
 | CWE          | `cwe`          | `Weakness`           |
 | Snyk Account | `snyk_account` | `Service`, `Account` |
 | Snyk Project | `snyk_project` | `Project`            |
-| snyk issue   | `snyk_finding` | `finding`            |
+| snyk issue   | `snyk_finding` | `Finding`            |
 
 ### Relationships
 

@@ -12,7 +12,7 @@ export type FindingEntity = Entity & {
 };
 
 export interface CVEEntity {
-  _class: string;
+  _class: string | string[];
   _key: string;
   _type: string;
   name: string;
@@ -24,7 +24,7 @@ export interface CVEEntity {
 }
 
 export interface CWEEntity {
-  _class: string;
+  _class: string | string[];
   _key: string;
   _type: string;
   name: string;

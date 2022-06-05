@@ -13,12 +13,12 @@ export const StepIds = {
 export const Entities = {
   CVE: {
     _type: 'cve',
-    _class: 'Vulnerability',
+    _class: ['Vulnerability'],
     resourceName: 'CVE',
   },
   CWE: {
     _type: 'cwe',
-    _class: 'Weakness',
+    _class: ['Weakness'],
     resourceName: 'CWE',
   },
   SNYK_ACCOUNT: {
@@ -28,7 +28,7 @@ export const Entities = {
   },
   SNYK_FINDING: {
     _type: 'snyk_finding',
-    _class: 'finding',
+    _class: ['Finding'],
     resourceName: 'snyk issue',
   },
   PROJECT: {

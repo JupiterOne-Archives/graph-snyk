@@ -81,7 +81,7 @@ export const invocationConfig: IntegrationSpecConfig<IntegrationConfig> = {
         {
           resourceName: 'Snyk Issue',
           _type: 'snyk_issue',
-          _class: 'Finding',
+          _class: ['Finding'],
         },
       ],
       relationships: [
