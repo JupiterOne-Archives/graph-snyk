@@ -1,7 +1,9 @@
 import {
+  executeStepWithDependencies,
   setupRecording,
   SetupRecordingInput,
 } from '@jupiterone/integration-sdk-testing';
+import { buildStepTestConfigForStep } from './config';
 
 type WithRecordingParams = {
   recordingName: string;
@@ -28,4 +30,30 @@ async function withRecording(
   }
 }
 
-export { withRecording };
+type CreateStepCollectionTestParams = WithRecordingParams & {
+  stepId: string;
+};
+
+function createStepCollectionTest({
+  recordingName,
+  directoryName,
+  recordingSetupOptions,
+  stepId,
+}: CreateStepCollectionTestParams) {
+  return async () => {
+    await withRecording(
+      {
+        directoryName,
+        recordingName,
+        recordingSetupOptions,
+      },
+      async () => {
+        const stepConfig = buildStepTestConfigForStep(stepId);
+        const stepResult = await executeStepWithDependencies(stepConfig);
+        expect(stepResult).toMatchStepMetadata(stepConfig);
+      },
+    );
+  };
+}
+
+export { withRecording, createStepCollectionTest };

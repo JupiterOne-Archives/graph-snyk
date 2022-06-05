@@ -8,6 +8,7 @@ export const StepIds = {
   FETCH_ACCOUNT: 'fetch-account',
   FETCH_PROJECTS: 'fetch-projects',
   FETCH_FINDINGS: 'fetch-findings',
+  FETCH_USERS: 'fetch-users',
 };
 
 export const Entities = {
@@ -36,6 +37,11 @@ export const Entities = {
     _class: ['Project'],
     resourceName: 'Snyk Project',
   },
+  USER: {
+    _type: 'snyk_user',
+    _class: ['User'],
+    resourceName: 'Snyk User',
+  },
 };
 
 export const Relationships = {
@@ -62,5 +68,11 @@ export const Relationships = {
     sourceType: Entities.SNYK_ACCOUNT._type,
     _class: RelationshipClass.HAS,
     targetType: Entities.PROJECT._type,
+  },
+  ACCOUNT_USER: {
+    _type: 'snyk_account_has_user',
+    sourceType: Entities.SNYK_ACCOUNT._type,
+    _class: RelationshipClass.HAS,
+    targetType: Entities.USER._type,
   },
 };

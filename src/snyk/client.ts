@@ -259,4 +259,30 @@ export class APIClient {
       },
     );
   }
+
+  async iterateUsers(iteratee: (user: any) => Promise<void>) {
+    return retry(
+      async () => {
+        const users = await this.snykRequest({
+          method: 'GET',
+          uri: `org/${this.config.snykOrgId}/members?includeGroupAdmins=true`,
+        });
+
+        for (const user of users) {
+          await iteratee(user);
+        }
+      },
+      {
+        delay: 5000,
+        factor: 1.2,
+        maxAttempts: this.retries,
+        handleError(err, context) {
+          const code = err.statusCode;
+          if (code < 500 && code !== 429) {
+            context.abort();
+          }
+        },
+      },
+    );
+  }
 }

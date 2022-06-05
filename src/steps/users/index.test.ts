@@ -2,10 +2,10 @@ import { createStepCollectionTest } from '../../../test/recording';
 import { StepIds } from '../../constants';
 
 test(
-  'fetch-projects',
+  'fetch-users',
   createStepCollectionTest({
     directoryName: __dirname,
-    recordingName: 'fetch-projects',
-    stepId: StepIds.FETCH_PROJECTS,
+    recordingName: 'fetch-users',
+    stepId: StepIds.FETCH_USERS,
   }),
 );
