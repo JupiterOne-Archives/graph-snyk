@@ -1,23 +1,18 @@
-import {
-  executeStepWithDependencies,
-  Recording,
-  setupRecording,
-} from '@jupiterone/integration-sdk-testing';
+import { executeStepWithDependencies } from '@jupiterone/integration-sdk-testing';
 import { buildStepTestConfigForStep } from '../../../test/config';
+import { withRecording } from '../../../test/recording';
 import { StepIds } from '../../constants';
 
-let recording: Recording;
-afterEach(async () => {
-  await recording.stop();
-});
-
 test('fetch-projects', async () => {
-  recording = setupRecording({
-    directory: __dirname,
-    name: 'fetch-projects',
-  });
-
-  const stepConfig = buildStepTestConfigForStep(StepIds.FETCH_PROJECTS);
-  const stepResult = await executeStepWithDependencies(stepConfig);
-  expect(stepResult).toMatchStepMetadata(stepConfig);
+  await withRecording(
+    {
+      directoryName: __dirname,
+      recordingName: 'fetch-projects',
+    },
+    async () => {
+      const stepConfig = buildStepTestConfigForStep(StepIds.FETCH_PROJECTS);
+      const stepResult = await executeStepWithDependencies(stepConfig);
+      expect(stepResult).toMatchStepMetadata(stepConfig);
+    },
+  );
 });

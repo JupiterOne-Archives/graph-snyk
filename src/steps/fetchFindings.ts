@@ -3,7 +3,7 @@ import {
   IntegrationStepExecutionContext,
 } from '@jupiterone/integration-sdk-core';
 
-import { APIClient } from '../client';
+import { APIClient } from '../snyk/client';
 import { IntegrationConfig } from '../config';
 import { Entities, Relationships, StepIds } from '../constants';
 import {

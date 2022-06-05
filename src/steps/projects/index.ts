@@ -5,7 +5,7 @@ import {
   RelationshipClass,
 } from '@jupiterone/integration-sdk-core';
 import { Entities, Relationships } from '../../constants';
-import { APIClient } from '../../client';
+import { APIClient } from '../../snyk/client';
 import { StepIds } from '../../constants';
 import { createProjectEntity } from './converter';
 import { getAccountEntity } from '../../util/entity';
