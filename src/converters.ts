@@ -1,4 +1,5 @@
 import {
+  createIntegrationEntity,
   Entity,
   parseTimePropertyValue,
   Relationship,
@@ -8,26 +9,24 @@ import { Entities, Relationships } from './constants';
 
 import { AggregatedIssue, CVEEntity, CWEEntity, FindingEntity } from './types';
 
-export const SNYK_SERVICE_ENTITY_TYPE = 'snyk_account';
-export const SNYK_FINDING_ENTITY_TYPE = 'snyk_finding';
-export const SNYK_CVE_ENTITY_TYPE = 'cve';
-export const SNYK_CWE_ENTITY_TYPE = 'cwe';
-
-export const SNYK_SERVICE_SNYK_FINDING_RELATIONSHIP_TYPE =
-  'snyk_service_identified_snyk_finding';
-export const SNYK_FINDING_CVE_RELATIONSHIP_TYPE = 'snyk_finding_is_cve';
-export const SNYK_FINDING_CWE_RELATIONSHIP_TYPE = 'snyk_finding_exploits_cwe';
-
 const CVE_URL_BASE = 'https://nvd.nist.gov/vuln/detail/';
 
-export function createServiceEntity(orgId: string): Entity {
-  return {
-    _key: `snyk:${orgId}`,
-    _type: Entities.SNYK_ACCOUNT._type,
-    _class: Entities.SNYK_ACCOUNT._class,
-    category: 'code dependency scan',
-    displayName: `snyk/${orgId}`,
-  };
+export function createServiceEntity(orgId: string, orgName?: string): Entity {
+  return createIntegrationEntity({
+    entityData: {
+      source: {},
+      assign: {
+        _key: `snyk:${orgId}`,
+        _type: Entities.SNYK_ACCOUNT._type,
+        _class: Entities.SNYK_ACCOUNT._class,
+        id: orgId,
+        category: ['security'],
+        name: orgName,
+        displayName: orgName || `snyk/${orgId}`,
+        function: ['scanning'],
+      },
+    },
+  });
 }
 
 export function createFindingEntity(vuln: AggregatedIssue): FindingEntity {
