@@ -6,8 +6,6 @@ import {
 import { buildStepTestConfigForStep } from '../../../test/config';
 import { StepIds } from '../../constants';
 
-jest.setTimeout(120000);
-
 let recording: Recording;
 afterEach(async () => {
   await recording.stop();
