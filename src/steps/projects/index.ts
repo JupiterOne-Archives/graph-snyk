@@ -24,7 +24,7 @@ async function fetchProjects({
   let numProjectsCollected = 0;
 
   await apiClient.iterateProjects(async (project) => {
-    // TODO (austinkelleher) - Remove this later after we've collected some
+    // TODO (austinkelleher, INT-4063) - Remove this later after we've collected some
     // information on real world origins
     if (project.origin !== 'github') {
       logger.info(
