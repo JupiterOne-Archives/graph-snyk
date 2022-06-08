@@ -49,7 +49,8 @@ async function fetchFindings({
       const [projectSourceName, packageName] = projectName.split(':');
 
       await apiClient.iterateIssues(projectId, async (issue) => {
-        const finding = createFindingEntity(issue);
+        const finding = createFindingEntity(issue) as FindingEntity;
+
         if (entityCache.findingEntities[finding.id]) {
           if (
             !entityCache.findingEntities[finding.id].targets.includes(

@@ -8,6 +8,8 @@ and this project adheres to
 
 ## [Unreleased]
 
+### Added
+
 - Support for ingesting the following **new** entities:
 
   | Resources                 | Entity `_type` | Entity `_class` |
@@ -27,6 +29,24 @@ and this project adheres to
   | Source         | class     | Target     |
   | -------------- | --------- | ---------- |
   | `snyk_project` | **SCANS** | `CodeRepo` |
+
+- New properties added to entities:
+
+  | Entity         | Properties               |
+  | -------------- | ------------------------ |
+  | `snyk_account` | `id`                     |
+  | `snyk_account` | `name`                   |
+  | `snyk_account` | `function`               |
+  | `snyk_finding` | `isPinnable`             |
+  | `snyk_finding` | `isFixable`              |
+  | `snyk_finding` | `isPartiallyFixable`     |
+  | `snyk_finding` | `name`                   |
+  | `snyk_finding` | `violatedPolicyPublicId` |
+
+### Fixed
+
+- Fix value of `numericSeverity` by converting the string severity value to a
+  number
 
 ## [2.1.2] - 2022-03-08
 
