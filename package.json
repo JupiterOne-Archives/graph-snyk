@@ -19,22 +19,25 @@
     "lint": "eslint . --cache --fix --ext .ts,.tsx",
     "format": "prettier --write '**/*.{ts,js,json,css,md,yml}'",
     "type-check": "tsc",
-    "test": "jest --passWithNoTests",
+    "test": "jest",
     "test:ci": "yarn lint && yarn type-check && yarn test",
+    "test:env": "LOAD_ENV=1 yarn test",
     "build": "tsc -p tsconfig.dist.json --declaration",
     "prepush": "yarn lint && yarn type-check && jest --changedSince main",
     "prepack": "yarn build"
   },
   "peerDependencies": {
-    "@jupiterone/integration-sdk-core": "^6.19.0"
+    "@jupiterone/integration-sdk-core": "^8.13.11"
   },
   "devDependencies": {
-    "@jupiterone/integration-sdk-core": "^6.19.0",
-    "@jupiterone/integration-sdk-dev-tools": "^6.19.0",
-    "@jupiterone/integration-sdk-testing": "^6.19.0",
+    "@jupiterone/integration-sdk-core": "^8.13.11",
+    "@jupiterone/integration-sdk-dev-tools": "^8.13.11",
+    "@jupiterone/integration-sdk-testing": "^8.13.11",
+    "@types/node-fetch": "^2.6.1",
     "ts-node": "^8.10.2"
   },
   "dependencies": {
-    "@jupiterone/snyk-client": "^1.1.2"
+    "@lifeomic/attempt": "^3.0.3",
+    "node-fetch": "^2"
   }
 }
