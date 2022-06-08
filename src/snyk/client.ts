@@ -72,6 +72,26 @@ export class APIClient {
     }
   }
 
+  getCurrentUserDetails() {
+    return this.snykRequest({
+      method: 'GET',
+      uri: `user/me`,
+    });
+  }
+
+  async getCurrentOrgName(): Promise<string | undefined> {
+    try {
+      const currentUserDetails = await this.getCurrentUserDetails();
+
+      return (currentUserDetails.orgs || []).find((org) => {
+        return org && org.id === this.config.snykOrgId;
+      })?.name;
+    } catch (err) {
+      this.logger.warn({ err }, 'Could not fetch current org name');
+      return undefined;
+    }
+  }
+
   /**
    * @param iteratee receives each resource and produces entities/relationships
    */
@@ -245,6 +265,32 @@ export class APIClient {
           method: 'POST',
           uri: `/org/${orgId}/project/${projectId}/aggregated-issues`,
         });
+      },
+      {
+        delay: 5000,
+        factor: 1.2,
+        maxAttempts: this.retries,
+        handleError(err, context) {
+          const code = err.statusCode;
+          if (code < 500 && code !== 429) {
+            context.abort();
+          }
+        },
+      },
+    );
+  }
+
+  async iterateUsers(iteratee: (user: any) => Promise<void>) {
+    return retry(
+      async () => {
+        const users = await this.snykRequest({
+          method: 'GET',
+          uri: `org/${this.config.snykOrgId}/members?includeGroupAdmins=true`,
+        });
+
+        for (const user of users) {
+          await iteratee(user);
+        }
       },
       {
         delay: 5000,
