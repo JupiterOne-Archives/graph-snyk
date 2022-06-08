@@ -1,4 +1,4 @@
-import { APIClient } from './client';
+import { APIClient } from './snyk/client';
 
 import {
   IntegrationInstanceConfig,

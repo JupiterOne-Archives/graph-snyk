@@ -89,6 +89,7 @@ The following entities are created:
 | CWE          | `cwe`          | `Weakness`           |
 | Snyk Account | `snyk_account` | `Service`, `Account` |
 | Snyk Project | `snyk_project` | `Project`            |
+| Snyk User    | `snyk_user`    | `User`               |
 | snyk issue   | `snyk_finding` | `Finding`            |
 
 ### Relationships
@@ -98,9 +99,18 @@ The following relationships are created:
 | Source Entity `_type` | Relationship `_class` | Target Entity `_type` |
 | --------------------- | --------------------- | --------------------- |
 | `snyk_account`        | **HAS**               | `snyk_project`        |
+| `snyk_account`        | **HAS**               | `snyk_user`           |
 | `snyk_finding`        | **EXPLOITS**          | `cwe`                 |
 | `snyk_finding`        | **IS**                | `cve`                 |
 | `snyk_account`        | **IDENTIFIED**        | `snyk_finding`        |
+
+### Mapped Relationships
+
+The following mapped relationships are created:
+
+| Source Entity `_type` | Relationship `_class` | Target Entity `_type` | Direction |
+| --------------------- | --------------------- | --------------------- | --------- |
+| `snyk_project`        | **SCANS**             | `*CodeRepo*`          | FORWARD   |
 
 <!--
 ********************************************************************************

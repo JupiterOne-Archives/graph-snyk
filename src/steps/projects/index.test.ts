@@ -1,23 +1,26 @@
-import {
-  executeStepWithDependencies,
-  Recording,
-  setupRecording,
-} from '@jupiterone/integration-sdk-testing';
-import { buildStepTestConfigForStep } from '../../../test/config';
-import { StepIds } from '../../constants';
+import { createStepCollectionTest } from '../../../test/recording';
+import { mappedRelationships, StepIds } from '../../constants';
 
-let recording: Recording;
-afterEach(async () => {
-  await recording.stop();
-});
+test(
+  'fetch-projects',
+  createStepCollectionTest({
+    directoryName: __dirname,
+    recordingName: 'fetch-projects',
+    stepId: StepIds.FETCH_PROJECTS,
+    async afterExecute({ stepResult }) {
+      // NOTE: This is temporary. Once `toMatchStepMetadata` supports mapped
+      // relationships, then this can be removed.
+      const collectedMappedRelationships = stepResult.collectedRelationships.filter(
+        (r) => {
+          return (
+            r._type === mappedRelationships.PROJECT_REPO._type &&
+            r._class === mappedRelationships.PROJECT_REPO._class
+          );
+        },
+      );
 
-test('fetch-projects', async () => {
-  recording = setupRecording({
-    directory: __dirname,
-    name: 'fetch-projects',
-  });
-
-  const stepConfig = buildStepTestConfigForStep(StepIds.FETCH_PROJECTS);
-  const stepResult = await executeStepWithDependencies(stepConfig);
-  expect(stepResult).toMatchStepMetadata(stepConfig);
-});
+      expect(collectedMappedRelationships.length).toBeGreaterThan(0);
+      return Promise.resolve();
+    },
+  }),
+);
