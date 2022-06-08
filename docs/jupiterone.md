@@ -104,6 +104,14 @@ The following relationships are created:
 | `snyk_finding`        | **IS**                | `cve`                 |
 | `snyk_account`        | **IDENTIFIED**        | `snyk_finding`        |
 
+### Mapped Relationships
+
+The following mapped relationships are created:
+
+| Source Entity `_type` | Relationship `_class` | Target Entity `_type` | Direction |
+| --------------------- | --------------------- | --------------------- | --------- |
+| `snyk_project`        | **SCANS**             | `*CodeRepo*`          | FORWARD   |
+
 <!--
 ********************************************************************************
 END OF GENERATED DOCUMENTATION AFTER BELOW MARKER

@@ -1,8 +1,13 @@
 import {
   createIntegrationEntity,
+  createMappedRelationship,
+  Entity,
   parseTimePropertyValue,
+  RelationshipClass,
+  RelationshipDirection,
 } from '@jupiterone/integration-sdk-core';
-import { Entities } from '../../constants';
+import { Entities, mappedRelationships } from '../../constants';
+import { isSupportedCodeRepoOrigin, parseSnykProjectName } from './codeRepo';
 
 export function createProjectEntity(project: any) {
   return createIntegrationEntity({
@@ -40,6 +45,44 @@ export function createProjectEntity(project: any) {
         createdOn: parseTimePropertyValue(project.created),
         webLink: project.browseUrl,
       },
+    },
+  });
+}
+
+export function buildProjectRepoMappedRelationship(projectEntity: Entity) {
+  const projectOrigin = projectEntity.origin as string | undefined;
+  const projectName = projectEntity.name as string | undefined;
+
+  if (
+    !projectName ||
+    !projectOrigin ||
+    !isSupportedCodeRepoOrigin(projectOrigin)
+  )
+    return;
+
+  // We need to parse the `name` as it contains the organization name
+  // and the project name.
+  //
+  // For example:
+  //
+  // `starbase-test/nuxtjs-1`
+  // `starbase-test/nuxtjs-1:package.json`
+  const parsedSnykProjectName = parseSnykProjectName(projectName);
+  if (!parsedSnykProjectName) return;
+
+  return createMappedRelationship({
+    _class: RelationshipClass.SCANS,
+    _type: mappedRelationships.PROJECT_REPO._type,
+    _mapping: {
+      relationshipDirection: RelationshipDirection.FORWARD,
+      sourceEntityKey: projectEntity._key,
+      targetFilterKeys: [['_class', 'name', 'owner']],
+      targetEntity: {
+        _class: 'CodeRepo',
+        name: parsedSnykProjectName.codeRepoName.toLowerCase(),
+        owner: parsedSnykProjectName.codeRepoOrgName.toLowerCase(),
+      },
+      skipTargetCreation: true,
     },
   });
 }

@@ -1,4 +1,7 @@
-import { RelationshipClass } from '@jupiterone/integration-sdk-core';
+import {
+  RelationshipClass,
+  RelationshipDirection,
+} from '@jupiterone/integration-sdk-core';
 
 export const SetDataKeys = {
   ACCOUNT_ENTITY: 'ACCOUNT_ENTITY',
@@ -74,5 +77,15 @@ export const Relationships = {
     sourceType: Entities.SNYK_ACCOUNT._type,
     _class: RelationshipClass.HAS,
     targetType: Entities.USER._type,
+  },
+};
+
+export const mappedRelationships = {
+  PROJECT_REPO: {
+    _type: 'snyk_project_scans_coderepo',
+    sourceType: Entities.PROJECT._type,
+    _class: RelationshipClass.SCANS,
+    targetType: 'CodeRepo',
+    direction: RelationshipDirection.FORWARD,
   },
 };

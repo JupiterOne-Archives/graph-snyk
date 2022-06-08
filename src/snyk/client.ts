@@ -72,6 +72,26 @@ export class APIClient {
     }
   }
 
+  getCurrentUserDetails() {
+    return this.snykRequest({
+      method: 'GET',
+      uri: `user/me`,
+    });
+  }
+
+  async getCurrentOrgName(): Promise<string | undefined> {
+    try {
+      const currentUserDetails = await this.getCurrentUserDetails();
+
+      return (currentUserDetails.orgs || []).find((org) => {
+        return org && org.id === this.config.snykOrgId;
+      })?.name;
+    } catch (err) {
+      this.logger.warn({ err }, 'Could not fetch current org name');
+      return undefined;
+    }
+  }
+
   /**
    * @param iteratee receives each resource and produces entities/relationships
    */
