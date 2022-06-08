@@ -88,9 +88,9 @@ The following entities are created:
 | CVE          | `cve`          | `Vulnerability`      |
 | CWE          | `cwe`          | `Weakness`           |
 | Snyk Account | `snyk_account` | `Service`, `Account` |
+| Snyk Issue   | `snyk_finding` | `Finding`            |
 | Snyk Project | `snyk_project` | `Project`            |
 | Snyk User    | `snyk_user`    | `User`               |
-| snyk issue   | `snyk_finding` | `Finding`            |
 
 ### Relationships
 

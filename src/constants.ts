@@ -33,7 +33,7 @@ export const Entities = {
   SNYK_FINDING: {
     _type: 'snyk_finding',
     _class: ['Finding'],
-    resourceName: 'snyk issue',
+    resourceName: 'Snyk Issue',
   },
   PROJECT: {
     _type: 'snyk_project',
