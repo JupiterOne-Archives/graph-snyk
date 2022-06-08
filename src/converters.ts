@@ -7,7 +7,7 @@ import {
 } from '@jupiterone/integration-sdk-core';
 import { Entities, Relationships } from './constants';
 
-import { AggregatedIssue, CVEEntity, CWEEntity, FindingEntity } from './types';
+import { CVEEntity, CWEEntity } from './types';
 
 const CVE_URL_BASE = 'https://nvd.nist.gov/vuln/detail/';
 
@@ -29,34 +29,72 @@ export function createServiceEntity(orgId: string, orgName?: string): Entity {
   });
 }
 
-export function createFindingEntity(vuln: AggregatedIssue): FindingEntity {
-  return {
-    _class: Entities.SNYK_FINDING._class,
-    _key: `snyk-project-finding-${vuln.id}`,
-    _type: Entities.SNYK_FINDING._type,
-    category: 'application',
-    score: vuln.issueData.cvssScore,
-    cvssScore: vuln.issueData.cvssScore,
-    cwe: vuln.issueData.identifiers?.CWE,
-    cve: vuln.issueData.identifiers?.CVE,
-    description: vuln.issueData.description,
-    displayName: vuln.issueData.title,
-    webLink: vuln.issueData.url,
-    id: vuln.id,
-    numericSeverity: vuln.issueData.cvssScore,
-    severity: vuln.issueData.severity,
-    pkgName: vuln.pkgName,
-    pkgVersions: vuln.pkgVersions,
-    language: vuln.issueData.language,
-    isUpgradable: vuln.fixInfo?.isUpgradable,
-    isPatchable: vuln.fixInfo?.isPatchable,
-    publicationTime: parseTimePropertyValue(vuln.issueData.publicationTime),
-    disclosureTime: parseTimePropertyValue(vuln.issueData.disclosureTime),
-    open: true,
-    targets: [],
-    issueType: vuln.issueType,
-    identifiedInFile: '',
-  };
+const SEVERITY_TO_NUMERIC_SEVERITY_MAP = new Map<string, number>([
+  ['low', 2],
+  ['medium', 5],
+  ['high', 7],
+  ['critical', 10],
+]);
+
+export function getNumericSeverityFromIssueSeverity(
+  issueSeverity?: 'low' | 'medium' | 'high' | 'critical',
+): number {
+  if (!issueSeverity) return 0;
+
+  const numericSeverity = SEVERITY_TO_NUMERIC_SEVERITY_MAP.get(issueSeverity);
+  return numericSeverity === undefined ? 0 : numericSeverity;
+}
+
+export function createFindingEntity(vuln: any) {
+  return createIntegrationEntity({
+    entityData: {
+      source: vuln,
+      assign: {
+        _class: Entities.SNYK_FINDING._class,
+        _key: `snyk-project-finding-${vuln.id}`,
+        _type: Entities.SNYK_FINDING._type,
+        category: 'application',
+        score: vuln.issueData.cvssScore || undefined,
+        cvssScore: vuln.issueData.cvssScore,
+        cwe: vuln.issueData.identifiers?.CWE,
+        cve: vuln.issueData.identifiers?.CVE,
+        description: vuln.issueData.description,
+        name: vuln.issueData.title,
+        displayName: vuln.issueData.title,
+        webLink: vuln.issueData.url,
+        id: vuln.id,
+        numericSeverity: getNumericSeverityFromIssueSeverity(
+          vuln.issueData.severity,
+        ),
+        severity: vuln.issueData.severity,
+        pkgName: vuln.pkgName,
+        pkgVersions: vuln.pkgVersions,
+        language: vuln.issueData.language,
+        isUpgradable: vuln.fixInfo?.isUpgradable,
+        isPatchable: vuln.fixInfo?.isPatchable,
+        isPinnable: vuln.fixInfo?.isPinnable,
+        isFixable: vuln.fixInfo?.isFixable,
+        isPartiallyFixable: vuln.fixInfo?.isPartiallyFixable,
+
+        publicationTime: parseTimePropertyValue(vuln.issueData.publicationTime),
+        disclosureTime: parseTimePropertyValue(vuln.issueData.disclosureTime),
+        open: true,
+        targets: [],
+        issueType: vuln.issueType,
+        identifiedInFile: '',
+
+        priorityScore: vuln.priorityScore,
+        exploitMaturity: vuln.exploitMaturity,
+        nearestFixedInVersion: vuln.nearestFixedInVersion,
+        isMaliciousPackage: vuln.isMaliciousPackage,
+        isPatched: vuln.isPatched,
+        isIgnored: vuln.isIgnored,
+        violatedPolicyPublicId: vuln.issueData.violatedPolicyPublicId,
+
+        path: vuln.issueData.path,
+      },
+    },
+  });
 }
 
 export function createCVEEntity(
