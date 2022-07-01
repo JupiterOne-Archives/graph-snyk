@@ -23,6 +23,7 @@ and this project adheres to
   | -------------- | ------- | -------------- |
   | `snyk_account` | **HAS** | `snyk_project` |
   | `snyk_account` | **HAS** | `snyk_user`    |
+  | `snyk_project` | **HAS** | `snyk_finding` |
 
 - Added support for ingesting the following **new** mapped relationships:
 

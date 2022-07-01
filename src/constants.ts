@@ -78,6 +78,12 @@ export const Relationships = {
     _class: RelationshipClass.HAS,
     targetType: Entities.USER._type,
   },
+  PROJECT_FINDING: {
+    _type: 'snyk_project_has_finding',
+    sourceType: Entities.PROJECT._type,
+    _class: RelationshipClass.HAS,
+    targetType: Entities.SNYK_FINDING._type,
+  },
 };
 
 export const mappedRelationships = {

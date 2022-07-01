@@ -1,6 +1,8 @@
 import {
+  createDirectRelationship,
   IntegrationStep,
   IntegrationStepExecutionContext,
+  RelationshipClass,
 } from '@jupiterone/integration-sdk-core';
 
 import { APIClient } from '../snyk/client';
@@ -91,6 +93,16 @@ async function fetchFindings({
           await jobState.addRelationship(
             createServiceFindingRelationship(serviceEntity, finding),
           );
+
+          const projectHasFindingRelationship = createDirectRelationship({
+            from: project,
+            to: finding,
+            _class: RelationshipClass.HAS,
+          });
+
+          if (!jobState.hasKey(projectHasFindingRelationship._key)) {
+            await jobState.addRelationship(projectHasFindingRelationship);
+          }
         }
       });
     },
@@ -110,6 +122,7 @@ export const steps: IntegrationStep<IntegrationConfig>[] = [
       Relationships.FINDING_IS_CVE,
       Relationships.FINDING_EXPLOITS_CWE,
       Relationships.SERVICE_IDENTIFIED_FINDING,
+      Relationships.PROJECT_FINDING,
     ],
     dependsOn: [StepIds.FETCH_ACCOUNT, StepIds.FETCH_PROJECTS],
     executionHandler: fetchFindings,

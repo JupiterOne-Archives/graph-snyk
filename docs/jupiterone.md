@@ -102,6 +102,7 @@ The following relationships are created:
 | `snyk_account`        | **HAS**               | `snyk_user`           |
 | `snyk_finding`        | **EXPLOITS**          | `cwe`                 |
 | `snyk_finding`        | **IS**                | `cve`                 |
+| `snyk_project`        | **HAS**               | `snyk_finding`        |
 | `snyk_account`        | **IDENTIFIED**        | `snyk_finding`        |
 
 ### Mapped Relationships
