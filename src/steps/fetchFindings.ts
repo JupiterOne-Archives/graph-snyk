@@ -96,16 +96,16 @@ async function fetchFindings({
           await jobState.addRelationship(
             createServiceFindingRelationship(serviceEntity, finding),
           );
+        }
 
-          const projectHasFindingRelationship = createDirectRelationship({
-            from: project,
-            to: finding,
-            _class: RelationshipClass.HAS,
-          });
+        const projectHasFindingRelationship = createDirectRelationship({
+          from: project,
+          to: finding,
+          _class: RelationshipClass.HAS,
+        });
 
-          if (!jobState.hasKey(projectHasFindingRelationship._key)) {
-            await jobState.addRelationship(projectHasFindingRelationship);
-          }
+        if (!jobState.hasKey(projectHasFindingRelationship._key)) {
+          await jobState.addRelationship(projectHasFindingRelationship);
         }
       });
     },
