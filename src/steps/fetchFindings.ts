@@ -39,6 +39,8 @@ async function fetchFindings({
     cweEntities: {},
   };
 
+  let totalFindingsEncountered = 0;
+
   await jobState.iterateEntities(
     {
       _type: Entities.PROJECT._type,
@@ -52,6 +54,7 @@ async function fetchFindings({
 
       await apiClient.iterateIssues(projectId, async (issue) => {
         const finding = createFindingEntity(issue) as FindingEntity;
+        totalFindingsEncountered++;
 
         if (entityCache.findingEntities[finding.id]) {
           if (
@@ -106,6 +109,14 @@ async function fetchFindings({
         }
       });
     },
+  );
+
+  logger.info(
+    {
+      totalFindingsEncountered,
+      totalFindingsCreated: Object.values(entityCache.findingEntities).length,
+    },
+    'Finding Entity Counts Summary',
   );
 
   await jobState.addEntities(Object.values(entityCache.cweEntities));

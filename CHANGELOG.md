@@ -8,7 +8,12 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [2.2.0] - 2022-07-19
+
 ### Added
+
+- Added debug logs that show a summary of findings that were encountered and
+  findings that would be created
 
 - Support for ingesting the following **new** entities:
 
