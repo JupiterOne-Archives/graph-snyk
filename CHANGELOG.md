@@ -8,6 +8,8 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [2.2.1] - 2022-07-19
+
 ### Fixed
 
 - Create relationship between finding and project even when a finding entity has
