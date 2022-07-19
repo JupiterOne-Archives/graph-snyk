@@ -10,6 +10,9 @@ and this project adheres to
 
 ### Added
 
+- Added debug logs that show a summary of findings that were encountered and
+  findings that would be created
+
 - Support for ingesting the following **new** entities:
 
   | Resources                 | Entity `_type` | Entity `_class` |
