@@ -40,6 +40,10 @@ async function fetchFindings({
   };
 
   let totalFindingsEncountered = 0;
+  let totalCriticalFindingsEncountered = 0;
+  let totalHighFindingsEncountered = 0;
+  let totalMediumFindingsEncountered = 0;
+  let totalLowFindingsEncountered = 0;
 
   await jobState.iterateEntities(
     {
@@ -55,6 +59,16 @@ async function fetchFindings({
       await apiClient.iterateIssues(projectId, async (issue) => {
         const finding = createFindingEntity(issue) as FindingEntity;
         totalFindingsEncountered++;
+
+        if (finding.severity === 'critical') {
+          totalCriticalFindingsEncountered++;
+        } else if (finding.severity === 'high') {
+          totalHighFindingsEncountered++;
+        } else if (finding.severity === 'medium') {
+          totalMediumFindingsEncountered++;
+        } else if (finding.severity === 'low') {
+          totalLowFindingsEncountered++;
+        }
 
         if (entityCache.findingEntities[finding.id]) {
           if (
@@ -114,6 +128,10 @@ async function fetchFindings({
   logger.info(
     {
       totalFindingsEncountered,
+      totalCriticalFindingsEncountered,
+      totalHighFindingsEncountered,
+      totalMediumFindingsEncountered,
+      totalLowFindingsEncountered,
       totalFindingsCreated: Object.values(entityCache.findingEntities).length,
     },
     'Finding Entity Counts Summary',

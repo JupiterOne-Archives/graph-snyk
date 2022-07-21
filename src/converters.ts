@@ -66,7 +66,8 @@ export function createFindingEntity(vuln: any) {
         numericSeverity: getNumericSeverityFromIssueSeverity(
           vuln.issueData.severity,
         ),
-        severity: vuln.issueData.severity,
+        severity: vuln.issueData.severity, // Severity after policies have been applied
+        originalSeverity: vuln.issueData.originalSeverity, // Severity as seen in snyk DB, before policies have been applied
         pkgName: vuln.pkgName,
         pkgVersions: vuln.pkgVersions,
         language: vuln.issueData.language,
