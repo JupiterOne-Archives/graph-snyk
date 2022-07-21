@@ -51,7 +51,7 @@ export function createFindingEntity(vuln: any) {
       source: vuln,
       assign: {
         _class: Entities.SNYK_FINDING._class,
-        _key: `snyk-project-finding-${vuln.id}`,
+        _key: `snyk-project-${vuln.projectId}-vuln-${vuln.id}`,
         _type: Entities.SNYK_FINDING._type,
         category: 'application',
         score: vuln.issueData.cvssScore || undefined,

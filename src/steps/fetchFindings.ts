@@ -20,7 +20,6 @@ import { CVEEntity, CWEEntity, FindingEntity } from '../types';
 import { getAccountEntity } from '../util/entity';
 
 type EntityCache = {
-  findingEntities: { [key: string]: FindingEntity };
   cveEntities: { [cve: string]: CVEEntity };
   cweEntities: { [cwe: string]: CWEEntity };
 };
@@ -34,7 +33,6 @@ async function fetchFindings({
   const apiClient = new APIClient(logger, instance.config);
 
   const entityCache: EntityCache = {
-    findingEntities: {},
     cveEntities: {},
     cweEntities: {},
   };
@@ -54,10 +52,13 @@ async function fetchFindings({
       const projectName = project.name as string | undefined;
 
       if (!projectId || !projectName) return;
-      const [projectSourceName, packageName] = projectName.split(':');
+      const [, packageName] = projectName.split(':');
 
       await apiClient.iterateIssues(projectId, async (issue) => {
-        const finding = createFindingEntity(issue) as FindingEntity;
+        const finding = createFindingEntity({
+          ...issue,
+          projectId,
+        }) as FindingEntity;
         totalFindingsEncountered++;
 
         if (finding.severity === 'critical') {
@@ -70,47 +71,35 @@ async function fetchFindings({
           totalLowFindingsEncountered++;
         }
 
-        if (entityCache.findingEntities[finding.id]) {
-          if (
-            !entityCache.findingEntities[finding.id].targets.includes(
-              projectSourceName,
-            )
-          ) {
-            entityCache.findingEntities[finding.id].targets.push(
-              projectSourceName,
-            );
-          }
-        } else {
-          finding.targets.push(projectSourceName);
-          finding.identifiedInFile = packageName;
-          entityCache.findingEntities[finding.id] = finding;
+        finding.identifiedInFile = packageName;
 
-          for (const cve of finding.cve || []) {
-            let cveEntity = entityCache.cveEntities[cve];
-            if (!cveEntity) {
-              cveEntity = createCVEEntity(cve, issue.issueData.cvssScore!);
-              entityCache.cveEntities[cve] = cveEntity;
-            }
-            await jobState.addRelationship(
-              createFindingVulnerabilityRelationship(finding, cveEntity),
-            );
+        for (const cve of finding.cve || []) {
+          let cveEntity = entityCache.cveEntities[cve];
+          if (!cveEntity) {
+            cveEntity = createCVEEntity(cve, issue.issueData.cvssScore!);
+            entityCache.cveEntities[cve] = cveEntity;
           }
-
-          for (const cwe of finding.cwe || []) {
-            let cweEntity = entityCache.cweEntities[cwe];
-            if (!cweEntity) {
-              cweEntity = createCWEEntity(cwe);
-              entityCache.cweEntities[cwe] = cweEntity;
-            }
-            await jobState.addRelationship(
-              createFindingWeaknessRelationship(finding, cweEntity),
-            );
-          }
-
           await jobState.addRelationship(
-            createServiceFindingRelationship(serviceEntity, finding),
+            createFindingVulnerabilityRelationship(finding, cveEntity),
           );
         }
+
+        for (const cwe of finding.cwe || []) {
+          let cweEntity = entityCache.cweEntities[cwe];
+          if (!cweEntity) {
+            cweEntity = createCWEEntity(cwe);
+            entityCache.cweEntities[cwe] = cweEntity;
+          }
+          await jobState.addRelationship(
+            createFindingWeaknessRelationship(finding, cweEntity),
+          );
+        }
+
+        await jobState.addRelationship(
+          createServiceFindingRelationship(serviceEntity, finding),
+        );
+
+        await jobState.addEntity(finding);
 
         const projectHasFindingRelationship = createDirectRelationship({
           from: project,
@@ -132,14 +121,9 @@ async function fetchFindings({
       totalHighFindingsEncountered,
       totalMediumFindingsEncountered,
       totalLowFindingsEncountered,
-      totalFindingsCreated: Object.values(entityCache.findingEntities).length,
     },
     'Finding Entity Counts Summary',
   );
-
-  await jobState.addEntities(Object.values(entityCache.cweEntities));
-  await jobState.addEntities(Object.values(entityCache.cveEntities));
-  await jobState.addEntities(Object.values(entityCache.findingEntities));
 }
 
 export const steps: IntegrationStep<IntegrationConfig>[] = [
