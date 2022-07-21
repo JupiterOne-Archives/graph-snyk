@@ -8,6 +8,16 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [2.2.2] - 2022-07-20
+
+### Added
+
+- New property added to entity:
+
+  | Entity         | Properties         |
+  | -------------- | ------------------ |
+  | `snyk_finding` | `originalSeverity` |
+
 ## [2.2.1] - 2022-07-19
 
 ### Fixed
