@@ -16,13 +16,8 @@ import {
   createFindingWeaknessRelationship,
   createServiceFindingRelationship,
 } from '../converters';
-import { CVEEntity, CWEEntity, FindingEntity } from '../types';
+import { FindingEntity } from '../types';
 import { getAccountEntity } from '../util/entity';
-
-type EntityCache = {
-  cveEntities: { [cve: string]: CVEEntity };
-  cweEntities: { [cwe: string]: CWEEntity };
-};
 
 async function fetchFindings({
   jobState,
@@ -31,11 +26,6 @@ async function fetchFindings({
 }: IntegrationStepExecutionContext<IntegrationConfig>) {
   const serviceEntity = await getAccountEntity(jobState);
   const apiClient = new APIClient(logger, instance.config);
-
-  const entityCache: EntityCache = {
-    cveEntities: {},
-    cweEntities: {},
-  };
 
   let totalFindingsEncountered = 0;
   let totalCriticalFindingsEncountered = 0;
@@ -74,22 +64,14 @@ async function fetchFindings({
         finding.identifiedInFile = packageName;
 
         for (const cve of finding.cve || []) {
-          let cveEntity = entityCache.cveEntities[cve];
-          if (!cveEntity) {
-            cveEntity = createCVEEntity(cve, issue.issueData.cvssScore!);
-            entityCache.cveEntities[cve] = cveEntity;
-          }
+          const cveEntity = createCVEEntity(cve, issue.issueData.cvssScore!);
           await jobState.addRelationship(
             createFindingVulnerabilityRelationship(finding, cveEntity),
           );
         }
 
         for (const cwe of finding.cwe || []) {
-          let cweEntity = entityCache.cweEntities[cwe];
-          if (!cweEntity) {
-            cweEntity = createCWEEntity(cwe);
-            entityCache.cweEntities[cwe] = cweEntity;
-          }
+          const cweEntity = createCWEEntity(cwe);
           await jobState.addRelationship(
             createFindingWeaknessRelationship(finding, cweEntity),
           );
