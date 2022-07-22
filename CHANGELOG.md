@@ -8,6 +8,14 @@ and this project adheres to
 
 ## [Unreleased]
 
+### Changed
+
+- Findings are no longer aggregated by vulnerability ID. This change will allow
+  the finding entities created in J1 to be in parity with the findings in Snyk
+
+- CWE and CVE entities will be mapped to but we will no longer create these
+  entities from within this integration
+
 ## [2.2.2] - 2022-07-20
 
 ### Added
