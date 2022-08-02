@@ -76,6 +76,7 @@ export function createFindingEntity(vuln: any) {
         isPinnable: vuln.fixInfo?.isPinnable,
         isFixable: vuln.fixInfo?.isFixable,
         isPartiallyFixable: vuln.fixInfo?.isPartiallyFixable,
+        fixedIn: vuln.fixInfo?.fixedIn,
 
         publicationTime: parseTimePropertyValue(vuln.issueData.publicationTime),
         disclosureTime: parseTimePropertyValue(vuln.issueData.disclosureTime),
