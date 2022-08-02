@@ -19,6 +19,7 @@ export function createProjectEntity(project: any) {
         _key: project.id as string,
         name: project.name,
         displayName: project.name as string,
+        // Example origins: cli, github, github-enterprise, gitlab
         origin: project.origin,
         type: project.type,
         readOnly: project.readOnly,

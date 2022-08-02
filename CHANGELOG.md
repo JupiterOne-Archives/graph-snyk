@@ -8,6 +8,14 @@ and this project adheres to
 
 ## [Unreleased]
 
+### Added
+
+- New property added to entity:
+
+  | Entity         | Properties |
+  | -------------- | ---------- |
+  | `snyk_finding` | `fixedIn`  |
+
 ### Changed
 
 - Findings are no longer aggregated by vulnerability ID. This change will allow
