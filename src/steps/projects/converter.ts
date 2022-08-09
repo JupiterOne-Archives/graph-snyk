@@ -10,7 +10,6 @@ import { Entities, mappedRelationships } from '../../constants';
 import { isSupportedCodeRepoOrigin, parseSnykProjectName } from './codeRepo';
 
 export function createProjectEntity(project: any) {
-  console.log(project);
   return createIntegrationEntity({
     entityData: {
       source: project,
@@ -47,7 +46,7 @@ export function createProjectEntity(project: any) {
         createdOn: parseTimePropertyValue(project.created),
         webLink: project.browseUrl,
 
-        environmentAttributes: project?.attributes.environment,
+        environmentAttributes: project.attributes?.environment,
       },
     },
   });
