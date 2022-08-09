@@ -45,6 +45,8 @@ export function createProjectEntity(project: any) {
         lastScannedOn: parseTimePropertyValue(project.lastTestedDate),
         createdOn: parseTimePropertyValue(project.created),
         webLink: project.browseUrl,
+
+        environmentAttributes: project.attributes?.environment,
       },
     },
   });

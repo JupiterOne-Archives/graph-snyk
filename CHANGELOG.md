@@ -12,6 +12,14 @@ and this project adheres to
 
 - New property added to entity:
 
+  | Entity         | Properties              |
+  | -------------- | ----------------------- |
+  | `snyk_project` | `environmentAttributes` |
+
+### Added
+
+- New property added to entity:
+
   | Entity         | Properties |
   | -------------- | ---------- |
   | `snyk_finding` | `fixedIn`  |
