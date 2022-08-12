@@ -8,6 +8,8 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [2.3.0] - 2022-08-12
+
 ### Added
 
 - New property added to entity:
