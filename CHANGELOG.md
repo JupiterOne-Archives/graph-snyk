@@ -8,6 +8,20 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [2.4.0] - 2022-08-15
+
+### Added
+
+- New properties added to entities:
+
+  | Entity         | Properties         |
+  | -------------- | ------------------ |
+  | `snyk_project` | `repoFullName`     |
+  | `snyk_project` | `repoOrganization` |
+  | `snyk_project` | `repoName`         |
+  | `snyk_project` | `directoryName`    |
+  | `snyk_project` | `fileName`         |
+
 ## [2.3.0] - 2022-08-12
 
 ### Added

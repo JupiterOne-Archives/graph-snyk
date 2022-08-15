@@ -21,24 +21,55 @@ describe('#parseSnykProjectName', () => {
   test('should return parsed Snyk project when full file path supplied', () => {
     expect(parseSnykProjectName('starbase-test/starbase:package.json')).toEqual(
       {
-        codeRepoOrgName: 'starbase-test',
-        codeRepoName: 'starbase',
+        repoFullName: 'starbase-test/starbase',
+        repoOrganization: 'starbase-test',
+        repoName: 'starbase',
+        directoryName: undefined,
+        fileName: 'package.json',
       },
     );
   });
 
   test('should return parsed Snyk project when project without file path supplied', () => {
     expect(parseSnykProjectName('starbase-test/starbase')).toEqual({
-      codeRepoOrgName: 'starbase-test',
-      codeRepoName: 'starbase',
+      repoFullName: 'starbase-test/starbase',
+      repoOrganization: 'starbase-test',
+      repoName: 'starbase',
+      directoryName: undefined,
+      fileName: undefined,
     });
   });
 
   test('should return undefined when no org name found', () => {
-    expect(parseSnykProjectName('')).toEqual(undefined);
+    expect(parseSnykProjectName('')).toEqual({
+      repoFullName: undefined,
+      repoOrganization: undefined,
+      repoName: undefined,
+      directoryName: undefined,
+      fileName: undefined,
+    });
+  });
+
+  test('should parse subdirectory information', () => {
+    // starbase-test/starbase:subdir/package.json
+    expect(
+      parseSnykProjectName('starbase-test/starbase:subdir/package.json'),
+    ).toEqual({
+      repoFullName: 'starbase-test/starbase',
+      repoOrganization: 'starbase-test',
+      repoName: 'starbase',
+      directoryName: 'subdir',
+      fileName: 'package.json',
+    });
   });
 
   test('should return undefined when no repo name found', () => {
-    expect(parseSnykProjectName('starbase')).toEqual(undefined);
+    expect(parseSnykProjectName('starbase')).toEqual({
+      repoFullName: undefined,
+      repoOrganization: undefined,
+      repoName: undefined,
+      directoryName: undefined,
+      fileName: undefined,
+    });
   });
 });
