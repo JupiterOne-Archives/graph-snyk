@@ -92,7 +92,7 @@ function parseSnykProjectName(projectName: string): ParseSnykProjectNameResult {
   return {
     repoFullName: repoFullName.toLowerCase(),
     repoOrganization: repoOrganization.toLowerCase(),
-    repoName: repoName.toLocaleLowerCase(),
+    repoName: repoName.toLowerCase(),
     directoryName: directoryName?.toLowerCase(),
     fileName,
   };
