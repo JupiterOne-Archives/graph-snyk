@@ -10,6 +10,14 @@ import { Entities, mappedRelationships } from '../../constants';
 import { isSupportedCodeRepoOrigin, parseSnykProjectName } from './codeRepo';
 
 export function createProjectEntity(project: any) {
+  const {
+    repoOrganization,
+    repoName,
+    repoFullName,
+    directoryName,
+    fileName,
+  } = parseSnykProjectName(project.name);
+
   return createIntegrationEntity({
     entityData: {
       source: project,
@@ -17,7 +25,14 @@ export function createProjectEntity(project: any) {
         _class: Entities.PROJECT._class,
         _type: Entities.PROJECT._type,
         _key: project.id as string,
+
         name: project.name,
+        repoFullName,
+        repoOrganization,
+        repoName,
+        directoryName,
+        fileName,
+
         displayName: project.name as string,
         // Example origins: cli, github, github-enterprise, gitlab
         origin: project.origin,
@@ -63,15 +78,8 @@ export function buildProjectRepoMappedRelationship(projectEntity: Entity) {
   )
     return;
 
-  // We need to parse the `name` as it contains the organization name
-  // and the project name.
-  //
-  // For example:
-  //
-  // `starbase-test/nuxtjs-1`
-  // `starbase-test/nuxtjs-1:package.json`
-  const parsedSnykProjectName = parseSnykProjectName(projectName);
-  if (!parsedSnykProjectName) return;
+  const { repoOrganization, repoName } = parseSnykProjectName(projectName);
+  if (!repoName || !repoOrganization) return;
 
   return createMappedRelationship({
     _class: RelationshipClass.SCANS,
@@ -82,8 +90,8 @@ export function buildProjectRepoMappedRelationship(projectEntity: Entity) {
       targetFilterKeys: [['_class', 'name', 'owner']],
       targetEntity: {
         _class: 'CodeRepo',
-        name: parsedSnykProjectName.codeRepoName.toLowerCase(),
-        owner: parsedSnykProjectName.codeRepoOrgName.toLowerCase(),
+        name: repoName,
+        owner: repoOrganization,
       },
       skipTargetCreation: true,
     },
