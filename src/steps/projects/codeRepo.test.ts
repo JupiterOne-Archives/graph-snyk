@@ -58,7 +58,23 @@ describe('#parseSnykProjectName', () => {
       repoFullName: 'starbase-test/starbase',
       repoOrganization: 'starbase-test',
       repoName: 'starbase',
-      directoryName: 'subdir',
+      fullDirectoryPath: 'subdir',
+      topLevelDirectoryName: 'subdir',
+      fileName: 'package.json',
+    });
+  });
+
+  test('should handle multiple subdirectories', () => {
+    expect(
+      parseSnykProjectName(
+        'starbase-test/starbase:my-directory/sub-dir-1/sub-dir-2/package.json',
+      ),
+    ).toEqual({
+      repoFullName: 'starbase-test/starbase',
+      repoOrganization: 'starbase-test',
+      repoName: 'starbase',
+      fullDirectoryPath: 'my-directory/sub-dir-1/sub-dir-2',
+      topLevelDirectoryName: 'my-directory',
       fileName: 'package.json',
     });
   });
