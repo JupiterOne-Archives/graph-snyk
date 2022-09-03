@@ -8,6 +8,22 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [2.4.1] - 2022-09-03
+
+### Added
+
+- New properties added to entities:
+
+  | Entity         | Properties              |
+  | -------------- | ----------------------- |
+  | `snyk_project` | `fullDirectoryPath`     |
+  | `snyk_project` | `topLevelDirectoryName` |
+
+### Fixed
+
+- Update Snyk project name parsing to properly extract the top-level directory
+  name and the full directory path to the scanned file
+
 ## [2.4.0] - 2022-08-15
 
 ### Added

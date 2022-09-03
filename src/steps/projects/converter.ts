@@ -14,7 +14,8 @@ export function createProjectEntity(project: any) {
     repoOrganization,
     repoName,
     repoFullName,
-    directoryName,
+    fullDirectoryPath,
+    topLevelDirectoryName,
     fileName,
   } = parseSnykProjectName(project.name);
 
@@ -30,7 +31,9 @@ export function createProjectEntity(project: any) {
         repoFullName,
         repoOrganization,
         repoName,
-        directoryName,
+        directoryName: topLevelDirectoryName,
+        topLevelDirectoryName,
+        fullDirectoryPath,
         fileName,
 
         displayName: project.name as string,

@@ -9,24 +9,37 @@ function isSupportedCodeRepoOrigin(projectOrigin: string): boolean {
   );
 }
 
+function rejoinFileScannedPath(fileScannedPathParts: string[]) {
+  return fileScannedPathParts.slice(0, -1).join('/');
+}
+
+function lastEl(els: string[]): string {
+  return els[els.length - 1];
+}
+
 function parseSnykProjectFileScannedPath(fileScannedPath: string) {
-  // Two possible cases:
+  // Possible cases:
   //
   // `subdir/package.json` => ['subdir', 'package.json']
+  // `subdir/subdir2/package.json` => ['subdir', 'subdir2', 'package.json']
   // `package.json` => ['package.json']
   const fileScannedPathSplit = fileScannedPath.split('/');
 
-  let directoryName: string | undefined;
+  let fullDirectoryPath: string | undefined;
+  let topLevelDirectoryName: string | undefined;
   let fileName: string | undefined;
 
-  if (fileScannedPathSplit.length === 2) {
-    [directoryName, fileName] = fileScannedPathSplit;
+  if (fileScannedPathSplit.length > 1) {
+    fileName = lastEl(fileScannedPathSplit);
+    fullDirectoryPath = rejoinFileScannedPath(fileScannedPathSplit);
+    topLevelDirectoryName = fileScannedPathSplit[0];
   } else {
     [fileName] = fileScannedPathSplit;
   }
 
   return {
-    directoryName,
+    fullDirectoryPath,
+    topLevelDirectoryName,
     fileName,
   };
 }
@@ -35,7 +48,20 @@ type ParseSnykProjectNameResult = {
   repoFullName?: string;
   repoOrganization?: string;
   repoName?: string;
-  directoryName?: string;
+  /**
+   * The full path to the directory which contains the scanned file
+   *
+   * Example scanned file: `my/directory/path/package.json`
+   * Example `fullDirectoryPath`: `my/directory/path`
+   */
+  fullDirectoryPath?: string;
+  /**
+   * The top level directory which contains the scanned file
+   *
+   * Example scanned file: `my/directory/path/package.json`
+   * Example `topLevelDirectoryName`: `my`
+   */
+  topLevelDirectoryName?: string;
   fileName?: string;
 };
 
@@ -46,7 +72,8 @@ function getUnknownSnykProjectNameParseResult(): ParseSnykProjectNameResult {
     repoFullName: undefined,
     repoOrganization: undefined,
     repoName: undefined,
-    directoryName: undefined,
+    fullDirectoryPath: undefined,
+    topLevelDirectoryName: undefined,
     fileName: undefined,
   };
 }
@@ -80,20 +107,24 @@ function parseSnykProjectName(projectName: string): ParseSnykProjectNameResult {
   if (!repoOrganization || !repoName)
     return getUnknownSnykProjectNameParseResult();
 
-  let directoryName: string | undefined;
+  let fullDirectoryPath: string | undefined;
+  let topLevelDirectoryName: string | undefined;
   let fileName: string | undefined;
 
   if (fileScannedPath) {
-    ({ directoryName, fileName } = parseSnykProjectFileScannedPath(
-      fileScannedPath,
-    ));
+    ({
+      fullDirectoryPath,
+      topLevelDirectoryName,
+      fileName,
+    } = parseSnykProjectFileScannedPath(fileScannedPath));
   }
 
   return {
     repoFullName: repoFullName.toLowerCase(),
     repoOrganization: repoOrganization.toLowerCase(),
     repoName: repoName.toLowerCase(),
-    directoryName: directoryName?.toLowerCase(),
+    fullDirectoryPath: fullDirectoryPath?.toLowerCase(),
+    topLevelDirectoryName: topLevelDirectoryName?.toLowerCase(),
     fileName,
   };
 }
