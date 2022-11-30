@@ -4,7 +4,7 @@ import {
 } from '@jupiterone/integration-sdk-core';
 import { IntegrationConfig } from '../../config';
 import { Entities, SetDataKeys, StepIds } from '../../constants';
-import { createServiceEntity } from '../../converters';
+import { createServiceEntity } from '../findings/converters';
 import { APIClient } from '../../snyk/client';
 
 async function fetchAccount(

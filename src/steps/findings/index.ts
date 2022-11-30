@@ -5,9 +5,9 @@ import {
   RelationshipClass,
 } from '@jupiterone/integration-sdk-core';
 
-import { APIClient } from '../snyk/client';
-import { IntegrationConfig } from '../config';
-import { Entities, Relationships, StepIds } from '../constants';
+import { APIClient } from '../../snyk/client';
+import { IntegrationConfig } from '../../config';
+import { Entities, Relationships, StepIds } from '../../constants';
 import {
   createCVEEntity,
   createCWEEntity,
@@ -15,9 +15,9 @@ import {
   createFindingVulnerabilityRelationship,
   createFindingWeaknessRelationship,
   createServiceFindingRelationship,
-} from '../converters';
-import { FindingEntity } from '../types';
-import { getAccountEntity } from '../util/entity';
+} from './converters';
+import { FindingEntity } from '../../types';
+import { getAccountEntity } from '../../util/entity';
 
 async function fetchFindings({
   jobState,
@@ -45,10 +45,14 @@ async function fetchFindings({
       const [, packageName] = projectName.split(':');
 
       await apiClient.iterateIssues(projectId, async (issue) => {
-        const finding = createFindingEntity({
-          ...issue,
-          projectId,
-        }) as FindingEntity;
+        const finding = createFindingEntity(
+          {
+            ...issue,
+            projectId,
+          },
+          project,
+        ) as FindingEntity;
+
         totalFindingsEncountered++;
 
         if (finding.severity === 'critical') {
@@ -64,7 +68,7 @@ async function fetchFindings({
         finding.identifiedInFile = packageName;
 
         for (const cve of finding.cve || []) {
-          const cveEntity = createCVEEntity(cve, issue.issueData.cvssScore!);
+          const cveEntity = createCVEEntity(cve, finding.score);
           await jobState.addRelationship(
             createFindingVulnerabilityRelationship(finding, cveEntity),
           );
