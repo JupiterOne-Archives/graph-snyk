@@ -1,6 +1,6 @@
 {
   "name": "@jupiterone/graph-snyk",
-  "version": "2.4.1",
+  "version": "2.4.2",
   "description": "A JupiterOne integration for Snyk.",
   "license": "MPL-2.0",
   "main": "dist/index.js",
