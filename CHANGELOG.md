@@ -8,6 +8,10 @@ and this project adheres to
 
 ## [Unreleased]
 
+### Changed
+
+- `snyk_finding` now includes target property from `snyk_project` **repoName**.
+
 ## [2.4.1] - 2022-09-03
 
 ### Added

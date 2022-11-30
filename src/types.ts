@@ -9,6 +9,7 @@ export type FindingEntity = Entity & {
   cve?: string[];
   cwe?: string[];
   targets: string[];
+  score: number;
 };
 
 export interface CVEEntity {

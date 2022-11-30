@@ -5,9 +5,9 @@ import {
   Relationship,
   RelationshipDirection,
 } from '@jupiterone/integration-sdk-core';
-import { Entities, Relationships } from './constants';
+import { Entities, Relationships } from '../../constants';
 
-import { CVEEntity, CWEEntity } from './types';
+import { CVEEntity, CWEEntity } from '../../types';
 
 const CVE_URL_BASE = 'https://nvd.nist.gov/vuln/detail/';
 
@@ -45,7 +45,11 @@ export function getNumericSeverityFromIssueSeverity(
   return numericSeverity === undefined ? 0 : numericSeverity;
 }
 
-export function createFindingEntity(vuln: any) {
+export function createFindingEntity(vuln: any, projectEntity: Entity) {
+  const targets = projectEntity.repoName
+    ? [projectEntity.repoName as string]
+    : [];
+
   return createIntegrationEntity({
     entityData: {
       source: vuln,
@@ -81,7 +85,7 @@ export function createFindingEntity(vuln: any) {
         publicationTime: parseTimePropertyValue(vuln.issueData.publicationTime),
         disclosureTime: parseTimePropertyValue(vuln.issueData.disclosureTime),
         open: true,
-        targets: [],
+        targets,
         issueType: vuln.issueType,
         identifiedInFile: '',
 
