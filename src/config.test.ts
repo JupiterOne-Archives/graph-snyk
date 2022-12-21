@@ -64,6 +64,7 @@ describe('validateInvocation', () => {
           instanceConfig: {
             snykOrgId: (undefined as unknown) as string,
             snykApiKey: 'dummy-api-key',
+            snykGroupId: 'dummy-api-key',
           },
         }),
       );
@@ -81,6 +82,7 @@ describe('validateInvocation', () => {
           instanceConfig: {
             snykOrgId: 'dummy-org-id',
             snykApiKey: (undefined as unknown) as string,
+            snykGroupId: 'dummy-org-id',
           },
         }),
       );

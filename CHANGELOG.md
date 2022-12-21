@@ -8,6 +8,32 @@ and this project adheres to
 
 ## [Unreleased]
 
+### Added
+
+- Deconstructed description property of `snyk_finding` entity
+- New entities:
+
+  | Resources         | Entity `_type`      | Entity `_class` |
+  |-------------------|---------------------|-----------------|
+  | Snyk Group        | `snyk_group`        | `Group`         |
+  | Snyk Organization | `snyk_organization` | `Organization`  |
+  | Snyk Service      | `snyk_service`      | `Service`       |
+  | Snyk Role         | `snyk_role`         | `AccessRole`    |
+
+- New relationships:
+
+  | Source Entity `_type` | Relationship `_class` | Target Entity `_type` |
+  |-----------------------|-----------------------|-----------------------|
+  | `snyk_account`        | **HAS**               | `snyk_group`          |
+  | `snyk_account`        | **HAS**               | `snyk_service`        |
+  | `snyk_group`          | **HAS**               | `snyk_organization`   |
+  | `snyk_group`          | **HAS**               | `snyk_role`           |
+  | `snyk_organization`   | **HAS**               | `snyk_project`        |
+  | `snyk_organization`   | **HAS**               | `snyk_user`           |
+  | `snyk_service`        | **IDENTIFIED**        | `snyk_finding`        |
+  | `snyk_service`        | **SCANS**             | `snyk_project`        |
+  | `snyk_user`           | **ASSIGNED**          | `snyk_role`           |
+
 ## [2.4.4] - 2023-01-12
 
 ### Changed
@@ -33,7 +59,7 @@ and this project adheres to
 - New properties added to entities:
 
   | Entity         | Properties              |
-  | -------------- | ----------------------- |
+  |----------------|-------------------------|
   | `snyk_project` | `fullDirectoryPath`     |
   | `snyk_project` | `topLevelDirectoryName` |
 
@@ -49,7 +75,7 @@ and this project adheres to
 - New properties added to entities:
 
   | Entity         | Properties         |
-  | -------------- | ------------------ |
+  |----------------|--------------------|
   | `snyk_project` | `repoFullName`     |
   | `snyk_project` | `repoOrganization` |
   | `snyk_project` | `repoName`         |
@@ -63,7 +89,7 @@ and this project adheres to
 - New property added to entity:
 
   | Entity         | Properties              |
-  | -------------- | ----------------------- |
+  |----------------|-------------------------|
   | `snyk_project` | `environmentAttributes` |
 
 ### Added
@@ -71,7 +97,7 @@ and this project adheres to
 - New property added to entity:
 
   | Entity         | Properties |
-  | -------------- | ---------- |
+  |----------------|------------|
   | `snyk_finding` | `fixedIn`  |
 
 ### Changed
@@ -89,7 +115,7 @@ and this project adheres to
 - New property added to entity:
 
   | Entity         | Properties         |
-  | -------------- | ------------------ |
+  |----------------|--------------------|
   | `snyk_finding` | `originalSeverity` |
 
 ## [2.2.1] - 2022-07-19
@@ -110,14 +136,14 @@ and this project adheres to
 - Support for ingesting the following **new** entities:
 
   | Resources                 | Entity `_type` | Entity `_class` |
-  | ------------------------- | -------------- | --------------- |
+  |---------------------------|----------------|-----------------|
   | Snyk Project              | `snyk_project` | `Project`       |
   | Snyk Organization Members | `snyk_user`    | `User`          |
 
 - Added support for ingesting the following **new** relationships:
 
   | Source         | class   | Target         |
-  | -------------- | ------- | -------------- |
+  |----------------|---------|----------------|
   | `snyk_account` | **HAS** | `snyk_project` |
   | `snyk_account` | **HAS** | `snyk_user`    |
   | `snyk_project` | **HAS** | `snyk_finding` |
@@ -125,13 +151,13 @@ and this project adheres to
 - Added support for ingesting the following **new** mapped relationships:
 
   | Source         | class     | Target     |
-  | -------------- | --------- | ---------- |
+  |----------------|-----------|------------|
   | `snyk_project` | **SCANS** | `CodeRepo` |
 
 - New properties added to entities:
 
   | Entity         | Properties               |
-  | -------------- | ------------------------ |
+  |----------------|--------------------------|
   | `snyk_account` | `id`                     |
   | `snyk_account` | `name`                   |
   | `snyk_account` | `function`               |

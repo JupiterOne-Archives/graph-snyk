@@ -4,25 +4,26 @@ import {
 } from '@jupiterone/integration-sdk-core';
 import { IntegrationConfig } from '../../config';
 import { Entities, SetDataKeys, StepIds } from '../../constants';
-import { createServiceEntity } from '../findings/converters';
-import { APIClient } from '../../snyk/client';
+import { createAccountEntity } from './converters';
+import { Account } from '../../types';
 
-async function fetchAccount(
-  context: IntegrationStepExecutionContext<IntegrationConfig>,
-) {
-  const { instance, jobState, logger } = context;
+async function fetchAccount({
+  instance,
+  jobState,
+}: IntegrationStepExecutionContext<IntegrationConfig>) {
+  const { name, description, id } = instance;
 
-  const apiClient = new APIClient(logger, instance.config);
-  const currentOrgName = await apiClient.getCurrentOrgName();
+  const account: Account = {
+    name,
+    description,
+    id,
+  };
 
-  const serviceEntity = await jobState.addEntity(
-    createServiceEntity(instance.config.snykOrgId, currentOrgName),
-  );
-
-  await jobState.setData(SetDataKeys.ACCOUNT_ENTITY, serviceEntity);
+  const accountEntity = await jobState.addEntity(createAccountEntity(account));
+  await jobState.setData(SetDataKeys.ACCOUNT_ENTITY, accountEntity);
 }
 
-export const steps: IntegrationStep<IntegrationConfig>[] = [
+export const accountStep: IntegrationStep<IntegrationConfig>[] = [
   {
     id: StepIds.FETCH_ACCOUNT,
     name: 'Fetch Account',

@@ -1,5 +1,7 @@
 import {
   createDirectRelationship,
+  Entity,
+  getRawData,
   IntegrationStep,
   IntegrationStepExecutionContext,
   RelationshipClass,
@@ -7,25 +9,31 @@ import {
 
 import { APIClient } from '../../snyk/client';
 import { IntegrationConfig } from '../../config';
-import { Entities, Relationships, StepIds } from '../../constants';
+import {
+  Entities,
+  mappedRelationships,
+  Relationships,
+  SetDataKeys,
+  StepIds,
+} from '../../constants';
 import {
   createCVEEntity,
   createCWEEntity,
   createFindingEntity,
   createFindingVulnerabilityRelationship,
   createFindingWeaknessRelationship,
-  createServiceFindingRelationship,
 } from './converters';
-import { FindingEntity } from '../../types';
-import { getAccountEntity } from '../../util/entity';
+import { FindingEntity, Project } from '../../types';
 
 async function fetchFindings({
   jobState,
   instance,
   logger,
 }: IntegrationStepExecutionContext<IntegrationConfig>) {
-  const serviceEntity = await getAccountEntity(jobState);
   const apiClient = new APIClient(logger, instance.config);
+  const serviceEntity = (await jobState.getData(
+    SetDataKeys.SERVICE_ENTITY,
+  )) as Entity;
 
   let totalFindingsEncountered = 0;
   let totalCriticalFindingsEncountered = 0;
@@ -35,11 +43,20 @@ async function fetchFindings({
 
   await jobState.iterateEntities(
     {
-      _type: Entities.PROJECT._type,
+      _type: Entities.SNYK_PROJECT._type,
     },
-    async (project) => {
-      const projectId = project.id as string | undefined;
-      const projectName = project.name as string | undefined;
+    async (projectEntity) => {
+      const projectId = projectEntity.id as string | undefined;
+      const projectName = projectEntity.name as string | undefined;
+
+      const project = getRawData<Project & { orgId: string }>(projectEntity);
+      if (!project) {
+        logger.warn(
+          { _key: projectEntity._key },
+          'Could not get raw data for project entity',
+        );
+        return;
+      }
 
       if (!projectId || !projectName) return;
       const [, packageName] = projectName.split(':');
@@ -50,7 +67,7 @@ async function fetchFindings({
             ...issue,
             projectId,
           },
-          project,
+          projectEntity,
         ) as FindingEntity;
 
         totalFindingsEncountered++;
@@ -81,14 +98,18 @@ async function fetchFindings({
           );
         }
 
-        await jobState.addRelationship(
-          createServiceFindingRelationship(serviceEntity, finding),
-        );
-
         await jobState.addEntity(finding);
 
+        await jobState.addRelationship(
+          createDirectRelationship({
+            _class: RelationshipClass.IDENTIFIED,
+            from: serviceEntity,
+            to: finding,
+          }),
+        );
+
         const projectHasFindingRelationship = createDirectRelationship({
-          from: project,
+          from: projectEntity,
           to: finding,
           _class: RelationshipClass.HAS,
         });
@@ -116,14 +137,20 @@ export const steps: IntegrationStep<IntegrationConfig>[] = [
   {
     id: StepIds.FETCH_FINDINGS,
     name: 'Fetch findings',
-    entities: [Entities.CVE, Entities.CWE, Entities.SNYK_FINDING],
+    entities: [Entities.SNYK_FINDING],
     relationships: [
-      Relationships.FINDING_IS_CVE,
-      Relationships.FINDING_EXPLOITS_CWE,
-      Relationships.SERVICE_IDENTIFIED_FINDING,
       Relationships.PROJECT_FINDING,
+      Relationships.SERVICE_IDENTIFIED_FINDING,
     ],
-    dependsOn: [StepIds.FETCH_ACCOUNT, StepIds.FETCH_PROJECTS],
+    mappedRelationships: [
+      mappedRelationships.FINDING_IS_CVE,
+      mappedRelationships.FINDING_EXPLOITS_CWE,
+    ],
+    dependsOn: [
+      StepIds.FETCH_ORGANIZATIONS,
+      StepIds.FETCH_PROJECTS,
+      StepIds.FETCH_SERVICE,
+    ],
     executionHandler: fetchFindings,
   },
 ];

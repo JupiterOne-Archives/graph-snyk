@@ -9,7 +9,7 @@ export const invocationConfig: IntegrationSpecConfig<IntegrationConfig> = {
   integrationSteps: [
     {
       /**
-       * ENDPOINT: GET https://snyk.io/api/v1/org/{orgId}/settings
+       * ENDPOINT: N/A
        * PATTERN: Singleton
        */
       id: 'fetch-account',
@@ -18,10 +18,35 @@ export const invocationConfig: IntegrationSpecConfig<IntegrationConfig> = {
         {
           resourceName: 'Snyk Account',
           _type: 'snyk_account',
-          _class: ['Service', 'Account'],
+          _class: ['Account'],
         },
       ],
       relationships: [],
+      implemented: true,
+    },
+    {
+      /**
+       * ENDPOINT: N/A
+       * PATTERN: Singleton
+       */
+      id: 'fetch-service',
+      name: 'Fetch Service',
+      entities: [
+        {
+          resourceName: 'Snyk Service',
+          _type: 'snyk_service',
+          _class: ['Service'],
+        },
+      ],
+      relationships: [
+        {
+          _type: 'snyk_account_has_service',
+          sourceType: 'snyk_account',
+          _class: RelationshipClass.HAS,
+          targetType: 'snyk_service',
+        },
+      ],
+      dependsOn: ['fetch-account'],
       implemented: true,
     },
     {
@@ -45,9 +70,15 @@ export const invocationConfig: IntegrationSpecConfig<IntegrationConfig> = {
           _class: RelationshipClass.HAS,
           targetType: 'snyk_project',
         },
+        {
+          _class: RelationshipClass.SCANS,
+          _type: 'snyk_service_scans_project',
+          sourceType: 'snyk_service',
+          targetType: 'snyk_project',
+        },
       ],
-      dependsOn: ['fetch-organization'],
-      implemented: false,
+      dependsOn: ['fetch-organizations', 'fetch-service'],
+      implemented: true,
     },
     {
       /**
@@ -94,6 +125,104 @@ export const invocationConfig: IntegrationSpecConfig<IntegrationConfig> = {
       ],
       dependsOn: ['fetch-projects'],
       implemented: false,
+    },
+    {
+      /**
+       * ENDPOINT: POST https://snyk.io/api/v1/org/{orgId}/project/{projectId}/aggregated-issues
+       * PATTERN: Fetch Child Entities
+       */
+      id: 'fetch-group',
+      name: 'Fetch Group',
+      entities: [
+        {
+          resourceName: 'Snyk Group',
+          _type: 'snyk_group',
+          _class: ['Group'],
+        },
+      ],
+      relationships: [
+        {
+          _class: RelationshipClass.HAS,
+          _type: 'snyk_account_has_group',
+          sourceType: 'snyk_account',
+          targetType: 'snyk_group',
+        },
+      ],
+      implemented: true,
+    },
+    {
+      /**
+       * ENDPOINT: POST https://snyk.io/api/v1/org/{orgId}/project/{projectId}/aggregated-issues
+       * PATTERN: Fetch Child Entities
+       */
+      id: 'fetch-organizations',
+      name: 'Fetch Organizations',
+      entities: [
+        {
+          resourceName: 'Snyk Organization',
+          _type: 'snyk_organization',
+          _class: ['Organization'],
+        },
+      ],
+      relationships: [],
+      dependsOn: ['fetch-group'],
+      implemented: true,
+    },
+    {
+      /**
+       * ENDPOINT: POST https://snyk.io/api/v1/org/{orgId}/project/{projectId}/aggregated-issues
+       * PATTERN: Fetch Child Entities
+       */
+      id: 'fetch-roles',
+      name: 'Fetch Group Roles',
+      entities: [
+        {
+          resourceName: 'Snyk Role',
+          _type: 'snyk_role',
+          _class: ['AccessRole'],
+        },
+      ],
+      relationships: [
+        {
+          _class: RelationshipClass.HAS,
+          _type: 'snyk_group_has_role',
+          sourceType: 'snyk_group',
+          targetType: 'snyk_role',
+        },
+      ],
+      dependsOn: ['fetch-group'],
+      implemented: true,
+    },
+    {
+      /**
+       * ENDPOINT: n/a
+       * PATTERN: Build Child Relationships
+       */
+      id: 'build-user-role-relationship',
+      name: 'Build User and Role Relationship',
+      entities: [
+        {
+          _class: ['AccessRole'],
+          _type: 'snyk_role',
+          resourceName: 'Snyk Role',
+        },
+      ],
+      relationships: [
+        {
+          _class: RelationshipClass.ASSIGNED,
+          _type: 'snyk_user_assigned_role',
+          sourceType: 'snyk_user',
+          targetType: 'snyk_role',
+        },
+        {
+          _class: RelationshipClass.HAS,
+          _type: 'snyk_organization_has_role',
+          sourceType: 'snyk_organization',
+          targetType: 'snyk_role',
+        },
+      ],
+      dependsOn: ['fetch-users', 'fetch-organizations'],
+      implemented: true,
     },
     {
       /**

@@ -26,6 +26,11 @@ async function withRecording(
     directory: directoryName,
     name: recordingName,
     options: {
+      matchRequestsBy: {
+        url: {
+          pathname: false,
+        },
+      },
       ...(recordingSetupOptions || {}),
     },
   });
