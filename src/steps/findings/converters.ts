@@ -68,9 +68,10 @@ export function createFindingEntity(vuln: any, projectEntity: Entity) {
         webLink: vuln.issueData.url,
         id: vuln.id,
         numericSeverity: getNumericSeverityFromIssueSeverity(
-          vuln.issueData.severity,
+          vuln.issueData.originalSeverity,
         ),
-        severity: vuln.issueData.severity, // Severity after policies have been applied
+        severity: vuln.issueData.originalSeverity, // Uses originalSeverity to match UI
+        afterPolicySeverity: vuln.issueData.severity, // Severity after policies have been applied
         originalSeverity: vuln.issueData.originalSeverity, // Severity as seen in snyk DB, before policies have been applied
         pkgName: vuln.pkgName,
         pkgVersions: vuln.pkgVersions,
