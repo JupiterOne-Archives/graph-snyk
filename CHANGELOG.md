@@ -8,6 +8,10 @@ and this project adheres to
 
 ## [Unreleased]
 
+### Changed
+
+- `snyk_finding` now uses `originalSeverity` for `severity` to match UI
+
 ## [2.4.2] - 2022-11-30
 
 ### Changed
