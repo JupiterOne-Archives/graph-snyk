@@ -25,8 +25,13 @@ async function fetchOrganizations({
       await jobState.addEntity(createOrganizationEntity(org));
     });
   } else {
-    const userDetails = await client.getCurrentUserDetails();
-    await jobState.addEntity(createOrganizationEntity(userDetails.orgs[0]));
+    const currentOrg = await client.getCurrentOrgName();
+    await jobState.addEntity(
+      createOrganizationEntity({
+        id: instance.config.snykOrgId,
+        name: currentOrg || instance.config.snykOrgId,
+      }),
+    );
   }
 }
 
