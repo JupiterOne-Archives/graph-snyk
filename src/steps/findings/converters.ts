@@ -9,7 +9,6 @@ import { Entities, mappedRelationships, Relationships } from '../../constants';
 
 import { CVEEntity, CWEEntity } from '../../types';
 
-import startCase from 'lodash.startcase';
 import { deconstructDesc } from '../../util/deconstructDesc';
 
 const CVE_URL_BASE = 'https://nvd.nist.gov/vuln/detail/';
@@ -54,7 +53,7 @@ export function createFindingEntity(vuln: any, projectEntity: Entity) {
         numericSeverity: getNumericSeverityFromIssueSeverity(
           vuln.issueData.originalSeverity,
         ),
-        severity: vuln.issueData.originalSeverity, // Uses originalSeverity to match UI
+        severity: vuln.issueData.originalSeverity || vuln.issueData.severity, // Uses originalSeverity to match UI
         afterPolicySeverity: vuln.issueData.severity, // Severity after policies have been applied
         originalSeverity: vuln.issueData.originalSeverity, // Severity as seen in snyk DB, before policies have been applied
         pkgName: vuln.pkgName,

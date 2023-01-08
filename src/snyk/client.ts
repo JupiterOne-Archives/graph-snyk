@@ -139,11 +139,12 @@ export class APIClient {
   public async iterateIssues(
     projectId: string,
     iteratee: ResourceIteratee<AggregatedIssue>,
+    orgId?: string,
   ): Promise<void> {
     let response: ListAggregatedIssuesResponse;
     try {
       response = await this.listAggregatedIssues(
-        this.config.snykOrgId,
+        orgId || this.config.snykOrgId,
         projectId,
       );
     } catch (err) {

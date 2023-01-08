@@ -61,63 +61,67 @@ async function fetchFindings({
       if (!projectId || !projectName) return;
       const [, packageName] = projectName.split(':');
 
-      await apiClient.iterateIssues(projectId, async (issue) => {
-        const finding = createFindingEntity(
-          {
-            ...issue,
-            projectId,
-          },
-          projectEntity,
-        ) as FindingEntity;
+      await apiClient.iterateIssues(
+        projectId,
+        async (issue) => {
+          const finding = createFindingEntity(
+            {
+              ...issue,
+              projectId,
+            },
+            projectEntity,
+          ) as FindingEntity;
 
-        totalFindingsEncountered++;
+          totalFindingsEncountered++;
 
-        if (finding.severity === 'critical') {
-          totalCriticalFindingsEncountered++;
-        } else if (finding.severity === 'high') {
-          totalHighFindingsEncountered++;
-        } else if (finding.severity === 'medium') {
-          totalMediumFindingsEncountered++;
-        } else if (finding.severity === 'low') {
-          totalLowFindingsEncountered++;
-        }
+          if (finding.severity === 'critical') {
+            totalCriticalFindingsEncountered++;
+          } else if (finding.severity === 'high') {
+            totalHighFindingsEncountered++;
+          } else if (finding.severity === 'medium') {
+            totalMediumFindingsEncountered++;
+          } else if (finding.severity === 'low') {
+            totalLowFindingsEncountered++;
+          }
 
-        finding.identifiedInFile = packageName;
+          finding.identifiedInFile = packageName;
 
-        for (const cve of finding.cve || []) {
-          const cveEntity = createCVEEntity(cve, finding.score);
+          for (const cve of finding.cve || []) {
+            const cveEntity = createCVEEntity(cve, finding.score);
+            await jobState.addRelationship(
+              createFindingVulnerabilityRelationship(finding, cveEntity),
+            );
+          }
+
+          for (const cwe of finding.cwe || []) {
+            const cweEntity = createCWEEntity(cwe);
+            await jobState.addRelationship(
+              createFindingWeaknessRelationship(finding, cweEntity),
+            );
+          }
+
+          await jobState.addEntity(finding);
+
           await jobState.addRelationship(
-            createFindingVulnerabilityRelationship(finding, cveEntity),
+            createDirectRelationship({
+              _class: RelationshipClass.IDENTIFIED,
+              from: serviceEntity,
+              to: finding,
+            }),
           );
-        }
 
-        for (const cwe of finding.cwe || []) {
-          const cweEntity = createCWEEntity(cwe);
-          await jobState.addRelationship(
-            createFindingWeaknessRelationship(finding, cweEntity),
-          );
-        }
-
-        await jobState.addEntity(finding);
-
-        await jobState.addRelationship(
-          createDirectRelationship({
-            _class: RelationshipClass.IDENTIFIED,
-            from: serviceEntity,
+          const projectHasFindingRelationship = createDirectRelationship({
+            from: projectEntity,
             to: finding,
-          }),
-        );
+            _class: RelationshipClass.HAS,
+          });
 
-        const projectHasFindingRelationship = createDirectRelationship({
-          from: projectEntity,
-          to: finding,
-          _class: RelationshipClass.HAS,
-        });
-
-        if (!jobState.hasKey(projectHasFindingRelationship._key)) {
-          await jobState.addRelationship(projectHasFindingRelationship);
-        }
-      });
+          if (!jobState.hasKey(projectHasFindingRelationship._key)) {
+            await jobState.addRelationship(projectHasFindingRelationship);
+          }
+        },
+        project.orgId,
+      );
     },
   );
 
