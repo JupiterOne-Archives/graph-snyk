@@ -13,19 +13,19 @@ describe('deconstruct-description', () => {
 
     const {
       description,
-      Recommendations,
-      References,
-      Impact,
+      recommendations,
+      references,
+      impact,
     } = deconstructedDesc as DeconstructedDescription;
 
     expect(description).toBe(
       'org.jenkins-ci.main:jenkins-core is an open-source automation server. Affected versions of this package are vulnerable to Authentication Bypass. Due to a missing permissions check, a malicious remote authenticated user may be able to trigger the update process of the site.',
     );
-    expect(Recommendations).toBe(
+    expect(recommendations).toBe(
       'Upgrade org.jenkins-ci.main:jenkins-core to versions 1.651.2, 2.3 or higher.',
     );
-    expect(References).toBe('- Jenkins Security Advisory - GitHub Commit');
-    expect(Impact).toBe(
+    expect(references).toBe('- Jenkins Security Advisory - GitHub Commit');
+    expect(impact).toBe(
       'An attacker may be able to trigger the update process of the site',
     );
   });
@@ -41,16 +41,16 @@ describe('deconstruct-description', () => {
 
     const {
       description,
-      Recommendations,
-      References,
-      Impact,
+      recommendations,
+      references,
+      impact,
     } = deconstructedDesc as DeconstructedDescription;
 
     expect(description).toBe(
       'org.jenkins-ci.main:jenkins-core is an open-source automation server. Affected versions of this package are vulnerable to Authentication Bypass. Due to a missing permissions check, a malicious remote authenticated user may be able to trigger the update process of the site.',
     );
-    expect(Recommendations).toBe(undefined);
-    expect(References).toBe(undefined);
-    expect(Impact).toBe(undefined);
+    expect(recommendations).toBe(undefined);
+    expect(references).toBe(undefined);
+    expect(impact).toBe(undefined);
   });
 });

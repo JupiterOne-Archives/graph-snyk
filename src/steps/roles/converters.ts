@@ -19,7 +19,7 @@ export function createRoleEntity(role: Role): Entity {
         description: role.description,
         publicId: role.publicId,
         createdOn: parseTimePropertyValue(role.created),
-        modified: parseTimePropertyValue(role.modified),
+        modifiedOn: parseTimePropertyValue(role.modified),
       },
     },
   });

@@ -1,8 +1,8 @@
 export interface DeconstructedDescription {
   description?: string;
-  Impact?: string;
-  Recommendations?: string;
-  References?: string;
+  impact?: string;
+  recommendations?: string;
+  references?: string;
 }
 
 export function deconstructDesc({
@@ -10,15 +10,15 @@ export function deconstructDesc({
 }: {
   desc?: string;
 }): DeconstructedDescription | undefined {
-  return desc?.split('##').reduce((acc: DeconstructedDescription, curr, x) => {
+  return desc?.split('##').reduce((acc: DeconstructedDescription, curr) => {
     if (curr.includes('Remediation'))
-      acc.Recommendations = curr.replace(/Remediation/g, '').trim();
+      acc.recommendations = curr.replace(/Remediation/g, '').trim();
     else if (curr.includes('References'))
-      acc.References = curr.replace(/References/g, '').trim();
+      acc.references = curr.replace(/References/g, '').trim();
     else {
       if (curr.includes('\n\nAn attacker ')) {
         const splitOverview = curr.split('\n\n');
-        acc.Impact = splitOverview[1].trim();
+        acc.impact = splitOverview[1].trim();
         acc.description = splitOverview[0].replace(/Overview/g, '').trim();
       } else acc.description = curr.replace(/Overview/g, '').trim();
     }
