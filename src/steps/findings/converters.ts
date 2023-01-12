@@ -64,7 +64,7 @@ export function createFindingEntity(vuln: any, projectEntity: Entity) {
         cve: vuln.issueData.identifiers?.CVE,
         description: vuln.issueData.description,
         name: vuln.issueData.title,
-        displayName: vuln.issueData.title,
+        displayName: vuln.pkgName,
         webLink: vuln.issueData.url,
         id: vuln.id,
         numericSeverity: getNumericSeverityFromIssueSeverity(
