@@ -8,6 +8,8 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [2.4.4] - 2023-01-12
+
 ### Changed
 
 - `snyk_finding` display name to use package name
