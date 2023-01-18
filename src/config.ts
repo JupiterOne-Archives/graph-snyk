@@ -14,10 +14,14 @@ import {
 interface IntegrationConfig extends IntegrationInstanceConfig {
   snykOrgId: string;
   snykApiKey: string;
+  snykGroupId?: string;
 }
 
 const instanceConfigFields: IntegrationInstanceConfigFieldMap<IntegrationConfig> = {
   snykOrgId: {
+    type: 'string',
+  },
+  snykGroupId: {
     type: 'string',
   },
   snykApiKey: {

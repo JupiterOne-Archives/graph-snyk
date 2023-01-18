@@ -18,6 +18,7 @@ type WithRecordingParams = {
   recordingSetupOptions?: SetupRecordingInput['options'];
 };
 
+// Note: Recordings present in this integration uses an enterprise-tier test account for full step coverage
 async function withRecording(
   { recordingName, directoryName, recordingSetupOptions }: WithRecordingParams,
   cb: () => Promise<void>,
@@ -26,6 +27,11 @@ async function withRecording(
     directory: directoryName,
     name: recordingName,
     options: {
+      matchRequestsBy: {
+        url: {
+          pathname: false,
+        },
+      },
       ...(recordingSetupOptions || {}),
     },
   });

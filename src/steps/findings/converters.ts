@@ -5,29 +5,13 @@ import {
   Relationship,
   RelationshipDirection,
 } from '@jupiterone/integration-sdk-core';
-import { Entities, Relationships } from '../../constants';
+import { Entities, mappedRelationships, Relationships } from '../../constants';
 
 import { CVEEntity, CWEEntity } from '../../types';
 
-const CVE_URL_BASE = 'https://nvd.nist.gov/vuln/detail/';
+import { deconstructDesc } from '../../util/deconstructDesc';
 
-export function createServiceEntity(orgId: string, orgName?: string): Entity {
-  return createIntegrationEntity({
-    entityData: {
-      source: {},
-      assign: {
-        _key: `snyk:${orgId}`,
-        _type: Entities.SNYK_ACCOUNT._type,
-        _class: Entities.SNYK_ACCOUNT._class,
-        id: orgId,
-        category: ['security'],
-        name: orgName,
-        displayName: orgName || `snyk/${orgId}`,
-        function: ['scanning'],
-      },
-    },
-  });
-}
+const CVE_URL_BASE = 'https://nvd.nist.gov/vuln/detail/';
 
 const SEVERITY_TO_NUMERIC_SEVERITY_MAP = new Map<string, number>([
   ['low', 2],
@@ -62,7 +46,6 @@ export function createFindingEntity(vuln: any, projectEntity: Entity) {
         cvssScore: vuln.issueData.cvssScore,
         cwe: vuln.issueData.identifiers?.CWE,
         cve: vuln.issueData.identifiers?.CVE,
-        description: vuln.issueData.description,
         name: vuln.issueData.title,
         displayName: vuln.pkgName,
         webLink: vuln.issueData.url,
@@ -70,7 +53,7 @@ export function createFindingEntity(vuln: any, projectEntity: Entity) {
         numericSeverity: getNumericSeverityFromIssueSeverity(
           vuln.issueData.originalSeverity,
         ),
-        severity: vuln.issueData.originalSeverity, // Uses originalSeverity to match UI
+        severity: vuln.issueData.originalSeverity || vuln.issueData.severity, // Uses originalSeverity to match UI
         afterPolicySeverity: vuln.issueData.severity, // Severity after policies have been applied
         originalSeverity: vuln.issueData.originalSeverity, // Severity as seen in snyk DB, before policies have been applied
         pkgName: vuln.pkgName,
@@ -99,6 +82,7 @@ export function createFindingEntity(vuln: any, projectEntity: Entity) {
         violatedPolicyPublicId: vuln.issueData.violatedPolicyPublicId,
 
         path: vuln.issueData.path,
+        ...deconstructDesc({ desc: vuln.issueData.description }),
       },
     },
   });
@@ -140,15 +124,15 @@ export function createCWEEntity(cwe: string): CWEEntity {
   };
 }
 
-export function createServiceFindingRelationship(
-  service: Entity,
+export function createOrganizationFindingRelationship(
+  organization: Entity,
   finding: Entity,
 ): Relationship {
   return {
     _class: 'IDENTIFIED',
-    _key: `${service._key}|identified|${finding._key}`,
-    _type: Relationships.SERVICE_IDENTIFIED_FINDING._type,
-    _fromEntityKey: service._key,
+    _key: `${organization._key}|identified|${finding._key}`,
+    _type: Relationships.ORGANIZATION_IDENTIFIED_FINDING._type,
+    _fromEntityKey: organization._key,
     _toEntityKey: finding._key,
     displayName: 'IDENTIFIED',
   };
@@ -161,7 +145,7 @@ export function createFindingVulnerabilityRelationship(
   return {
     _key: `${finding._key}|is|${cve._key}`,
     _class: 'IS',
-    _type: Relationships.FINDING_IS_CVE._type,
+    _type: mappedRelationships.FINDING_IS_CVE._type,
     _mapping: {
       sourceEntityKey: finding._key,
       relationshipDirection: RelationshipDirection.FORWARD,
@@ -179,7 +163,7 @@ export function createFindingWeaknessRelationship(
   return {
     _key: `${finding._key}|is|${cwe._key}`,
     _class: 'EXPLOITS',
-    _type: Relationships.FINDING_EXPLOITS_CWE._type,
+    _type: mappedRelationships.FINDING_EXPLOITS_CWE._type,
     _mapping: {
       sourceEntityKey: finding._key,
       relationshipDirection: RelationshipDirection.FORWARD,

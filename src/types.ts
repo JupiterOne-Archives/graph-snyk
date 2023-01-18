@@ -107,17 +107,83 @@ export interface AggregatedIssue {
   };
 }
 
-export interface Project {
-  name: string;
+export interface Group {
   id: string;
-  createdOn: Date;
-  origin: string;
-  totalDependencies: number;
-  issueCountsBySeverity: IssueCount;
+  name: string;
+  url: string;
 }
 
-interface IssueCount {
-  low: number;
-  medium: number;
-  high: number;
+export interface Organization {
+  id: string;
+  name: string;
+  slug?: string;
+  url?: string;
+  created?: string;
+}
+
+export interface Project {
+  id: string;
+  name: string;
+  created: string;
+  origin: string;
+  type: string;
+  readOnly: boolean;
+  testFrequency: string;
+  isMonitored: boolean;
+  totalDependencies: number;
+  issueCountsBySeverity: {
+    low: number;
+    high: number;
+    medium: number;
+    critical: number;
+  };
+  imageTag: string;
+  imagePlatform: string;
+  imageBaseImage: string;
+  lastTestedDate: string;
+  browseUrl: string;
+  owner: {
+    id: string;
+    name: string;
+    username: string;
+    email: string;
+  };
+  importingUser: {
+    id: string;
+    name: string;
+    username: string;
+    email: string;
+  };
+  tags: {
+    key: string;
+    value: string;
+  }[];
+  branch: string;
+  targetReference: string;
+}
+
+export interface Role {
+  name: string;
+  description?: string;
+  publicId?: string;
+  created?: string;
+  modified?: string;
+}
+
+export interface User {
+  id: string;
+  username: string;
+  name: string;
+  email: string;
+  role: string;
+}
+
+export interface Account {
+  id: string;
+  name: string;
+  description: string | undefined;
+}
+
+export interface Service {
+  name: string;
 }
