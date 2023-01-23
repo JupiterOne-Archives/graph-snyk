@@ -94,21 +94,23 @@ async function buildUserRoleRelationship({
               await jobState.addEntity(roleEntity);
             }
 
-            await jobState.addRelationship(
-              createDirectRelationship({
-                _class: RelationshipClass.ASSIGNED,
-                from: userEntity,
-                to: roleEntity,
-              }),
-            );
+            const userRoleRelationship = createDirectRelationship({
+              _class: RelationshipClass.ASSIGNED,
+              from: userEntity,
+              to: roleEntity,
+            });
+            if (!jobState.hasKey(userRoleRelationship._key)) {
+              await jobState.addRelationship(userRoleRelationship);
+            }
 
-            await jobState.addRelationship(
-              createDirectRelationship({
-                _class: RelationshipClass.HAS,
-                from: orgEntity,
-                to: roleEntity,
-              }),
-            );
+            const orgRoleRelationships = createDirectRelationship({
+              _class: RelationshipClass.HAS,
+              from: orgEntity,
+              to: roleEntity,
+            });
+            if (!jobState.hasKey(orgRoleRelationships._key)) {
+              await jobState.addRelationship(orgRoleRelationships);
+            }
           }
         },
       );
