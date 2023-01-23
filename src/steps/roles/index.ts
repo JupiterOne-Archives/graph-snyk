@@ -89,9 +89,10 @@ async function buildUserRoleRelationship({
 
           const userRole = user.role;
           if (userRole) {
-            const roleEntity = await jobState.addEntity(
-              createRoleEntity({ name: userRole }),
-            );
+            const roleEntity = createRoleEntity({ name: userRole });
+            if (!jobState.hasKey(roleEntity._key)) {
+              await jobState.addEntity(roleEntity);
+            }
 
             await jobState.addRelationship(
               createDirectRelationship({
