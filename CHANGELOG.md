@@ -8,6 +8,12 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [2.5.1] - 2023-01-23
+
+### Added
+
+- Added a check for duplicate role entities in buildUserRoleRelationships.
+
 ## [2.5.0] - 2023-01-18
 
 ### Added
