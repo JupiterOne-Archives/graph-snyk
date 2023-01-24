@@ -9,7 +9,7 @@ import {
 import { Entities, mappedRelationships, Relationships } from '../../constants';
 import { Priority, SnykFinding } from '../../types/finding';
 
-import { AggregatedIssue, CVEEntity, CWEEntity } from '../../types/types';
+import { CVEEntity, CWEEntity } from '../../types/types';
 
 import { deconstructDesc } from '../../util/deconstructDesc';
 
