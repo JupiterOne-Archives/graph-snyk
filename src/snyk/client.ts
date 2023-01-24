@@ -4,9 +4,10 @@ import {
   IntegrationProviderAuthenticationError,
 } from '@jupiterone/integration-sdk-core';
 import { IntegrationConfig } from '../config';
-import { AggregatedIssue, Organization, Project, Role } from '../types';
+import { Organization, Project, Role } from '../types/types';
 import { retry } from '@lifeomic/attempt';
 import fetch, { BodyInit, RequestInit } from 'node-fetch';
+import { SnykFinding } from '../types/finding';
 
 interface ListProjectsResponse {
   org: {
@@ -16,8 +17,8 @@ interface ListProjectsResponse {
   projects: Project[];
 }
 
-interface ListAggregatedIssuesResponse {
-  issues: AggregatedIssue[];
+interface SnykFindingResponse {
+  issues: SnykFinding[];
 }
 
 export type ResourceIteratee<T> = (each: T) => Promise<void> | void;
@@ -138,10 +139,10 @@ export class APIClient {
    */
   public async iterateIssues(
     projectId: string,
-    iteratee: ResourceIteratee<AggregatedIssue>,
+    iteratee: ResourceIteratee<SnykFinding>,
     orgId?: string,
   ): Promise<void> {
-    let response: ListAggregatedIssuesResponse;
+    let response: SnykFindingResponse;
     try {
       response = await this.listAggregatedIssues(
         orgId || this.config.snykOrgId,

@@ -19,7 +19,7 @@ import {
   createProjectEntity,
 } from './converter';
 import { IntegrationConfig } from '../../config';
-import { Organization } from '../../types';
+import { Organization } from '../../types/types';
 
 async function fetchProjects({
   jobState,

@@ -7,7 +7,7 @@ import {
 } from '@jupiterone/integration-sdk-core';
 import { IntegrationConfig } from '../../config';
 import { Entities, Relationships, SetDataKeys, StepIds } from '../../constants';
-import { Service } from '../../types';
+import { Service } from '../../types/types';
 import { createServiceEntity } from './converters';
 
 async function fetchService({
