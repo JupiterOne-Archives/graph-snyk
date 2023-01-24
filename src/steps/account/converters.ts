@@ -3,7 +3,7 @@ import {
   Entity,
 } from '@jupiterone/integration-sdk-core';
 import { Entities } from '../../constants';
-import { Account } from '../../types';
+import { Account } from '../../types/types';
 
 export function createAccountEntity(data: Account): Entity {
   return createIntegrationEntity({

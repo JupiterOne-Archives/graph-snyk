@@ -23,7 +23,7 @@ import {
   createFindingVulnerabilityRelationship,
   createFindingWeaknessRelationship,
 } from './converters';
-import { FindingEntity, Project } from '../../types';
+import { FindingEntity, Project } from '../../types/types';
 
 async function fetchFindings({
   jobState,
@@ -65,11 +65,10 @@ async function fetchFindings({
         projectId,
         async (issue) => {
           const finding = createFindingEntity(
-            {
-              ...issue,
-              projectId,
-            },
+            projectId,
+            issue,
             projectEntity,
+            logger,
           ) as FindingEntity;
 
           totalFindingsEncountered++;

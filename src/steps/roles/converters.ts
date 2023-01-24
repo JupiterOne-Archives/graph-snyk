@@ -4,7 +4,7 @@ import {
   parseTimePropertyValue,
 } from '@jupiterone/integration-sdk-core';
 import { Entities } from '../../constants';
-import { Role } from '../../types';
+import { Role } from '../../types/types';
 import { generateRoleKey } from '../../util/generateRoleKey';
 
 export function createRoleEntity(role: Role): Entity {

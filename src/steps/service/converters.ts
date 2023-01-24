@@ -3,7 +3,7 @@ import {
   Entity,
 } from '@jupiterone/integration-sdk-core';
 import { Entities } from '../../constants';
-import { Service } from '../../types';
+import { Service } from '../../types/types';
 
 export function createServiceEntity(service: Service): Entity {
   return createIntegrationEntity({

@@ -10,7 +10,7 @@ import { APIClient } from '../../snyk/client';
 import { StepIds } from '../../constants';
 import { IntegrationConfig } from '../../config';
 import { createUserEntity } from './converter';
-import { Organization } from '../../types';
+import { Organization } from '../../types/types';
 
 async function fetchUsers({
   jobState,

@@ -3,7 +3,7 @@ import {
   Entity,
 } from '@jupiterone/integration-sdk-core';
 import { Entities } from '../../constants';
-import { Group } from '../../types';
+import { Group } from '../../types/types';
 
 export function createGroupEntity(group: Group): Entity {
   return createIntegrationEntity({

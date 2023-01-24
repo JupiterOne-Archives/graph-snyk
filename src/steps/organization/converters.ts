@@ -4,7 +4,7 @@ import {
   parseTimePropertyValue,
 } from '@jupiterone/integration-sdk-core';
 import { Entities } from '../../constants';
-import { Organization } from '../../types';
+import { Organization } from '../../types/types';
 
 export function createOrganizationEntity(org: Organization): Entity {
   return createIntegrationEntity({

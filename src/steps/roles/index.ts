@@ -10,7 +10,7 @@ import { IntegrationConfig } from '../../config';
 import { Entities, Relationships, SetDataKeys, StepIds } from '../../constants';
 import { createRoleEntity } from './converters';
 import { APIClient } from '../../snyk/client';
-import { User } from '../../types';
+import { User } from '../../types/types';
 
 async function fetchRoles({
   instance,

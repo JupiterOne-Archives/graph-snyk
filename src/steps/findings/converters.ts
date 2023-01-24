@@ -1,13 +1,15 @@
 import {
   createIntegrationEntity,
   Entity,
+  IntegrationLogger,
   parseTimePropertyValue,
   Relationship,
   RelationshipDirection,
 } from '@jupiterone/integration-sdk-core';
 import { Entities, mappedRelationships, Relationships } from '../../constants';
+import { Priority, SnykFinding } from '../../types/finding';
 
-import { CVEEntity, CWEEntity } from '../../types';
+import { AggregatedIssue, CVEEntity, CWEEntity } from '../../types/types';
 
 import { deconstructDesc } from '../../util/deconstructDesc';
 
@@ -29,17 +31,56 @@ export function getNumericSeverityFromIssueSeverity(
   return numericSeverity === undefined ? 0 : numericSeverity;
 }
 
-export function createFindingEntity(vuln: any, projectEntity: Entity) {
+function factorSeverityToDisplaySeverity(sev: string) {
+  // We expect data to look like:
+  // 'Low severity'
+  const lowerSev = sev.toLowerCase().split(' ');
+  if (lowerSev.length >= 1) {
+    if (lowerSev[0] === 'low') return 'low';
+    if (lowerSev[0] === 'medium') return 'medium';
+    if (lowerSev[0] === 'high') return 'high';
+    if (lowerSev[0] === 'critical') return 'critical';
+  }
+  return undefined;
+}
+
+function getSeverityFromPriorities(s: Priority | undefined) {
+  for (const factor of s?.factors ?? []) {
+    if (factor.name === 'severity') {
+      return factorSeverityToDisplaySeverity(factor.description);
+    }
+  }
+  return undefined;
+}
+
+export function createFindingEntity(
+  projectId: string,
+  vuln: SnykFinding,
+  projectEntity: Entity,
+  logger: IntegrationLogger,
+) {
   const targets = projectEntity.repoName
     ? [projectEntity.repoName as string]
     : [];
+
+  // TODO: severity calculation can be cleaned up and simplified. This is here for
+  // debugging purposes.
+  let severity = getSeverityFromPriorities(vuln.priority);
+  if (severity) {
+    logger.info({}, 'Got severity from priorities');
+  } else {
+    logger.info({}, 'Was not able to get severity from priorities');
+    severity = vuln.issueData.severity;
+  }
+
+  const numericSeverity = getNumericSeverityFromIssueSeverity(severity as any);
 
   return createIntegrationEntity({
     entityData: {
       source: vuln,
       assign: {
         _class: Entities.SNYK_FINDING._class,
-        _key: `snyk-project-${vuln.projectId}-vuln-${vuln.id}`,
+        _key: `snyk-project-${projectId}-vuln-${vuln.id}`,
         _type: Entities.SNYK_FINDING._type,
         category: 'application',
         score: vuln.issueData.cvssScore || undefined,
@@ -50,12 +91,9 @@ export function createFindingEntity(vuln: any, projectEntity: Entity) {
         displayName: vuln.pkgName,
         webLink: vuln.issueData.url,
         id: vuln.id,
-        numericSeverity: getNumericSeverityFromIssueSeverity(
-          vuln.issueData.originalSeverity,
-        ),
-        severity: vuln.issueData.originalSeverity || vuln.issueData.severity, // Uses originalSeverity to match UI
-        afterPolicySeverity: vuln.issueData.severity, // Severity after policies have been applied
-        originalSeverity: vuln.issueData.originalSeverity, // Severity as seen in snyk DB, before policies have been applied
+        numericSeverity,
+        severity,
+        originalSeverity: vuln.issueData.originalSeverity,
         pkgName: vuln.pkgName,
         pkgVersions: vuln.pkgVersions,
         language: vuln.issueData.language,
@@ -74,9 +112,9 @@ export function createFindingEntity(vuln: any, projectEntity: Entity) {
         identifiedInFile: '',
 
         priorityScore: vuln.priorityScore,
-        exploitMaturity: vuln.exploitMaturity,
-        nearestFixedInVersion: vuln.nearestFixedInVersion,
-        isMaliciousPackage: vuln.isMaliciousPackage,
+        exploitMaturity: vuln.issueData.exploitMaturity,
+        nearestFixedInVersion: vuln.issueData.nearestFixedInVersion,
+        isMaliciousPackage: vuln.issueData.isMaliciousPackage,
         isPatched: vuln.isPatched,
         isIgnored: vuln.isIgnored,
         violatedPolicyPublicId: vuln.issueData.violatedPolicyPublicId,

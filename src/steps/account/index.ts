@@ -5,7 +5,7 @@ import {
 import { IntegrationConfig } from '../../config';
 import { Entities, SetDataKeys, StepIds } from '../../constants';
 import { createAccountEntity } from './converters';
-import { Account } from '../../types';
+import { Account } from '../../types/types';
 
 async function fetchAccount({
   instance,
