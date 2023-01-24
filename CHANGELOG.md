@@ -8,6 +8,19 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [2.6.0] - 2023-01-24
+
+### Changed
+
+- `severity` property is first calculated from priority information, then
+  `severity` property.
+- `afterPoliciesSeverity` is removed.
+
+### Fixed
+
+- `exploitMaturity`, `nearestFixedInVersion`, `isMaliciousPackage` now pull from
+  correct properties
+
 ## [2.5.2] - 2023-01-23
 
 ### Fixed
