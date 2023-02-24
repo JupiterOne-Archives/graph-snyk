@@ -271,7 +271,7 @@ export class APIClient {
   async listAggregatedIssues(orgId, projectId) {
     return this.snykRequestWithRetry({
       method: 'POST',
-      uri: `/org/${orgId}/project/${projectId}/aggregated-issues`,
+      uri: `org/${orgId}/project/${projectId}/aggregated-issues`,
     });
   }
 
