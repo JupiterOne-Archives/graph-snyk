@@ -1,4 +1,4 @@
-# Integration with JupiterOne
+# Snyk
 
 ## Snyk + JupiterOne Integration Benefits
 
@@ -42,7 +42,7 @@ The integration instance configurations requires the following two parameters:
 
 ### In JupiterOne
 
-1. From the configuration **Gear Icon**, select **Integrations**.
+1. From the top navigation of the J1 Search homepage, select **Integrations**.
 2. Scroll to the **Snyk** integration tile and click it.
 3. Click the **Add Configuration** button and configure the following settings:
 
@@ -60,7 +60,7 @@ The integration instance configurations requires the following two parameters:
 
 ## How to Uninstall
 
-1. From the configuration **Gear Icon**, select **Integrations**.
+1. From the top navigation of the J1 Search homepage, select **Integrations**.
 2. Scroll to the **Snyk** integration tile and click it.
 3. Identify and click the **integration to delete**.
 4. Click the **trash can** icon.
