@@ -96,14 +96,18 @@ function parseSnykProjectName(projectName: string): ParseSnykProjectNameResult {
   // `projectName` can be in two different formats:
   // Input 1. `starbase-test/starbase:subdir/package.json`
   // Input 2. `starbase-test/starbase:package.json`
+  // Input 3. `starbase-test/subdir/starbase:package.json`
+
   //
   // Output 1. ['starbase-test/starbase', 'subdir/package.json']
   // Output 2. ['starbase-test/starbase', 'package.json']
+  // Output 3. ['starbase-test/subdir/starbase', 'package.json']
   const [repoFullName, fileScannedPath] = projectName.split(':');
   if (!repoFullName) return getUnknownSnykProjectNameParseResult();
 
-  // `starbase-test/starbase` => `starbase`
-  const [repoOrganization, repoName] = repoFullName.split('/');
+  // `starbase-test/subdir/starbase` => `starbase`
+  const [repoOrganization, ...rest] = repoFullName.split('/');
+  const repoName = rest.pop();
   if (!repoOrganization || !repoName)
     return getUnknownSnykProjectNameParseResult();
 
