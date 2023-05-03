@@ -12,7 +12,7 @@ import {
  * same properties defined by `instanceConfigFields`.
  */
 interface IntegrationConfig extends IntegrationInstanceConfig {
-  snykOrgId: string;
+  snykOrgId?: string;
   snykApiKey: string;
   snykGroupId?: string;
 }
