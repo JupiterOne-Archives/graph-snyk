@@ -79,6 +79,19 @@ describe('#parseSnykProjectName', () => {
     });
   });
 
+  test('should handle multiple subdirectories on full file path', () => {
+    expect(
+      parseSnykProjectName(
+        'starbase-test/subdir_1/subdir_2/starbase:package.json',
+      ),
+    ).toEqual({
+      repoFullName: 'starbase-test/subdir_1/subdir_2/starbase',
+      repoOrganization: 'starbase-test',
+      repoName: 'starbase',
+      fileName: 'package.json',
+    });
+  });
+
   test('should return undefined when no repo name found', () => {
     expect(parseSnykProjectName('starbase')).toEqual({
       repoFullName: undefined,

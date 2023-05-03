@@ -28,8 +28,8 @@ async function fetchOrganizations({
     const currentOrg = await client.getCurrentOrgName();
     await jobState.addEntity(
       createOrganizationEntity({
-        id: instance.config.snykOrgId || '',
-        name: currentOrg || instance.config.snykOrgId || '',
+        id: instance.config.snykOrgId,
+        name: currentOrg || instance.config.snykOrgId,
       }),
     );
   }
