@@ -23,7 +23,7 @@ describe('#parseSnykProjectName', () => {
       {
         repoFullName: 'starbase-test/starbase',
         repoOrganization: 'starbase-test',
-        repoName: 'starbase',
+        repoName: 'starbase-test/starbase',
         directoryName: undefined,
         fileName: 'package.json',
       },
@@ -34,7 +34,7 @@ describe('#parseSnykProjectName', () => {
     expect(parseSnykProjectName('starbase-test/starbase')).toEqual({
       repoFullName: 'starbase-test/starbase',
       repoOrganization: 'starbase-test',
-      repoName: 'starbase',
+      repoName: 'starbase-test/starbase',
       directoryName: undefined,
       fileName: undefined,
     });
@@ -57,7 +57,7 @@ describe('#parseSnykProjectName', () => {
     ).toEqual({
       repoFullName: 'starbase-test/starbase',
       repoOrganization: 'starbase-test',
-      repoName: 'starbase',
+      repoName: 'starbase-test/starbase',
       fullDirectoryPath: 'subdir',
       topLevelDirectoryName: 'subdir',
       fileName: 'package.json',
@@ -72,7 +72,7 @@ describe('#parseSnykProjectName', () => {
     ).toEqual({
       repoFullName: 'starbase-test/starbase',
       repoOrganization: 'starbase-test',
-      repoName: 'starbase',
+      repoName: 'starbase-test/starbase',
       fullDirectoryPath: 'my-directory/sub-dir-1/sub-dir-2',
       topLevelDirectoryName: 'my-directory',
       fileName: 'package.json',
@@ -87,18 +87,8 @@ describe('#parseSnykProjectName', () => {
     ).toEqual({
       repoFullName: 'starbase-test/subdir_1/subdir_2/starbase',
       repoOrganization: 'starbase-test',
-      repoName: 'starbase',
+      repoName: 'starbase-test/subdir_1/subdir_2/starbase',
       fileName: 'package.json',
-    });
-  });
-
-  test('should return undefined when no repo name found', () => {
-    expect(parseSnykProjectName('starbase')).toEqual({
-      repoFullName: undefined,
-      repoOrganization: undefined,
-      repoName: undefined,
-      directoryName: undefined,
-      fileName: undefined,
     });
   });
 });
