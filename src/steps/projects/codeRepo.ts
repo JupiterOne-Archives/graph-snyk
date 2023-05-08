@@ -96,15 +96,20 @@ function parseSnykProjectName(projectName: string): ParseSnykProjectNameResult {
   // `projectName` can be in two different formats:
   // Input 1. `starbase-test/starbase:subdir/package.json`
   // Input 2. `starbase-test/starbase:package.json`
-  //
+  // Input 3. `starbase-test/subdir/starbase:package.json`
+
   // Output 1. ['starbase-test/starbase', 'subdir/package.json']
   // Output 2. ['starbase-test/starbase', 'package.json']
-  const [repoFullName, fileScannedPath] = projectName.split(':');
-  if (!repoFullName) return getUnknownSnykProjectNameParseResult();
+  // Output 3. ['starbase-test/subdir/starbase', 'package.json']
 
-  // `starbase-test/starbase` => `starbase`
-  const [repoOrganization, repoName] = repoFullName.split('/');
-  if (!repoOrganization || !repoName)
+  const [repoFullName, fileScannedPath] = projectName.split(':');
+
+  if (!repoFullName || repoFullName === '')
+    return getUnknownSnykProjectNameParseResult();
+
+  // `starbase-test/subdir/starbase` => `starbase-test`
+  const [repoOrganization] = repoFullName.split('/');
+  if (!repoOrganization || repoOrganization === '')
     return getUnknownSnykProjectNameParseResult();
 
   let fullDirectoryPath: string | undefined;
@@ -122,7 +127,7 @@ function parseSnykProjectName(projectName: string): ParseSnykProjectNameResult {
   return {
     repoFullName: repoFullName.toLowerCase(),
     repoOrganization: repoOrganization.toLowerCase(),
-    repoName: repoName.toLowerCase(),
+    repoName: repoFullName.toLowerCase(),
     fullDirectoryPath: fullDirectoryPath?.toLowerCase(),
     topLevelDirectoryName: topLevelDirectoryName?.toLowerCase(),
     fileName,
