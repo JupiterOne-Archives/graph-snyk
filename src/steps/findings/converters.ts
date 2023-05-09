@@ -9,9 +9,10 @@ import {
 import { Entities, mappedRelationships, Relationships } from '../../constants';
 import { Priority, SnykFinding } from '../../types/finding';
 
-import { CVEEntity, CWEEntity } from '../../types/types';
+import { CVEEntity, CWEEntity, Project } from '../../types/types';
 
 import { deconstructDesc } from '../../util/deconstructDesc';
+import { parseSnykProjectName } from '../projects/codeRepo';
 
 const CVE_URL_BASE = 'https://nvd.nist.gov/vuln/detail/';
 
@@ -56,12 +57,15 @@ function getSeverityFromPriorities(s: Priority | undefined) {
 export function createFindingEntity(
   projectId: string,
   vuln: SnykFinding,
-  projectEntity: Entity,
+  project: Project,
   logger: IntegrationLogger,
 ) {
-  const targets = projectEntity.repoName
-    ? [projectEntity.repoName as string]
-    : [];
+  //subdir_1/subdir_2/name
+  const { repoName, repoFullName } = parseSnykProjectName(project.name);
+
+  const last = repoFullName?.split('/').pop();
+
+  const targets = [repoName, repoFullName, last];
 
   // TODO: severity calculation can be cleaned up and simplified. This is here for
   // debugging purposes.
