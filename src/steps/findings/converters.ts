@@ -62,10 +62,10 @@ export function createFindingEntity(
 ) {
   //subdir_1/subdir_2/name
   const { repoName, repoFullName } = parseSnykProjectName(project.name);
-
   const last = repoFullName?.split('/').pop();
-
-  const targets = [repoName, repoFullName, last];
+  const targets: string[] = [repoName, repoFullName, last].filter(
+    (name) => name !== undefined,
+  ) as string[];
 
   // TODO: severity calculation can be cleaned up and simplified. This is here for
   // debugging purposes.
