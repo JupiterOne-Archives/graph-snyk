@@ -61,9 +61,10 @@ export function createFindingEntity(
   logger: IntegrationLogger,
 ) {
   //subdir_1/subdir_2/name
-  const { repoName, repoFullName } = parseSnykProjectName(project.name);
-  const last = repoFullName?.split('/').pop();
-  const targets: string[] = [repoName, repoFullName, last].filter(
+  const { repoName, repoFullName, repoLastPath } = parseSnykProjectName(
+    project.name,
+  );
+  const targets: string[] = [repoName, repoFullName, repoLastPath].filter(
     (name) => name !== undefined,
   ) as string[];
 
