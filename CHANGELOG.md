@@ -8,6 +8,11 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [2.7.0] - 2023-01-24
+
+- Adding multiple possible ways to relate `CodeRepo` to `snyk_finding`, this way
+  we won't break any exising relationship while fixing `gitlab_project` ones.
+
 ## [2.6.0] - 2023-01-24
 
 ### Changed
