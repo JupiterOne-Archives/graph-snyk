@@ -67,7 +67,7 @@ async function fetchFindings({
           const finding = createFindingEntity(
             projectId,
             issue,
-            projectEntity,
+            project,
             logger,
           ) as FindingEntity;
 

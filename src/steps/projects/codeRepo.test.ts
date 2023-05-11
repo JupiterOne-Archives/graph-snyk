@@ -23,6 +23,7 @@ describe('#parseSnykProjectName', () => {
       {
         repoFullName: 'starbase-test/starbase',
         repoOrganization: 'starbase-test',
+        repoLastPath: 'starbase',
         repoName: 'starbase',
         directoryName: undefined,
         fileName: 'package.json',
@@ -35,6 +36,7 @@ describe('#parseSnykProjectName', () => {
       repoFullName: 'starbase-test/starbase',
       repoOrganization: 'starbase-test',
       repoName: 'starbase',
+      repoLastPath: 'starbase',
       directoryName: undefined,
       fileName: undefined,
     });
@@ -43,6 +45,7 @@ describe('#parseSnykProjectName', () => {
   test('should return undefined when no org name found', () => {
     expect(parseSnykProjectName('')).toEqual({
       repoFullName: undefined,
+      repoLastPath: undefined,
       repoOrganization: undefined,
       repoName: undefined,
       directoryName: undefined,
@@ -58,6 +61,7 @@ describe('#parseSnykProjectName', () => {
       repoFullName: 'starbase-test/starbase',
       repoOrganization: 'starbase-test',
       repoName: 'starbase',
+      repoLastPath: 'starbase',
       fullDirectoryPath: 'subdir',
       topLevelDirectoryName: 'subdir',
       fileName: 'package.json',
@@ -73,8 +77,23 @@ describe('#parseSnykProjectName', () => {
       repoFullName: 'starbase-test/starbase',
       repoOrganization: 'starbase-test',
       repoName: 'starbase',
+      repoLastPath: 'starbase',
       fullDirectoryPath: 'my-directory/sub-dir-1/sub-dir-2',
       topLevelDirectoryName: 'my-directory',
+      fileName: 'package.json',
+    });
+  });
+
+  test('should handle multiple path subdirectiories', () => {
+    expect(
+      parseSnykProjectName(
+        'starbase-test/subdir1/subdir2/starbase:package.json',
+      ),
+    ).toEqual({
+      repoFullName: 'starbase-test/subdir1/subdir2/starbase',
+      repoOrganization: 'starbase-test',
+      repoName: 'subdir1',
+      repoLastPath: 'starbase',
       fileName: 'package.json',
     });
   });

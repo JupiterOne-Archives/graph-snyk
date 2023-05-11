@@ -49,6 +49,13 @@ type ParseSnykProjectNameResult = {
   repoOrganization?: string;
   repoName?: string;
   /**
+   * The last path to the directory wich does NOT contain the scanned file
+   *
+   *  Example scanned file: `my/directory/path:package.json`
+   *  Example `repoLastPath`: `path`
+   */
+  repoLastPath?: string;
+  /**
    * The full path to the directory which contains the scanned file
    *
    * Example scanned file: `my/directory/path/package.json`
@@ -75,6 +82,7 @@ function getUnknownSnykProjectNameParseResult(): ParseSnykProjectNameResult {
     fullDirectoryPath: undefined,
     topLevelDirectoryName: undefined,
     fileName: undefined,
+    repoLastPath: undefined,
   };
 }
 
@@ -126,6 +134,7 @@ function parseSnykProjectName(projectName: string): ParseSnykProjectNameResult {
     fullDirectoryPath: fullDirectoryPath?.toLowerCase(),
     topLevelDirectoryName: topLevelDirectoryName?.toLowerCase(),
     fileName,
+    repoLastPath: repoFullName.split('/').pop()?.toLowerCase(),
   };
 }
 
