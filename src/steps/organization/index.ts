@@ -24,7 +24,7 @@ async function fetchOrganizations({
     await client.iterateOrganizations(async (org) => {
       await jobState.addEntity(createOrganizationEntity(org));
     });
-  } else {
+  } else if (instance.config.snykOrgId) {
     const currentOrg = await client.getCurrentOrgName();
     await jobState.addEntity(
       createOrganizationEntity({
