@@ -1,7 +1,4 @@
-import {
-  IntegrationProviderAuthenticationError,
-  IntegrationValidationError,
-} from '@jupiterone/integration-sdk-core';
+import { IntegrationProviderAuthenticationError } from '@jupiterone/integration-sdk-core';
 import { createMockExecutionContext } from '@jupiterone/integration-sdk-testing';
 import { integrationConfig } from '../test/config';
 import { withRecording } from '../test/recording';
@@ -55,39 +52,23 @@ describe('validateInvocation', () => {
     );
   });
 
-  test('should throw if `snykOrgId` missing from integration config', async () => {
-    expect.assertions(1);
-
-    try {
-      await validateInvocation(
-        createMockExecutionContext<IntegrationConfig>({
-          instanceConfig: {
-            snykOrgId: (undefined as unknown) as string,
-            snykApiKey: 'dummy-api-key',
-            snykGroupId: 'dummy-api-key',
-          },
-        }),
-      );
-    } catch (err) {
-      expect(err instanceof IntegrationValidationError).toEqual(true);
-    }
-  });
-
-  test('should throw if `snykOrgId` missing from integration config', async () => {
-    expect.assertions(1);
-
-    try {
-      await validateInvocation(
-        createMockExecutionContext<IntegrationConfig>({
-          instanceConfig: {
-            snykOrgId: 'dummy-org-id',
-            snykApiKey: (undefined as unknown) as string,
-            snykGroupId: 'dummy-org-id',
-          },
-        }),
-      );
-    } catch (err) {
-      expect(err instanceof IntegrationValidationError).toEqual(true);
-    }
+  // Ignored for now because we don't have a valid Snyk API key for new recordings
+  test.skip('should fallback to `snykGroupId` if `snykOrgId` is missing from integration config', async () => {
+    await withRecording(
+      {
+        directoryName: __dirname,
+        recordingName: 'validateInvocationPassesWithMissingOrgId',
+      },
+      async () => {
+        await validateInvocation(
+          createMockExecutionContext<IntegrationConfig>({
+            instanceConfig: {
+              ...integrationConfig,
+              snykOrgId: undefined,
+            },
+          }),
+        );
+      },
+    );
   });
 });

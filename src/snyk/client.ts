@@ -50,10 +50,13 @@ export class APIClient {
   }
 
   public async verifyAuthentication(): Promise<void> {
+    const uri = this.config.snykOrgId
+      ? `org/${this.config.snykOrgId}/members`
+      : `group/${this.config.snykGroupId}/members`;
     try {
       await this.snykRequest({
         method: 'GET',
-        uri: `org/${this.config.snykOrgId}/members`,
+        uri,
       });
     } catch (err) {
       this.logger.info(
@@ -65,7 +68,7 @@ export class APIClient {
 
       throw new IntegrationProviderAuthenticationError({
         cause: err,
-        endpoint: `https://snyk.io/api/v1/org/${this.config.snykOrgId}/members`,
+        endpoint: `https://snyk.io/api/v1/${uri}`,
         status: err.response?.statusCode || err.statusCode || err.status,
         statusText:
           err.response?.statusMessage || err.statusText || err.message,
@@ -140,14 +143,11 @@ export class APIClient {
   public async iterateIssues(
     projectId: string,
     iteratee: ResourceIteratee<SnykFinding>,
-    orgId?: string,
+    orgId: string,
   ): Promise<void> {
     let response: SnykFindingResponse;
     try {
-      response = await this.listAggregatedIssues(
-        orgId || this.config.snykOrgId,
-        projectId,
-      );
+      response = await this.listAggregatedIssues(orgId, projectId);
     } catch (err) {
       this.logger.error(
         {

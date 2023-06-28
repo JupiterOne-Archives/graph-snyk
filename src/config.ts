@@ -12,8 +12,8 @@ import {
  * same properties defined by `instanceConfigFields`.
  */
 interface IntegrationConfig extends IntegrationInstanceConfig {
-  snykOrgId: string;
   snykApiKey: string;
+  snykOrgId?: string;
   snykGroupId?: string;
 }
 
@@ -35,10 +35,16 @@ export default async function validateInvocation(
 ) {
   const { config } = context.instance;
 
-  if (!config?.snykOrgId || !config?.snykApiKey) {
-    throw new IntegrationValidationError(
-      'Config requires all of {snykOrgId, snykApiKey}',
-    );
+  const errMessages: string[] = [];
+  if (!config?.snykApiKey) {
+    errMessages.push('Config requires {snykApiKey}.');
+  }
+  if (!config?.snykOrgId && !config?.snykGroupId) {
+    errMessages.push('Config requires either {snykOrgId} or {snykGroupId}.');
+  }
+
+  if (errMessages.length) {
+    throw new IntegrationValidationError(errMessages.join(' '));
   }
 
   const apiClient = new APIClient(context.logger, config);
