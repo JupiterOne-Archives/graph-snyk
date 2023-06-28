@@ -8,6 +8,10 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [2.8.0] - 2023-06-29
+
+- Change config validation to require either `snykOrgId` or `snykGroupId`
+
 ## [2.7.0] - 2023-01-24
 
 - Adding multiple possible ways to relate `CodeRepo` to `snyk_finding`, this way
