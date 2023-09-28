@@ -8,6 +8,10 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [2.8.1] - 2023-09-28
+
+- Upgrade sdk packages
+
 ## [2.8.0] - 2023-06-29
 
 - Change config validation to require either `snykOrgId` or `snykGroupId`
