@@ -52,7 +52,6 @@ describe('validateInvocation', () => {
     );
   });
 
-  // Ignored for now because we don't have a valid Snyk API key for new recordings
   test('should fallback to `snykGroupId` if `snykOrgId` is missing from integration config', async () => {
     await withRecording(
       {
