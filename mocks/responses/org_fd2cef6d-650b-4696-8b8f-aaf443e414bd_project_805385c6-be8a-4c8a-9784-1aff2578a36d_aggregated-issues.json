@@ -1,0 +1,45 @@
+{
+  "issues": [
+    {
+      "issueType": "configuration",
+      "pkgName": "",
+      "pkgVersions": [],
+      "introducedThrough": [],
+      "isPatched": false,
+      "fixInfo": {
+        "isUpgradable": false,
+        "isPinnable": false,
+        "isPatchable": false,
+        "isFixable": false,
+        "isPartiallyFixable": false,
+        "nearestFixedInVersion": ""
+      },
+      "id": "1259825461",
+      "issueData": {
+        "id": "1259825461",
+        "title": "Service does not restrict ingress sources",
+        "severity": "medium",
+        "originalSeverity": "medium",
+        "url": "https://snyk.io/security-rules/SNYK-CC-K8S-15",
+        "description": "Defining a Load balancer Service without setting the loadBalancerSourceRanges property will use the default value of 0.0.0.0/0.",
+        "disclosureTime": "2023-01-08T10:39:19+00:00",
+        "path": "[DocId: 0].input.spec.loadBalancerSourceRanges",
+        "violatedPolicyPublicId": "SNYK-CC-K8S-15",
+        "CVSSv3": "",
+        "cvssDetails": [],
+        "credit": [],
+        "identifiers": {},
+        "language": "",
+        "nearestFixedInVersion": "",
+        "patches": [],
+        "semver": {
+          "vulnerable": ""
+        },
+        "cvssScore": null,
+        "exploitMaturity": null,
+        "publicationTime": null
+      },
+      "isIgnored": false
+    }
+  ]
+}
