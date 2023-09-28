@@ -1,0 +1,256 @@
+{
+  "requests": {
+    "org/fd2cef6d-650b-4696-8b8f-aaf443e414bd/members": {
+      "method": "GET",
+      "status": 200,
+      "content": "responses/org_fd2cef6d-650b-4696-8b8f-aaf443e414bd_members.json",
+      "headers": {
+        "content-type": "application/json",
+        "accept": "application/json",
+        "authorization": "[REDACTED]",
+        "user-agent": "node-fetch/1.0 (+https://github.com/bitinn/node-fetch)",
+        "accept-encoding": "gzip,deflate",
+        "connection": "close",
+        "host": "snyk.io"
+      }
+    },
+    "group/fd2cef6d-650b-4696-8b8f-aaf443e414bd/members": {
+      "method": "GET",
+      "status": 200,
+      "content": "responses/group_fd2cef6d-650b-4696-8b8f-aaf443e414bd_members.json",
+      "headers": {
+        "content-type": "application/json",
+        "accept": "application/json",
+        "authorization": "[REDACTED]",
+        "user-agent": "node-fetch/1.0 (+https://github.com/bitinn/node-fetch)",
+        "accept-encoding": "gzip,deflate",
+        "connection": "close",
+        "host": "snyk.io"
+      }
+    },
+    "group/6ea3fc3c-8f73-4f87-9122-f7b884cec006/orgs": {
+      "method": "GET",
+      "status": 200,
+      "content": "responses/group_6ea3fc3c-8f73-4f87-9122-f7b884cec006_orgs.json",
+      "headers": {
+        "content-type": "application/json",
+        "accept": "application/json",
+        "authorization": "[REDACTED]",
+        "user-agent": "node-fetch/1.0 (+https://github.com/bitinn/node-fetch)",
+        "accept-encoding": "gzip,deflate",
+        "connection": "close",
+        "host": "snyk.io"
+      }
+    },
+    "org/fd2cef6d-650b-4696-8b8f-aaf443e414bd/projects": {
+      "method": "GET",
+      "status": 200,
+      "content": "responses/org_fd2cef6d-650b-4696-8b8f-aaf443e414bd_projects.json",
+      "headers": {
+        "content-type": "application/json",
+        "accept": "application/json",
+        "authorization": "[REDACTED]",
+        "user-agent": "node-fetch/1.0 (+https://github.com/bitinn/node-fetch)",
+        "accept-encoding": "gzip,deflate",
+        "connection": "close",
+        "host": "snyk.io"
+      }
+    },
+    "/org/fd2cef6d-650b-4696-8b8f-aaf443e414bd/project/c6eba998-c605-40e1-92c9-b64d56b3f944/aggregated-issues": {
+      "method": "POST",
+      "status": 200,
+      "content": "responses/org_fd2cef6d-650b-4696-8b8f-aaf443e414bd_project_c6eba998-c605-40e1-92c9-b64d56b3f944_aggregated-issues.json",
+      "headers": {
+        "content-type": "application/json",
+        "accept": "application/json",
+        "authorization": "[REDACTED]",
+        "user-agent": "node-fetch/1.0 (+https://github.com/bitinn/node-fetch)",
+        "accept-encoding": "gzip,deflate",
+        "connection": "close",
+        "host": "snyk.io"
+      }
+    },
+    "/org/fd2cef6d-650b-4696-8b8f-aaf443e414bd/project/98fcca9e-505a-4fd9-a078-10b94afe3ee7/aggregated-issues": {
+      "method": "POST",
+      "status": 200,
+      "content": "responses/org_fd2cef6d-650b-4696-8b8f-aaf443e414bd_project_98fcca9e-505a-4fd9-a078-10b94afe3ee7_aggregated-issues.json",
+      "headers": {
+        "content-type": "application/json",
+        "accept": "application/json",
+        "authorization": "[REDACTED]",
+        "user-agent": "node-fetch/1.0 (+https://github.com/bitinn/node-fetch)",
+        "accept-encoding": "gzip,deflate",
+        "connection": "close",
+        "host": "snyk.io"
+      }
+    },
+    "/org/fd2cef6d-650b-4696-8b8f-aaf443e414bd/project/502d7a31-c3b4-459e-81f2-3511d2d1d285/aggregated-issues": {
+      "method": "POST",
+      "status": 200,
+      "content": "responses/org_fd2cef6d-650b-4696-8b8f-aaf443e414bd_project_502d7a31-c3b4-459e-81f2-3511d2d1d285_aggregated-issues.json",
+      "headers": {
+        "content-type": "application/json",
+        "accept": "application/json",
+        "authorization": "[REDACTED]",
+        "user-agent": "node-fetch/1.0 (+https://github.com/bitinn/node-fetch)",
+        "accept-encoding": "gzip,deflate",
+        "connection": "close",
+        "host": "snyk.io"
+      }
+    },
+    "/org/fd2cef6d-650b-4696-8b8f-aaf443e414bd/project/6126645c-9822-46b9-b802-c33c74108604/aggregated-issues": {
+      "method": "POST",
+      "status": 200,
+      "content": "responses/org_fd2cef6d-650b-4696-8b8f-aaf443e414bd_project_6126645c-9822-46b9-b802-c33c74108604_aggregated-issues.json",
+      "headers": {
+        "content-type": "application/json",
+        "accept": "application/json",
+        "authorization": "[REDACTED]",
+        "user-agent": "node-fetch/1.0 (+https://github.com/bitinn/node-fetch)",
+        "accept-encoding": "gzip,deflate",
+        "connection": "close",
+        "host": "snyk.io"
+      }
+    },
+    "/org/fd2cef6d-650b-4696-8b8f-aaf443e414bd/project/48716505-faab-4889-8ad6-8fc3de93b596/aggregated-issues": {
+      "method": "POST",
+      "status": 200,
+      "content": "responses/org_fd2cef6d-650b-4696-8b8f-aaf443e414bd_project_48716505-faab-4889-8ad6-8fc3de93b596_aggregated-issues.json",
+      "headers": {
+        "content-type": "application/json",
+        "accept": "application/json",
+        "authorization": "[REDACTED]",
+        "user-agent": "node-fetch/1.0 (+https://github.com/bitinn/node-fetch)",
+        "accept-encoding": "gzip,deflate",
+        "connection": "close",
+        "host": "snyk.io"
+      }
+    },
+    "/org/fd2cef6d-650b-4696-8b8f-aaf443e414bd/project/805385c6-be8a-4c8a-9784-1aff2578a36d/aggregated-issues": {
+      "method": "POST",
+      "status": 200,
+      "content": "responses/org_fd2cef6d-650b-4696-8b8f-aaf443e414bd_project_805385c6-be8a-4c8a-9784-1aff2578a36d_aggregated-issues.json",
+      "headers": {
+        "content-type": "application/json",
+        "accept": "application/json",
+        "authorization": "[REDACTED]",
+        "user-agent": "node-fetch/1.0 (+https://github.com/bitinn/node-fetch)",
+        "accept-encoding": "gzip,deflate",
+        "connection": "close",
+        "host": "snyk.io"
+      }
+    },
+    "/org/fd2cef6d-650b-4696-8b8f-aaf443e414bd/project/1c7ae0d5-773a-47a4-b93b-6814f49a9869/aggregated-issues": {
+      "method": "POST",
+      "status": 200,
+      "content": "responses/org_fd2cef6d-650b-4696-8b8f-aaf443e414bd_project_1c7ae0d5-773a-47a4-b93b-6814f49a9869_aggregated-issues.json",
+      "headers": {
+        "content-type": "application/json",
+        "accept": "application/json",
+        "authorization": "[REDACTED]",
+        "user-agent": "node-fetch/1.0 (+https://github.com/bitinn/node-fetch)",
+        "accept-encoding": "gzip,deflate",
+        "connection": "close",
+        "host": "snyk.io"
+      }
+    },
+    "/org/fd2cef6d-650b-4696-8b8f-aaf443e414bd/project/e7f32ff8-8010-4f12-a538-4a7267aaeb3b/aggregated-issues": {
+      "method": "POST",
+      "status": 200,
+      "content": "responses/org_fd2cef6d-650b-4696-8b8f-aaf443e414bd_project_e7f32ff8-8010-4f12-a538-4a7267aaeb3b_aggregated-issues.json",
+      "headers": {
+        "content-type": "application/json",
+        "accept": "application/json",
+        "authorization": "[REDACTED]",
+        "user-agent": "node-fetch/1.0 (+https://github.com/bitinn/node-fetch)",
+        "accept-encoding": "gzip,deflate",
+        "connection": "close",
+        "host": "snyk.io"
+      }
+    },
+    "/org/fd2cef6d-650b-4696-8b8f-aaf443e414bd/project/9596146e-41cb-40ca-8496-ccaaad9eed46/aggregated-issues": {
+      "method": "POST",
+      "status": 200,
+      "content": "responses/org_fd2cef6d-650b-4696-8b8f-aaf443e414bd_project_9596146e-41cb-40ca-8496-ccaaad9eed46_aggregated-issues.json",
+      "headers": {
+        "content-type": "application/json",
+        "accept": "application/json",
+        "authorization": "[REDACTED]",
+        "user-agent": "node-fetch/1.0 (+https://github.com/bitinn/node-fetch)",
+        "accept-encoding": "gzip,deflate",
+        "connection": "close",
+        "host": "snyk.io"
+      }
+    },
+    "/org/fd2cef6d-650b-4696-8b8f-aaf443e414bd/project/d5a63756-d699-493a-8110-d5811e2ad71a/aggregated-issues": {
+      "method": "POST",
+      "status": 200,
+      "content": "responses/org_fd2cef6d-650b-4696-8b8f-aaf443e414bd_project_d5a63756-d699-493a-8110-d5811e2ad71a_aggregated-issues.json",
+      "headers": {
+        "content-type": "application/json",
+        "accept": "application/json",
+        "authorization": "[REDACTED]",
+        "user-agent": "node-fetch/1.0 (+https://github.com/bitinn/node-fetch)",
+        "accept-encoding": "gzip,deflate",
+        "connection": "close",
+        "host": "snyk.io"
+      }
+    },
+    "/org/fd2cef6d-650b-4696-8b8f-aaf443e414bd/project/c3552211-c414-4b48-983c-f21d8e0b909c/aggregated-issues": {
+      "method": "POST",
+      "status": 200,
+      "content": "responses/org_fd2cef6d-650b-4696-8b8f-aaf443e414bd_project_c3552211-c414-4b48-983c-f21d8e0b909c_aggregated-issues.json",
+      "headers": {
+        "content-type": "application/json",
+        "accept": "application/json",
+        "authorization": "[REDACTED]",
+        "user-agent": "node-fetch/1.0 (+https://github.com/bitinn/node-fetch)",
+        "accept-encoding": "gzip,deflate",
+        "connection": "close",
+        "host": "snyk.io"
+      }
+    },
+    "/org/fd2cef6d-650b-4696-8b8f-aaf443e414bd/project/c39fc1cb-f5f2-41ef-b8e0-bb044f431fa7/aggregated-issues": {
+      "method": "POST",
+      "status": 200,
+      "content": "responses/org_fd2cef6d-650b-4696-8b8f-aaf443e414bd_project_c39fc1cb-f5f2-41ef-b8e0-bb044f431fa7_aggregated-issues.json",
+      "headers": {
+        "content-type": "application/json",
+        "accept": "application/json",
+        "authorization": "[REDACTED]",
+        "user-agent": "node-fetch/1.0 (+https://github.com/bitinn/node-fetch)",
+        "accept-encoding": "gzip,deflate",
+        "connection": "close",
+        "host": "snyk.io"
+      }
+    },
+    "group/6ea3fc3c-8f73-4f87-9122-f7b884cec006/roles": {
+      "method": "GET",
+      "status": 200,
+      "content": "responses/group_6ea3fc3c-8f73-4f87-9122-f7b884cec006_roles.json",
+      "headers": {
+        "content-type": "application/json",
+        "accept": "application/json",
+        "authorization": "[REDACTED]",
+        "user-agent": "node-fetch/1.0 (+https://github.com/bitinn/node-fetch)",
+        "accept-encoding": "gzip,deflate",
+        "connection": "close",
+        "host": "snyk.io"
+      }
+    },
+    "org/fd2cef6d-650b-4696-8b8f-aaf443e414bd/members?includeGroupAdmins=true": {
+      "method": "GET",
+      "status": 200,
+      "content": "responses/org_fd2cef6d-650b-4696-8b8f-aaf443e414bd_members?includeGroupAdmins=true.json",
+      "headers": {
+        "content-type": "application/json",
+        "accept": "application/json",
+        "authorization": "[REDACTED]",
+        "user-agent": "node-fetch/1.0 (+https://github.com/bitinn/node-fetch)",
+        "accept-encoding": "gzip,deflate",
+        "connection": "close",
+        "host": "snyk.io"
+      }
+    }
+  }
+}
