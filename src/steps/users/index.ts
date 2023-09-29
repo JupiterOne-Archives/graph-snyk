@@ -33,7 +33,10 @@ async function fetchUsers({
       }
 
       await apiClient.iterateUsers(organization.id, async (user) => {
-        const userEntity = await jobState.addEntity(createUserEntity(user));
+        const userEntity = createUserEntity(user);
+        if (!jobState.hasKey(userEntity._key)) {
+          await jobState.addEntity(userEntity);
+        }
 
         await jobState.addRelationship(
           createDirectRelationship({
