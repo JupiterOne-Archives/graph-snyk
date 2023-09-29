@@ -1,7 +1,6 @@
 import {
   createDirectRelationship,
   Entity,
-  getRawData,
   IntegrationStep,
   IntegrationStepExecutionContext,
   RelationshipClass,
@@ -10,7 +9,7 @@ import { IntegrationConfig } from '../../config';
 import { Entities, Relationships, SetDataKeys, StepIds } from '../../constants';
 import { createRoleEntity } from './converters';
 import { APIClient } from '../../snyk/client';
-import { User } from '../../types/types';
+import { generateRoleKey } from '../../util/generateRoleKey';
 
 async function fetchRoles({
   instance,
@@ -37,30 +36,23 @@ async function fetchRoles({
 
 async function buildUserGroupRoleRelationship({
   jobState,
-  logger,
 }: IntegrationStepExecutionContext<IntegrationConfig>) {
   await jobState.iterateEntities(
     { _type: Entities.SNYK_USER._type },
     async (userEntity) => {
-      const user = getRawData<User>(userEntity);
-      if (!user) {
-        logger.warn(
-          { _key: userEntity._key },
-          'Could not get raw data for user entity',
-        );
+      if (!userEntity.role || typeof userEntity.role !== 'string') {
         return;
       }
+      const roleEntityKey = generateRoleKey(userEntity.role);
 
-      const roleEntity = (await jobState.findEntity(
-        `snyk_role:${user.role}`,
-      )) as Entity;
-
-      if (roleEntity) {
+      if (jobState.hasKey(roleEntityKey)) {
         await jobState.addRelationship(
           createDirectRelationship({
             _class: RelationshipClass.ASSIGNED,
-            from: userEntity,
-            to: roleEntity,
+            fromKey: userEntity._key,
+            fromType: Entities.SNYK_USER._type,
+            toKey: roleEntityKey,
+            toType: Entities.SNYK_ROLE._type,
           }),
         );
       }
@@ -70,7 +62,6 @@ async function buildUserGroupRoleRelationship({
 
 async function buildUserRoleRelationship({
   jobState,
-  logger,
 }: IntegrationStepExecutionContext<IntegrationConfig>) {
   await jobState.iterateEntities(
     { _type: Entities.SNYK_ORGANIZATION._type },
@@ -78,16 +69,11 @@ async function buildUserRoleRelationship({
       await jobState.iterateEntities(
         { _type: Entities.SNYK_USER._type },
         async (userEntity) => {
-          const user = getRawData<User>(userEntity);
-          if (!user) {
-            logger.warn(
-              { _key: userEntity._key },
-              'Could not get raw data for user entity',
-            );
+          if (!userEntity.role || typeof userEntity.role !== 'string') {
             return;
           }
 
-          const userRole = user.role;
+          const userRole = userEntity.role;
           if (userRole) {
             const roleEntity = createRoleEntity({ name: userRole });
             if (!jobState.hasKey(roleEntity._key)) {
