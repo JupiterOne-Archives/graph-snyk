@@ -72,9 +72,9 @@ export function createFindingEntity(
   // debugging purposes.
   let severity = getSeverityFromPriorities(vuln.priority);
   if (severity) {
-    logger.info({}, 'Got severity from priorities');
+    logger.debug({}, 'Got severity from priorities');
   } else {
-    logger.info({}, 'Was not able to get severity from priorities');
+    logger.debug({}, 'Was not able to get severity from priorities');
     severity = vuln.issueData.severity;
   }
 

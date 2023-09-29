@@ -1,6 +1,5 @@
 import {
   createDirectRelationship,
-  getRawData,
   IntegrationStep,
   IntegrationStepExecutionContext,
   RelationshipClass,
@@ -10,7 +9,6 @@ import { APIClient } from '../../snyk/client';
 import { StepIds } from '../../constants';
 import { IntegrationConfig } from '../../config';
 import { createUserEntity } from './converter';
-import { Organization } from '../../types/types';
 
 async function fetchUsers({
   jobState,
@@ -22,18 +20,15 @@ async function fetchUsers({
   await jobState.iterateEntities(
     { _type: Entities.SNYK_ORGANIZATION._type },
     async (organizationEntity) => {
-      const organization = getRawData<Organization>(organizationEntity);
-
-      if (!organization) {
-        logger.warn(
-          { _key: organizationEntity._key },
-          'Could not get raw data for organization entity',
-        );
+      if (!organizationEntity.id || typeof organizationEntity.id !== 'string') {
         return;
       }
 
-      await apiClient.iterateUsers(organization.id, async (user) => {
-        const userEntity = await jobState.addEntity(createUserEntity(user));
+      await apiClient.iterateUsers(organizationEntity.id, async (user) => {
+        const userEntity = createUserEntity(user);
+        if (!jobState.hasKey(userEntity._key)) {
+          await jobState.addEntity(userEntity);
+        }
 
         await jobState.addRelationship(
           createDirectRelationship({

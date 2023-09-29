@@ -122,18 +122,8 @@ export class APIClient {
     }
 
     const projects = response?.projects;
-    if (projects && projects.length > 0) {
-      this.logger.info(
-        {
-          projects: projects.length,
-        },
-        'Fetched projects',
-      );
-      for (const project of projects) {
-        await iteratee(project);
-      }
-    } else {
-      this.logger.info('No projects found');
+    for (const project of projects || []) {
+      await iteratee(project);
     }
   }
 
@@ -164,20 +154,8 @@ export class APIClient {
       });
     }
 
-    if (response?.issues) {
-      this.logger.info(
-        {
-          projectId,
-          issues: response.issues.length,
-        },
-        'Fetched project issues',
-      );
-
-      for (const issue of response.issues) {
-        await iteratee(issue);
-      }
-    } else {
-      this.logger.info({ projectId }, 'No issues found');
+    for (const issue of response?.issues || []) {
+      await iteratee(issue);
     }
   }
 
