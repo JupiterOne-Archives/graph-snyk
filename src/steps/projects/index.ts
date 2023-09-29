@@ -49,7 +49,7 @@ async function fetchProjects({
         // TODO (austinkelleher, INT-4063) - Remove this later after we've collected some
         // information on real world origins
         if (project.origin !== 'github') {
-          logger.info(
+          logger.debug(
             {
               projectId: project.id,
               origin: project.origin,
@@ -90,7 +90,7 @@ async function fetchProjects({
       });
 
       if (numProjectsCollected) {
-        logger.info(
+        logger.debug(
           {
             numProjectsCollected,
           },
