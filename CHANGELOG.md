@@ -8,6 +8,10 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [2.8.2] - 2023-09-29
+
+- Fix duplicate key on Users step
+
 ## [2.8.1] - 2023-09-28
 
 - Upgrade sdk packages
