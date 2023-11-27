@@ -284,8 +284,13 @@ export class APIClient {
       uri: `group/${this.config.snykGroupId}/roles`,
     });
 
-    for (const role of roles) {
-      await iteratee(role);
+    if (roles && roles?.[Symbol.iterator]) {
+      for (const role of roles) {
+        await iteratee(role);
+      }
+    } else {
+      // TODO: remove after INT-9926 is resolved
+      this.logger.warn(roles, `Roles is not iterable. Current value: ${roles}`);
     }
   }
 
