@@ -8,6 +8,10 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [2.8.3] - 2023-11-27
+
+- Fix Group Roles issue
+
 ## [2.8.2] - 2023-09-29
 
 - Fix duplicate key on Users step
