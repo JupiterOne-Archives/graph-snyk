@@ -290,7 +290,10 @@ export class APIClient {
       }
     } else {
       // TODO: remove after INT-9926 is resolved
-      this.logger.warn(roles, `Roles is not iterable. Current value: ${roles}`);
+      this.logger.warn(
+        roles,
+        `Roles is not iterable. Current value: ${JSON.stringify(roles)}`,
+      );
     }
   }
 
