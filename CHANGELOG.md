@@ -8,6 +8,10 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [2.8.4] - 2023-11-27
+
+- Update log
+
 ## [2.8.3] - 2023-11-27
 
 - Fix Group Roles issue
